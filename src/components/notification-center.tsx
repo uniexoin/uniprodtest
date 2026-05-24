@@ -172,9 +172,9 @@ export function NotificationCenter() {
       variant="ghost" 
       size="icon" 
       onClick={isMobile ? () => { setMobileOpen(true); haptics.light(); } : undefined}
-      className="relative h-10 w-10 md:h-11 md:w-11 rounded-xl md:rounded-2xl glass-dark hover:border-primary/30 transition-all tap-feedback theme-landing"
+      className="relative w-10 h-10 rounded-xl hover:bg-white/10 text-white/80 hover:text-white transition-all flex items-center justify-center"
     >
-      <Bell className={`w-4 h-4 md:w-5 md:h-5 ${unreadCount > 0 ? 'text-primary' : 'text-muted-foreground'}`} />
+      <Bell className={`w-4.5 h-4.5 md:w-5 md:h-5 ${unreadCount > 0 ? 'text-accent' : 'text-white/80 group-hover:text-white'}`} />
       {unreadCount > 0 && (
         <span className="absolute top-2 right-2 md:top-2.5 md:right-2.5 flex h-2.5 w-2.5 md:h-3 md:w-3">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>

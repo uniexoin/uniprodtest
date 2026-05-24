@@ -27,7 +27,7 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={handleToggle}
-      className="rounded-full w-9 h-9 bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 shadow-sm text-foreground transition-all"
+      className="w-10 h-10 rounded-xl hover:bg-white/10 text-white/80 hover:text-white transition-all flex items-center justify-center"
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
@@ -40,7 +40,7 @@ export function ThemeToggle() {
           {theme === 'dark' ? (
             <Sun className="h-[1.2rem] w-[1.2rem] text-accent" />
           ) : (
-            <Moon className="h-[1.2rem] w-[1.2rem] text-primary" />
+            <Moon className="h-[1.2rem] w-[1.2rem] text-white/80 group-hover:text-white" />
           )}
         </motion.div>
       </AnimatePresence>
