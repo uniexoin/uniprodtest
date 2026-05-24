@@ -166,7 +166,7 @@ export default function SignupPage() {
           </motion.div>
           <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="text-sm font-bold text-muted-foreground uppercase tracking-widest mt-4">
             {step === 0 ? "Step 1: Identity" : step === 1 ? "Step 2: Role" : "Step 3: Profile"}
-          </h1>
+          </motion.h1>
           <div className="flex justify-center gap-2 mt-4">
             {[0, 1, 2].map((i) => (
               <div key={i} className={`h-1.5 rounded-full transition-all duration-500 ${i <= step ? 'w-8 bg-secondary' : 'w-4 bg-border'}`} />
