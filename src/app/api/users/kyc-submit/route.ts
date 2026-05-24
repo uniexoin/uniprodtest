@@ -32,7 +32,7 @@ export const POST = withAuth(async (req, user) => {
           }
         }
 
-        const matchRatio = matchCount / userNameParts.filter(p => p.length > 2).length;
+        const matchRatio = matchCount / userNameParts.filter((p: string) => p.length > 2).length;
         
         // Auto-approve if close to 50% match
         if (matchRatio >= 0.5) {
