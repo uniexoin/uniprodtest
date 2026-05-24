@@ -10,6 +10,7 @@ import { Eye, EyeOff, Sparkles, Store, ShieldCheck, ArrowRight, UserPlus } from 
 import { useAuthStore } from '@/modules/auth/auth.store';
 import { toast } from 'sonner';
 import { UniExoBrand } from '@/components/brand';
+import { SaaSBackground } from '@/components/saas-background';
 import { Label } from '@/components/ui/label';
 
 export default function SignupPage() {
@@ -143,25 +144,16 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-background flex items-center justify-center p-4 sm:p-6 font-sans theme-landing relative overflow-hidden">
-      {/* Dynamic Background Elements */}
-      <motion.div 
-        animate={{ y: [0, -50, 0], x: [0, 30, 0] }}
-        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        className="absolute top-1/4 -right-1/4 sm:right-1/4 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-secondary/10 rounded-full blur-[80px] sm:blur-[120px] -z-10"
-      />
-      <motion.div 
-        animate={{ y: [0, 60, 0], x: [0, -40, 0] }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        className="absolute bottom-1/4 -left-1/4 sm:left-1/4 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-primary/10 rounded-full blur-[100px] sm:blur-[150px] -z-10"
-      />
+    <div className="min-h-[100dvh] bg-background flex items-center justify-center p-4 sm:p-6 font-sans theme-landing relative overflow-hidden selection:bg-primary/30">
+      <SaaSBackground />
 
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="w-full max-w-md bg-white/40 dark:bg-black/40 border border-white/50 dark:border-white/10 p-6 sm:p-10 rounded-[2rem] sm:rounded-[3rem] shadow-[0_8px_32px_0_rgba(0,0,0,0.1)] backdrop-blur-xl relative z-10"
-      >
+      <AnimatePresence mode="wait">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full max-w-md bg-white/60 dark:bg-black/40 border border-white/60 dark:border-white/10 p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] backdrop-blur-2xl relative z-10"
+        >
         <div className="text-center mb-8">
           <motion.div 
             initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: "spring" }}
@@ -169,8 +161,10 @@ export default function SignupPage() {
           >
             <UserPlus className="w-8 h-8 text-secondary" />
           </motion.div>
-          <UniExoBrand size="lg" className="mb-2 justify-center" />
-          <h1 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mt-4">
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+            <UniExoBrand size="lg" className="mb-2 justify-center text-foreground" />
+          </motion.div>
+          <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="text-sm font-bold text-muted-foreground uppercase tracking-widest mt-4">
             {step === 0 ? "Step 1: Identity" : step === 1 ? "Step 2: Role" : "Step 3: Profile"}
           </h1>
           <div className="flex justify-center gap-2 mt-4">
@@ -331,7 +325,8 @@ export default function SignupPage() {
         <p className="mt-8 text-center text-muted-foreground/40 text-[10px] font-bold uppercase tracking-widest">
           Secured by UniExo Encryption
         </p>
-      </motion.div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
