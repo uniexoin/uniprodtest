@@ -1,299 +1,208 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { 
-  Car, 
-  Home, 
-  ShoppingBag, 
-  WashingMachine, 
-  ArrowRight,
-  Search,
-  User,
-  ChevronRight,
-  LayoutGrid,
-  Star
-} from 'lucide-react';
-import { useAuthStore } from '@/modules/auth/auth.store';
-import { useUIStore } from '@/store/ui.store';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { haptics } from '@/lib/haptics';
-
-import { useNotifications } from '@/hooks/use-notifications';
-import { useMyBookings } from '@/hooks/use-bookings';
-import { Bell, Clock, Info, CheckCircle2, AlertTriangle, ShieldCheck, CreditCard, Activity } from 'lucide-react';
+import { useState } from 'react';
+import { Slider } from '@/components/ui/slider';
+import { Check } from 'lucide-react';
+import { useAuthStore } from '@/store/auth.store';
 
 export function Dashboard() {
   const { user } = useAuthStore();
-  const { openProfileSidebar, isProfileSidebarOpen } = useUIStore();
-  const { notifications } = useNotifications();
-  const { data: bookings } = useMyBookings();
+  const [serviceType, setServiceType] = useState<'design' | 'development' | 'both'>('both');
+  const [pages, setPages] = useState<number>(5);
+  const [needContent, setNeedContent] = useState<boolean>(false);
+  const [needSEO, setNeedSEO] = useState<boolean>(false);
+  const [timeline, setTimeline] = useState<'regular' | 'fast' | 'rush'>('regular');
 
-  const quickActions = [
-    { 
-      label: 'Rent a Vehicle', 
-      icon: Car, 
-      href: '/vehicles', 
-      description: 'Cars, Bikes & Scooters',
-      gradient: 'from-blue-500/20 to-cyan-500/20',
-      iconColor: 'text-blue-400',
-      tag: 'FAST'
-    },
-    { 
-      label: 'Find a Room', 
-      icon: Home, 
-      href: '/houses', 
-      description: 'PGs, Hostels & Flats',
-      gradient: 'from-lime-500/20 to-emerald-500/20',
-      iconColor: 'text-lime-400',
-      tag: 'SECURE'
-    },
-    { 
-      label: 'Marketplace', 
-      icon: ShoppingBag, 
-      href: '/marketplace', 
-      description: 'Buy & Sell Used Items',
-      gradient: 'from-orange-500/20 to-yellow-500/20',
-      iconColor: 'text-orange-400',
-      tag: 'NEW'
-    },
-    { 
-      label: 'Laundry Service', 
-      icon: WashingMachine, 
-      href: '/laundry', 
-      description: 'Wash, Fold & Dry',
-      gradient: 'from-purple-500/20 to-pink-500/20',
-      iconColor: 'text-purple-400',
-      tag: 'FRESH'
-    },
-  ];
+  const calculatePrice = () => {
+    let base = 0;
+    let perPage = 0;
+
+    if (serviceType === 'design') {
+      base = 399;
+      perPage = 100;
+    } else if (serviceType === 'development') {
+      base = 199;
+      perPage = 100;
+    } else {
+      base = 499;
+      perPage = 200;
+    }
+
+    let total = Math.max(base, base + (pages - 1) * perPage);
+
+    if (needContent) total += pages * 50;
+    if (needSEO) total += pages * 50;
+    
+    if (timeline === 'rush') total += pages * 100;
+    if (timeline === 'fast') total += pages * 25;
+
+    return total;
+  };
+
+  const calculateAgencyCost = () => {
+    const perPage = serviceType === 'both' ? 1000 : 400;
+    return 8000 + (pages - 1) * perPage;
+  };
+
+  const calculateFreelancerCost = () => {
+    const perPage = serviceType === 'both' ? 500 : 200;
+    return 3000 + (pages - 1) * perPage;
+  };
+
+  const formatPrice = (price: number) => {
+    return '$' + price.toLocaleString();
+  };
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 selection:text-primary-foreground relative font-sans overflow-x-clip has-bottom-nav md:pb-0 theme-landing">
-      {/* Background Animated Blobs */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <motion.div
-          animate={{
-            scale: [1, 1.1, 1],
-            x: [0, 50, 0],
-            y: [0, 25, 0],
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[-10%] right-[-5%] w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-primary/5 rounded-full blur-[80px] md:blur-[100px]"
-        />
-        <motion.div
-          animate={{
-            scale: [1.1, 1, 1.1],
-            x: [0, -50, 0],
-            y: [0, -25, 0],
-          }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-[-10%] left-[-5%] w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-secondary/5 rounded-full blur-[80px] md:blur-[100px]"
-        />
-      </div>
+    <div className="min-h-screen bg-background w-full flex flex-col items-center">
+      {/* Header Spacer for Navbar if needed */}
+      <div className="h-20 w-full" />
+      
+      <section id="calculator-section" className="w-full bg-background py-16 md:py-28 px-4 md:px-16 max-w-7xl mx-auto flex flex-col items-center">
+        
+        {/* Header */}
+        <div className="text-center mb-12">
+          <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">Try project estimation calculator</p>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-normal text-foreground">Get premium website within your budget</h2>
+        </div>
 
-      <div className="relative z-10 flex w-full">
-        <main className="flex-1 transition-all duration-500 ease-in-out">
-          <div className="container mx-auto px-4 py-6 md:px-8 lg:px-12 md:py-12 max-w-7xl">
+        {/* Layout */}
+        <div className="w-full grid grid-cols-1 lg:grid-cols-2 rounded-2xl overflow-hidden shadow-2xl">
+          
+          {/* LEFT COLUMN */}
+          <div className="bg-[#0D0D0D] p-8 lg:p-12 flex flex-col divide-y divide-[#1E1E1E]">
             
-            {/* ── Header Section ─────────────────────────── */}
-            <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-8 mb-8 md:mb-16">
-              <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-              >
-                <div className="flex items-center gap-3 mb-1 md:mb-2">
-                   <div className="h-1 w-6 md:w-8 bg-primary rounded-full" />
-                   <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">DASHBOARD OVERVIEW</span>
-                </div>
-                <h1 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter leading-none">
-                  Hello, <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-primary">{user?.name?.split(' ')[0]}</span>
-                </h1>
-                <p className="text-muted-foreground mt-2 md:mt-4 font-medium text-sm md:text-lg max-w-md">Access premium services and manage your campus lifestyle.</p>
-              </motion.div>
-
-              <div className="flex items-center gap-3 md:gap-4">
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="hidden md:flex items-center gap-3 bg-surface/40 border border-border/50 p-2 px-4 rounded-2xl backdrop-blur-3xl shadow-2xl"
-                >
-                  <Search className="w-4 h-4 text-muted-foreground" />
-                  <input 
-                    type="text" 
-                    placeholder="Search anything..." 
-                    className="bg-transparent border-none focus:ring-0 text-sm w-48 placeholder:text-muted-foreground"
-                  />
-                </motion.div>
-                
-                <Button 
-                  onClick={openProfileSidebar}
-                  variant="outline"
-                  className={`hidden md:flex h-14 w-14 rounded-2xl border-border bg-surface/40 backdrop-blur-xl transition-all ${isProfileSidebarOpen ? 'border-primary text-primary' : 'hover:border-primary/30'}`}
-                >
-                  <User className="w-6 h-6" />
-                </Button>
-              </div>
-            </header>
-
-            {/* ── Quick Services ──────────────────────────── */}
-            <section className="mb-10 md:mb-20">
-              <div className="flex items-center justify-between mb-5 md:mb-10">
-                <div className="flex items-center gap-3 md:gap-4">
-                  <div className="p-2 md:p-3 rounded-xl md:rounded-2xl bg-primary/10 text-primary">
-                    <LayoutGrid className="w-5 h-5 md:w-6 md:h-6" />
-                  </div>
-                  <h2 className="text-xl md:text-3xl font-black tracking-tight">Quick <span className="text-primary">Services</span></h2>
-                </div>
-                <Button asChild variant="ghost" className="text-muted-foreground hover:text-foreground transition-colors group text-xs md:text-sm">
-                  <Link href="/vehicles">
-                    <span className="hidden sm:inline">EXPLORE ALL</span>
-                    <span className="sm:hidden">ALL</span>
-                    <ArrowRight className="ml-1 md:ml-2 w-3 h-3 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </Button>
-              </div>
-
-              {/* Unified Responsive 2x2 Grid for Quick Actions */}
-              <div className="grid grid-cols-2 gap-4 md:gap-6">
-                {quickActions.map((action, idx) => (
-                  <Link key={idx} href={action.href} className="group flex-1">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: idx * 0.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="relative overflow-hidden p-5 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] bg-surface/40 border border-border hover:border-primary/30 transition-all duration-500 h-full flex flex-col justify-between backdrop-blur-xl shadow-lg md:shadow-2xl"
-                    >
-                      <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-20 md:opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-                      
-                      <div className="relative z-10">
-                        <div className="flex flex-col md:flex-row justify-between items-start md:mb-8 gap-3 md:gap-0">
-                          <div className={`p-3 md:p-5 rounded-2xl md:rounded-3xl bg-surface/80 ${action.iconColor} md:group-hover:scale-110 transition-transform duration-500 shadow-xl md:shadow-2xl border border-white/5`}>
-                            <action.icon className="w-6 h-6 md:w-10 md:h-10" />
-                          </div>
-                          <span className="text-[8px] md:text-[10px] font-black px-2 md:px-3 py-1 bg-surface/80 rounded-full tracking-widest text-muted-foreground md:group-hover:text-foreground transition-colors border border-border">
-                            {action.tag}
-                          </span>
-                        </div>
-                        <div className="mt-4 md:mt-0">
-                          <h4 className="text-sm md:text-2xl font-black mb-1 md:mb-2 md:group-hover:translate-x-1 transition-transform duration-500">{action.label}</h4>
-                          <p className="hidden md:block text-muted-foreground group-hover:text-foreground transition-colors text-sm">{action.description}</p>
-                        </div>
-                      </div>
-
-                      <div className="relative z-10 mt-4 md:mt-12 flex items-center gap-1 md:gap-2 text-[10px] md:text-sm font-bold text-primary md:opacity-0 md:group-hover:opacity-100 transition-all duration-500 md:-translate-x-4 md:group-hover:translate-x-0">
-                        GO <ChevronRight className="w-3 h-3 md:w-4 md:h-4" />
-                      </div>
-                    </motion.div>
-                  </Link>
+            {/* Service Type */}
+            <div className="pb-8">
+              <h3 className="text-xl font-medium mb-6 text-white">What kind of service do you need?</h3>
+              <div className="space-y-4">
+                {[
+                  { id: 'design', label: 'Only Design' },
+                  { id: 'development', label: 'Only Development' },
+                  { id: 'both', label: 'Design + Development' }
+                ].map(option => (
+                  <label key={option.id} className="flex items-center gap-4 cursor-pointer group">
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${serviceType === option.id ? 'border-[#FF5656]' : 'border-white/30 group-hover:border-white/50'}`}>
+                      {serviceType === option.id && <div className="w-2 h-2 rounded-full bg-[#FF5656]" />}
+                    </div>
+                    <span className="text-white/80 group-hover:text-white transition-colors">{option.label}</span>
+                  </label>
                 ))}
-              </div>
-            </section>
-
-            {/* ── Recent Activity & Alerts ─────────────────── */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10 md:mb-20">
-              {/* Active Bookings */}
-              <div className="lg:col-span-2 space-y-6">
-                <div className="flex items-center gap-3">
-                   <div className="p-2 rounded-xl bg-primary/10 text-primary">
-                      <Clock className="w-5 h-5" />
-                   </div>
-                   <h3 className="text-xl font-black tracking-tight">Recent <span className="text-primary">Activity</span></h3>
-                </div>
-                
-                <div className="space-y-4">
-                  {bookings?.slice(0, 3).map((booking: any, idx: number) => (
-                    <motion.div 
-                      key={idx}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: idx * 0.1 }}
-                      className="p-5 rounded-3xl bg-surface/30 border border-border/50 flex items-center justify-between hover:border-primary/20 transition-all group"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                          {booking.service_type === 'vehicle' ? <Car className="w-6 h-6" /> : <Home className="w-6 h-6" />}
-                        </div>
-                        <div>
-                          <p className="text-sm font-black text-foreground uppercase">{booking.service_type} RENTAL</p>
-                          <p className="text-xs text-muted-foreground">ID: {booking.id.slice(0, 8)} • {new Date(booking.created_at).toLocaleDateString()}</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm font-black text-foreground">₹{Number(booking.total_amount).toLocaleString()}</p>
-                        <span className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest ${
-                          booking.status === 'confirmed' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-orange-500/10 text-orange-500'
-                        }`}>
-                          {booking.status}
-                        </span>
-                      </div>
-                    </motion.div>
-                  ))}
-                  {(!bookings || bookings.length === 0) && (
-                    <div className="py-12 text-center border-2 border-dashed border-border/50 rounded-[2.5rem]">
-                       <p className="text-sm text-muted-foreground font-medium">No recent bookings found.</p>
-                       <Button variant="link" className="text-primary font-bold text-xs">Start Exploring</Button>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Alerts / Notifications */}
-              <div className="space-y-6">
-                <div className="flex items-center gap-3">
-                   <div className="p-2 rounded-xl bg-accent/10 text-accent">
-                      <Bell className="w-5 h-5" />
-                   </div>
-                   <h3 className="text-xl font-black tracking-tight text-accent">Alerts</h3>
-                </div>
-
-                <div className="space-y-4">
-                  {notifications?.slice(0, 4).map((n, idx) => (
-                    <motion.div 
-                      key={idx}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: idx * 0.1 }}
-                      className={`p-4 rounded-2xl border flex gap-3 ${n.is_read ? 'bg-surface/10 border-border/30 opacity-50' : 'bg-accent/5 border-accent/20'}`}
-                    >
-                      <div className="mt-1">
-                        {n.type === 'success' ? <CheckCircle2 className="w-4 h-4 text-emerald-500" /> : <Info className="w-4 h-4 text-accent" />}
-                      </div>
-                      <div>
-                        <p className="text-xs font-black text-foreground leading-tight mb-1">{n.title}</p>
-                        <p className="text-[10px] text-muted-foreground line-clamp-2 leading-relaxed">{n.message}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                  {(!notifications || notifications.length === 0) && (
-                    <div className="py-10 text-center bg-surface/20 rounded-3xl border border-border/50">
-                       <p className="text-xs text-muted-foreground font-medium italic">All caught up!</p>
-                    </div>
-                  )}
-                </div>
               </div>
             </div>
 
-            {/* ── Featured Section ────────────────────────── */}
-            <section>
-               <div className="p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] bg-gradient-to-br from-surface to-background border border-border relative overflow-hidden group shadow-2xl">
-                  <div className="absolute top-0 right-0 p-6 md:p-12 opacity-[0.03] group-hover:opacity-[0.1] transition-opacity duration-700">
-                    <Star className="w-32 h-32 md:w-64 md:h-64 text-primary" />
+            {/* Number of Pages */}
+            <div className="py-8">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-medium text-white">Number of Pages</h3>
+                <span className="text-[#FF5656] text-xl font-medium">{pages} Pages</span>
+              </div>
+              <Slider 
+                value={[pages]} 
+                onValueChange={(val) => setPages(val[0])} 
+                min={1} 
+                max={30} 
+                step={1} 
+                className="my-6"
+              />
+              <div className="flex justify-between text-white/50 text-sm">
+                <span>1</span>
+                <span>30</span>
+              </div>
+            </div>
+
+            {/* Add-ons */}
+            <div className="py-8">
+              <div className="space-y-4">
+                <label className="flex items-center justify-between cursor-pointer group">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-colors ${needContent ? 'border-[#FF5656] bg-[#FF5656]' : 'border-white/30 group-hover:border-white/50'}`}>
+                      {needContent && <Check className="w-3.5 h-3.5 text-white" />}
+                    </div>
+                    <span className="text-white/80 group-hover:text-white transition-colors">I will need help with content</span>
                   </div>
-                  <div className="relative z-10">
-                    <span className="text-primary text-[10px] md:text-xs font-black tracking-widest uppercase mb-3 md:mb-4 block">LIMITED OFFER</span>
-                    <h3 className="text-2xl md:text-4xl font-black mb-3 md:mb-4 leading-tight">Upgrade your campus experience.</h3>
-                    <p className="text-muted-foreground max-w-md mb-6 md:mb-8 text-sm md:text-base">Get exclusive access to premium PGs and luxury vehicle rentals with priority booking.</p>
-                    <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90 font-black px-6 md:px-10 h-12 md:h-14 rounded-xl md:rounded-2xl transition-all text-sm md:text-base tap-feedback shadow-xl shadow-primary/20">
-                      <Link href="/houses">LEARN MORE</Link>
-                    </Button>
+                  <span className="text-[#FF5656] text-sm font-medium">+$50/pages</span>
+                </label>
+
+                <label className="flex items-center justify-between cursor-pointer group">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-colors ${needSEO ? 'border-[#FF5656] bg-[#FF5656]' : 'border-white/30 group-hover:border-white/50'}`}>
+                      {needSEO && <Check className="w-3.5 h-3.5 text-white" />}
+                    </div>
+                    <span className="text-white/80 group-hover:text-white transition-colors">I want to optimize my website for SEO</span>
                   </div>
-               </div>
-            </section>
+                  <span className="text-[#FF5656] text-sm font-medium">+$50/pages</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Timeline */}
+            <div className="pt-8">
+              <h3 className="text-xl font-medium mb-6 text-white">How fast do you need this?</h3>
+              <div className="space-y-4">
+                <label className="flex items-center justify-between cursor-pointer group">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${timeline === 'rush' ? 'border-[#FF5656]' : 'border-white/30 group-hover:border-white/50'}`}>
+                      {timeline === 'rush' && <div className="w-2 h-2 rounded-full bg-[#FF5656]" />}
+                    </div>
+                    <span className="text-white/80 group-hover:text-white transition-colors">Within 7 Days</span>
+                  </div>
+                  <span className="text-[#FF5656] text-sm font-medium">+$100/pages</span>
+                </label>
+
+                <label className="flex items-center justify-between cursor-pointer group">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${timeline === 'fast' ? 'border-[#FF5656]' : 'border-white/30 group-hover:border-white/50'}`}>
+                      {timeline === 'fast' && <div className="w-2 h-2 rounded-full bg-[#FF5656]" />}
+                    </div>
+                    <span className="text-white/80 group-hover:text-white transition-colors">Within 14 Days</span>
+                  </div>
+                  <span className="text-[#FF5656] text-sm font-medium">+$25/pages</span>
+                </label>
+
+                <label className="flex items-center justify-between cursor-pointer group">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${timeline === 'regular' ? 'border-[#FF5656]' : 'border-white/30 group-hover:border-white/50'}`}>
+                      {timeline === 'regular' && <div className="w-2 h-2 rounded-full bg-[#FF5656]" />}
+                    </div>
+                    <span className="text-white/80 group-hover:text-white transition-colors">Regular Speed (Based on discussion)</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
           </div>
-        </main>
-      </div>
+
+          {/* RIGHT COLUMN */}
+          <div className="bg-[#050505] p-8 lg:p-12 border border-white/10 lg:rounded-r-2xl flex flex-col justify-center min-h-[717.98px]">
+            <h3 className="text-2xl font-semibold text-white mb-2">Estimated Cost</h3>
+            <p className="text-white/50 text-sm mb-8">This is an estimated price. The final price may vary based on the project's complexity.</p>
+
+            <div className="space-y-4">
+              
+              <div className="bg-muted/50 rounded-2xl p-6 space-y-3 border border-white/5">
+                <p className="text-white/70 text-sm font-medium">Typical Agency charges minimum</p>
+                <div className="text-4xl font-bold text-white/50 line-through decoration-white/20">{formatPrice(calculateAgencyCost())}</div>
+                <p className="text-xs font-medium text-white/40">+ Too much extra time & additional cost</p>
+              </div>
+
+              <div className="bg-muted/50 rounded-2xl p-6 space-y-3 border border-white/5">
+                <p className="text-white/70 text-sm font-medium">Regular Freelancer charges minimum</p>
+                <div className="text-4xl font-bold text-white/50 line-through decoration-white/20">{formatPrice(calculateFreelancerCost())}</div>
+                <p className="text-xs font-medium text-white/40">+ Too much headache & back-and-forth</p>
+              </div>
+
+              <div className="bg-gradient-to-r from-pink-500 to-orange-500 rounded-2xl p-6 space-y-3 text-white shadow-2xl">
+                <p className="text-white/90 text-sm font-medium">With Webfluin Studio</p>
+                <div className="text-5xl font-bold">{formatPrice(calculatePrice())}</div>
+                <p className="text-sm font-medium text-white/90">Save your money, time & headache</p>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
     </div>
   );
 }
