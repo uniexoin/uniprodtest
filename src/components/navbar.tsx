@@ -85,7 +85,7 @@ export function Navbar() {
           <div className="flex h-14 md:h-[4.5rem] items-center justify-between">
             {/* Logo & Left Content */}
             <div className="flex items-center gap-4 md:gap-8">
-              <Link href="/" className="flex items-center gap-2 tap-feedback">
+              <Link href="/" className="flex items-center gap-2 tap-feedback text-white">
                 <UniExoBrand />
               </Link>
 

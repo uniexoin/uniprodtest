@@ -20,7 +20,7 @@ export const UniExoBrand = ({ className, size = 'md' }: UniExoBrandProps) => {
       sizeClasses[size],
       className
     )}>
-      <span className="text-white group-hover:text-white/90 transition-colors">UNI</span>
+      <span className="text-current group-hover:opacity-90 transition-opacity">UNI</span>
       <span className="text-accent italic font-black relative ml-0.5 group-hover:text-accent/80 transition-colors">
         EXO
         <span className="absolute -bottom-1 left-0 w-full h-1 bg-accent/40 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
