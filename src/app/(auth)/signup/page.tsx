@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { UniExoBrand } from '@/components/brand';
 import { SaaSBackground } from '@/components/saas-background';
 import { Label } from '@/components/ui/label';
+import { supabase } from '@/lib/supabase';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function SignupPage() {
   const [step, setStep] = useState(0); // 0: Identity, 1: Role, 2: Profile
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isGoogleSignup, setIsGoogleSignup] = useState(false);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -78,6 +80,31 @@ export default function SignupPage() {
     setError('');
 
     try {
+      if (isGoogleSignup) {
+        console.log('[SIGNUP] Preparing Google OAuth...');
+        // Save form data to local storage so the callback can use it
+        localStorage.setItem('pending_google_signup', JSON.stringify({
+          role: role,
+          name: formData.name,
+          phone: formData.phone,
+          university_id: role === 'user' ? formData.universityId : undefined,
+          business_name: role === 'vendor' ? formData.businessName : undefined,
+          service_type: role === 'vendor' ? formData.serviceType : undefined,
+          onsite_pickup: role === 'vendor' && formData.serviceType === 'laundry' ? formData.onsitePickup : undefined,
+          store_delivery: role === 'vendor' && formData.serviceType === 'laundry' ? formData.storeDelivery : undefined,
+        }));
+
+        const { error: signInError } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: `${window.location.origin}/google-callback`
+          }
+        });
+
+        if (signInError) throw signInError;
+        return; // Stop here, browser will redirect to Google
+      }
+
       console.log('[SIGNUP] Finalizing registration...');
       const res = await fetch(`/api/auth/register?_t=${Date.now()}`, {
         method: 'POST',
@@ -179,10 +206,9 @@ export default function SignupPage() {
             <motion.div key="step0" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-6">
               <Button
                 type="button"
-                onClick={async () => {
-                  const res = await fetch('/api/auth/google', { method: 'POST', body: JSON.stringify({}) });
-                  const data = await res.json();
-                  if (!data.success) toast.error(data.error);
+                onClick={() => {
+                  setIsGoogleSignup(true);
+                  setStep(1);
                 }}
                 className="w-full h-14 bg-white hover:bg-zinc-100 text-zinc-900 border border-zinc-200 font-bold rounded-2xl flex items-center justify-center gap-3 transition-all"
               >

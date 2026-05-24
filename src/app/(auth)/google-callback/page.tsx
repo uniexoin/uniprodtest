@@ -31,6 +31,18 @@ export default function GoogleCallbackPage() {
         }
 
         console.log('[GOOGLE CALLBACK] Syncing with server...');
+        
+        let pendingData = {};
+        try {
+          const stored = localStorage.getItem('pending_google_signup');
+          if (stored) {
+            pendingData = JSON.parse(stored);
+            localStorage.removeItem('pending_google_signup');
+          }
+        } catch (e) {
+          console.warn('Failed to parse pending google signup data');
+        }
+
         const res = await fetch(`/api/auth/google-sync?_t=${Date.now()}`, {
           method: 'POST',
           headers: { 
@@ -39,7 +51,8 @@ export default function GoogleCallbackPage() {
             'Pragma': 'no-cache'
           },
           body: JSON.stringify({
-            access_token: session.access_token
+            access_token: session.access_token,
+            ...pendingData
           })
         });
 
