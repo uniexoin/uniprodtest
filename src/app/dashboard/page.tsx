@@ -490,7 +490,7 @@ function VendorDashboard() {
               onClick={() => handleTabChange(s.id)}
               className={`flex flex-col items-center justify-center gap-1 p-2.5 rounded-xl text-[10px] font-bold transition-all duration-300 ${section === s.id
                   ? 'bg-[#8B004A] text-white shadow-lg shadow-[#8B004A]/20 scale-[1.03]'
-                  : 'text-slate-500 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-zinc-800 hover:text-[#8B004A]'
+                  : 'text-slate-500 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-zinc-800 hover:text-[#8B004A] dark:hover:text-rose-400'
                 }`}
             >
               <s.icon className={`w-4 h-4 ${section === s.id ? 'scale-110' : ''}`} />
@@ -500,14 +500,14 @@ function VendorDashboard() {
         </nav>
 
         {/* Desktop: Vertical sidebar list */}
-        <nav className="hidden lg:flex flex-col gap-2 p-2 bg-white/40 backdrop-blur-sm rounded-2xl border border-white/50">
+        <nav className="hidden lg:flex flex-col gap-2 p-2 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-sm rounded-2xl border border-white/50 dark:border-zinc-800">
           {filteredSections.map((s) => (
             <button
               key={s.id}
               onClick={() => handleTabChange(s.id)}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold whitespace-nowrap transition-all duration-300 group ${section === s.id
                   ? 'bg-[#8B004A] text-white shadow-xl shadow-[#8B004A]/20 scale-[1.02]'
-                  : 'text-slate-500 hover:bg-white hover:text-[#8B004A] hover:shadow-md'
+                  : 'text-slate-500 dark:text-zinc-400 hover:bg-white dark:hover:bg-zinc-800 hover:text-[#8B004A] dark:hover:text-rose-400 hover:shadow-md dark:hover:shadow-none'
                 }`}
             >
               <s.icon className={`w-4 h-4 transition-transform duration-500 ${section === s.id ? 'scale-110' : 'group-hover:rotate-12'}`} />
@@ -533,7 +533,7 @@ function VendorDashboard() {
         {/* Quick Actions Header */}
         <div className="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md p-4 sm:p-6 lg:p-8 rounded-2xl lg:rounded-3xl border border-white/20 dark:border-white/10 shadow-xl flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center justify-between gap-4 lg:gap-6">
           <div className="space-y-1">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tighter text-[#8B004A]">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tighter text-[#8B004A] dark:text-rose-400">
               Welcome back, {user?.name?.split(' ')[0] || 'Vendor'} 👋
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-zinc-400 font-medium flex items-center gap-2">
@@ -547,11 +547,11 @@ function VendorDashboard() {
               variant="outline"
               onClick={handleManualRefresh}
               disabled={isRefreshing}
-              className={`rounded-xl h-9 sm:h-11 text-xs sm:text-sm border-blue-200 dark:border-zinc-800 text-slate-700 bg-white dark:bg-zinc-900 shadow-md font-bold flex items-center gap-2 hover:bg-slate-50 transition-all ${
+              className={`rounded-xl h-9 sm:h-11 text-xs sm:text-sm border-blue-200 dark:border-zinc-800 text-slate-700 dark:text-zinc-200 bg-white dark:bg-zinc-900 shadow-md font-bold flex items-center gap-2 hover:bg-slate-50 transition-all ${
                 isRefreshing ? 'animate-pulse' : ''
               }`}
             >
-              <Activity className={`w-4 h-4 text-[#8B004A] ${isRefreshing ? 'animate-spin' : ''}`} />
+              <Activity className={`w-4 h-4 text-[#8B004A] dark:text-rose-400 ${isRefreshing ? 'animate-spin' : ''}`} />
               {isRefreshing ? 'Syncing...' : 'Sync DB'}
             </Button>
 

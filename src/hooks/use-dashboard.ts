@@ -24,7 +24,20 @@ export const useDashboardRealtime = (role: 'user' | 'vendor' | 'admin') => {
         ['vendorAnalyticsOverview']
     ];
 
-    if (role === 'vendor') {
+    if (role === 'admin') {
+        tables.push('profiles', 'vendor_profiles', 'payments', 'transactions', 'vehicles', 'houses', 'laundry_orders');
+        keys.push(
+            ['admin'],
+            ['admin', 'dashboard'],
+            ['admin', 'users'],
+            ['admin', 'vendors'],
+            ['admin', 'bookings'],
+            ['admin', 'payments'],
+            ['admin', 'transactions'],
+            ['admin', 'reports'],
+            ['admin', 'settings']
+        );
+    } else if (role === 'vendor') {
         tables.push('vehicles', 'houses', 'laundry_orders');
         keys.push(['vendorBookings'], ['vendorVehicles'], ['vendorHouses']);
     } else {

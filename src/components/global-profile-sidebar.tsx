@@ -293,16 +293,18 @@ export function GlobalProfileSidebar() {
         </div>
 
         {/* Become a Vendor CTA */}
-        <Link href="/signup?role=vendor" onClick={onClose} className="tap-feedback block">
-          <div className="p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] bg-gradient-to-br from-primary to-secondary text-primary-foreground relative overflow-hidden group shadow-2xl">
-            <Zap className="absolute -right-6 -bottom-6 w-24 h-24 md:w-32 md:h-32 text-primary-foreground/20 group-hover:scale-110 transition-transform duration-700" />
-            <h4 className="text-xl md:text-2xl font-black leading-none mb-1.5 md:mb-2">Become a <br />Vendor</h4>
-            <p className="text-xs md:text-sm font-medium mb-4 md:mb-6 opacity-80">Start earning by listing your services.</p>
-            <div className="w-full bg-primary-foreground text-primary flex items-center justify-center font-bold rounded-lg md:rounded-xl h-10 md:h-12 shadow-xl text-sm">
-                GET STARTED
+        {user?.role === 'user' && (
+          <Link href="/signup?role=vendor" onClick={onClose} className="tap-feedback block">
+            <div className="p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] bg-gradient-to-br from-primary to-secondary text-primary-foreground relative overflow-hidden group shadow-2xl">
+              <Zap className="absolute -right-6 -bottom-6 w-24 h-24 md:w-32 md:h-32 text-primary-foreground/20 group-hover:scale-110 transition-transform duration-700" />
+              <h4 className="text-xl md:text-2xl font-black leading-none mb-1.5 md:mb-2">Become a <br />Vendor</h4>
+              <p className="text-xs md:text-sm font-medium mb-4 md:mb-6 opacity-80">Start earning by listing your services.</p>
+              <div className="w-full bg-primary-foreground text-primary flex items-center justify-center font-bold rounded-lg md:rounded-xl h-10 md:h-12 shadow-xl text-sm">
+                  GET STARTED
+              </div>
             </div>
-          </div>
-        </Link>
+          </Link>
+        )}
       </div>
 
       {/* Bottom Actions */}

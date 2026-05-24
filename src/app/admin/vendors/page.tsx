@@ -11,7 +11,7 @@ export default function AdminVendorsPage() {
   const { data: vendors, isLoading } = useVendorsList();
   const approveVendor = useApproveVendor();
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
+  const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected' | 'suspended'>('all');
 
   const handleApprove = (vendorId: string) => {
     approveVendor.mutate({ vendorId, status: 'approved' });
@@ -20,6 +20,11 @@ export default function AdminVendorsPage() {
   const handleReject = (vendorId: string) => {
     const reason = prompt('Reason for rejection (optional):');
     approveVendor.mutate({ vendorId, status: 'rejected', reason: reason || undefined });
+  };
+
+  const handleSuspend = (vendorId: string) => {
+    const reason = prompt('Reason for suspension (optional):');
+    approveVendor.mutate({ vendorId, status: 'suspended', reason: reason || undefined });
   };
 
   if (isLoading) {
@@ -51,6 +56,7 @@ export default function AdminVendorsPage() {
   const statusIcon = (status: string) => {
     if (status === 'approved') return <CheckCircle className="w-4 h-4 text-green-500" />;
     if (status === 'rejected') return <XCircle className="w-4 h-4 text-red-500" />;
+    if (status === 'suspended') return <XCircle className="w-4 h-4 text-orange-500" />;
     return <Clock className="w-4 h-4 text-amber-500" />;
   };
 
@@ -58,6 +64,7 @@ export default function AdminVendorsPage() {
     const colors: Record<string, string> = {
       approved: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
       rejected: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+      suspended: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
       pending: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
     };
     return (
@@ -87,7 +94,7 @@ export default function AdminVendorsPage() {
           />
         </div>
         <div className="flex gap-2">
-          {(['all', 'pending', 'approved', 'rejected'] as const).map((f) => (
+          {(['all', 'pending', 'approved', 'rejected', 'suspended'] as const).map((f) => (
             <Button
               key={f}
               variant={filter === f ? 'default' : 'outline'}
@@ -112,7 +119,12 @@ export default function AdminVendorsPage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-3">
-                    <h3 className="text-lg font-semibold">{vendor.businessName || 'Unnamed Business'}</h3>
+                    <h3 className="text-lg font-semibold flex items-center gap-1.5">
+                      {vendor.businessName || 'Unnamed Business'}
+                      {vendor.approvalStatus === 'approved' && (
+                        <CheckCircle className="w-5 h-5 text-emerald-500 fill-emerald-50" />
+                      )}
+                    </h3>
                     {statusBadge(vendor.approvalStatus)}
                   </div>
                   <p className="text-sm text-muted-foreground">
@@ -156,7 +168,20 @@ export default function AdminVendorsPage() {
                   </div>
                 )}
 
-                {vendor.approvalStatus === 'rejected' && (
+                {vendor.approvalStatus === 'approved' && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleSuspend(vendor._id)}
+                    disabled={approveVendor.isPending}
+                    className="border-orange-200 text-orange-600 hover:bg-orange-50 shrink-0"
+                  >
+                    <XCircle className="w-4 h-4 mr-1" />
+                    Suspend
+                  </Button>
+                )}
+
+                {(vendor.approvalStatus === 'rejected' || vendor.approvalStatus === 'suspended') && (
                   <Button
                     size="sm"
                     onClick={() => handleApprove(vendor._id)}

@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { NotificationCenter } from '@/components/notification-center';
 import { Zap } from 'lucide-react';
+import { useDashboardRealtime } from '@/hooks/use-dashboard';
 
 const ADMIN_NAV = [
   { href: '/admin', label: 'Overview', icon: LayoutDashboard },
@@ -28,6 +29,7 @@ const ADMIN_NAV = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  useDashboardRealtime('admin');
 
   return (
     <ProtectedRoute allowedRoles={['admin']}>

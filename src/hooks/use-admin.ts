@@ -82,7 +82,7 @@ export function useApproveVendor() {
             reason,
         }: {
             vendorId: string;
-            status: 'approved' | 'rejected';
+            status: 'approved' | 'rejected' | 'suspended';
             reason?: string;
         }) => {
             const res = await api.patch(`/vendors/${vendorId}/approval`, { status, reason });

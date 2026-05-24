@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useQueryClient } from '@tanstack/react-query';
 
-type RealtimeTable = 'bookings' | 'vehicles' | 'houses' | 'wallets' | 'laundry_orders' | 'marketplace_items' | 'profiles';
+type RealtimeTable = 'bookings' | 'vehicles' | 'houses' | 'wallets' | 'laundry_orders' | 'marketplace_items' | 'profiles' | 'vendor_profiles' | 'payments' | 'transactions';
 
 export const useRealtimeSync = (tables: RealtimeTable[], queryKeys: string[][]) => {
   const queryClient = useQueryClient();

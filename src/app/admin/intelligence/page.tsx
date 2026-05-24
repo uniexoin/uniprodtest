@@ -83,7 +83,7 @@ export default function AdminIntelligencePage() {
               </div>
               <div className="mt-4">
                 <p className="text-zinc-500 text-sm font-bold uppercase tracking-wider">{kpi.label}</p>
-                <h3 className="text-3xl font-black mt-1 tracking-tight">{kpi.value}</h3>
+                <h3 className={`text-4xl font-black mt-1 tracking-tight ${kpi.color}`}>{kpi.value}</h3>
               </div>
             </CardContent>
           </Card>
@@ -96,7 +96,7 @@ export default function AdminIntelligencePage() {
           <CardHeader>
             <CardTitle className="text-xl font-bold flex items-center gap-2">
               <MapPin className="w-5 h-5 text-blue-400" />
-              Live Campus Pulse Map
+              Live Operations Pulse Map
             </CardTitle>
           </CardHeader>
           <CardContent className="h-full flex items-center justify-center relative">
@@ -126,7 +126,7 @@ export default function AdminIntelligencePage() {
               })}
               <div className="text-center z-0">
                 <p className="text-4xl font-black text-zinc-700">CORE</p>
-                <p className="text-xs text-zinc-800 font-bold tracking-[0.5em] uppercase">University Grid</p>
+                <p className="text-xs text-zinc-800 font-bold tracking-[0.5em] uppercase">Operations Grid</p>
               </div>
             </div>
           </CardContent>

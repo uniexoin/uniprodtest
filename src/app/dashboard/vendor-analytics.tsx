@@ -24,6 +24,8 @@ import { useVehicleFleet, useReturnVehicle, useToggleMaintenance, useVehicleOper
 import { useVendorLaundryOrders, useUpdateVendorOrderStatus } from '@/hooks/use-laundry-services';
 import { VehicleDispatchModal } from '@/components/vehicle-dispatch-modal';
 import { toast } from 'sonner';
+import { useLanguageStore } from '@/store/language.store';
+import { TRANSLATIONS, LANGUAGES } from '@/lib/translations';
 
 // Elegant Color Scheme
 const BURGUNDY = '#8B004A';
@@ -34,6 +36,11 @@ const COLORS = [BURGUNDY, '#5B2C6F', MUTED_BURGUNDY, '#D2B4DE'];
 export function VendorAnalyticsDashboard() {
   const [section, setSection] = useState('overview');
   const [isPending, startTransition] = useTransition();
+  const { language, setLanguage } = useLanguageStore();
+
+  const t = (key: string) => {
+    return TRANSLATIONS[language]?.[key] || TRANSLATIONS['en']?.[key] || key;
+  };
 
   const { data: overview, isLoading: loadingOverview } = useVendorAnalyticsOverview();
   const { data: dues } = useVendorDues();
@@ -41,15 +48,15 @@ export function VendorAnalyticsDashboard() {
   const serviceType = overview?.serviceType || 'all';
 
   const navItems = [
-    { id: 'overview', label: 'Analytics Overview', icon: LayoutDashboard },
-    { id: 'revenue', label: 'Revenue & Sales', icon: BarChart3 },
-    { id: 'ledger', label: 'Ledger Book', icon: FileText },
-    ...(serviceType === 'vehicle' ? [{ id: 'fleet', label: 'Vehicle Fleet', icon: Car }] : []),
-    ...(serviceType === 'house' || serviceType === 'pg' ? [{ id: 'rooms', label: 'Room & PG Manager', icon: Home }] : []),
-    ...(serviceType === 'laundry' ? [{ id: 'laundry', label: 'Laundry Pipeline', icon: Shirt }] : []),
+    { id: 'overview', label: t('analyticsOverview'), icon: LayoutDashboard },
+    { id: 'revenue', label: t('revenueSales'), icon: BarChart3 },
+    { id: 'ledger', label: t('ledgerBook'), icon: FileText },
+    ...(serviceType === 'vehicle' ? [{ id: 'fleet', label: t('vehicleFleet'), icon: Car }] : []),
+    ...(serviceType === 'house' || serviceType === 'pg' ? [{ id: 'rooms', label: t('roomPgManager'), icon: Home }] : []),
+    ...(serviceType === 'laundry' ? [{ id: 'laundry', label: t('laundryPipeline'), icon: Shirt }] : []),
   ];
 
-  if (loadingOverview) return <div className="p-8 text-center animate-pulse text-[#8B004A]">Loading Analytics Engine...</div>;
+  if (loadingOverview) return <div className="p-8 text-center animate-pulse text-[#8B004A] dark:text-rose-400">Loading Analytics Engine...</div>;
 
   const handleTabChange = (id: string) => {
     startTransition(() => {
@@ -63,7 +70,7 @@ export function VendorAnalyticsDashboard() {
       {dues?.totalDue > 0 && (
         <div className="fixed top-20 right-8 z-50 animate-bounce bg-red-600 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3">
           <AlertTriangle className="w-5 h-5" />
-          <span className="font-bold">₹{dues.totalDue.toLocaleString()} Due!</span>
+          <span className="font-bold">₹{(dues?.totalDue || 0).toLocaleString()} Due!</span>
           <Button variant="outline" size="sm" className="text-red-600 border-white h-7" onClick={() => toast.success('Reminders sent to all customers!')}>
             Send Reminders
           </Button>
@@ -72,6 +79,22 @@ export function VendorAnalyticsDashboard() {
 
       {/* Sidebar */}
       <aside className="lg:w-64 shrink-0">
+        {/* Language Selector */}
+        <div className="mb-4 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-sm rounded-2xl border border-white/50 dark:border-white/10 p-2 flex justify-between items-center">
+          <span className="text-xs font-bold text-slate-500 dark:text-zinc-400 pl-2">{t('changeLang') || 'Language'}</span>
+          <select 
+            value={language} 
+            onChange={(e) => setLanguage(e.target.value as any)}
+            className="bg-transparent text-sm font-bold border-0 focus:ring-0 cursor-pointer text-[#8B004A] dark:text-rose-400"
+          >
+            {LANGUAGES.map(lang => (
+              <option key={lang.code} value={lang.code} className="text-slate-900 dark:text-zinc-900">
+                {lang.flag} {lang.nativeName}
+              </option>
+            ))}
+          </select>
+        </div>
+
         {/* Mobile: Grid of pills */}
         <nav className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 lg:hidden p-1.5 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-sm rounded-2xl border border-white/50 dark:border-white/10 mb-4">
           {navItems.map((item) => (
@@ -81,7 +104,7 @@ export function VendorAnalyticsDashboard() {
               className={`flex flex-col items-center justify-center gap-1 p-2 rounded-xl text-[11px] font-bold transition-all duration-300 ${
                 section === item.id
                   ? 'bg-[#8B004A] text-white shadow-lg shadow-[#8B004A]/20 scale-[1.02]'
-                  : 'text-slate-500 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-zinc-800 hover:text-[#8B004A]'
+                  : 'text-slate-500 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-zinc-800 hover:text-[#8B004A] dark:hover:text-rose-400'
               }`}
             >
               <item.icon className={`w-4 h-4 ${section === item.id ? 'scale-110' : ''}`} />
@@ -91,7 +114,7 @@ export function VendorAnalyticsDashboard() {
         </nav>
 
         {/* Desktop: Vertical sidebar list */}
-        <nav className="hidden lg:flex flex-col gap-2 p-2 bg-white/40 backdrop-blur-sm rounded-2xl border border-white/50">
+        <nav className="hidden lg:flex flex-col gap-2 p-2 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-sm rounded-2xl border border-white/50 dark:border-zinc-850">
           {navItems.map((item) => (
             <button
               key={item.id}
@@ -99,7 +122,7 @@ export function VendorAnalyticsDashboard() {
               className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold whitespace-nowrap transition-all group ${
                 section === item.id
                   ? 'bg-[#8B004A] text-zinc-100 shadow-lg shadow-[#8B004A]/30 scale-[1.02]'
-                  : 'text-slate-600 hover:bg-white hover:text-[#8B004A] hover:shadow-md'
+                  : 'text-slate-600 dark:text-zinc-400 hover:bg-white dark:hover:bg-zinc-800 hover:text-[#8B004A] dark:hover:text-rose-400 hover:shadow-md dark:hover:shadow-none'
               }`}
             >
               <item.icon className={`w-4 h-4 transition-transform duration-500 ${section === item.id ? 'scale-110' : 'group-hover:rotate-12'}`} />
@@ -123,33 +146,38 @@ export function VendorAnalyticsDashboard() {
 }
 
 // ─── OVERVIEW SECTION ──────────────────────────────────────────────────
-export function OverviewSection({ overview }: { overview: any }) {
+export function OverviewSection({ overview = {} }: { overview: any }) {
   const { data: trends } = useVendorBookingTrends(30);
   const { data: ledger } = useVendorLedger(1, 5); // Fetch recent 5 for activity feed
+  const { language } = useLanguageStore();
+
+  const t = (key: string) => {
+    return TRANSLATIONS[language]?.[key] || TRANSLATIONS['en']?.[key] || key;
+  };
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white/40 p-8 rounded-[2.5rem] border border-white/60 shadow-inner">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white/40 dark:bg-zinc-900/40 p-8 rounded-[2.5rem] border border-white/60 dark:border-zinc-800 shadow-inner">
         <div>
-          <h2 className="text-4xl font-black tracking-tighter text-slate-900 leading-none mb-2">
-            Analytics Engine <span className="text-[#8B004A]">v2.0</span>
+          <h2 className="text-4xl font-black tracking-tighter text-slate-900 dark:text-zinc-100 leading-none mb-2">
+            {t('dashboard')} <span className="text-[#8B004A] dark:text-rose-400">v2.0</span>
           </h2>
-          <p className="text-slate-500 font-medium flex items-center gap-2">
+          <p className="text-slate-500 dark:text-zinc-400 font-medium flex items-center gap-2">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
             </span>
-            Real-time performance synchronized for your {overview.serviceType || 'business'}
+            {t('commandCenter')} ({overview.serviceType || 'business'})
           </p>
         </div>
-        <div className="flex items-center gap-3 bg-white/50 p-2 rounded-2xl border border-white/20">
+        <div className="flex items-center gap-3 bg-white/50 dark:bg-zinc-900/50 p-2 rounded-2xl border border-white/20 dark:border-zinc-800">
           <Badge className="bg-[#8B004A] text-white hover:bg-[#8B004A] border-0 px-4 py-2 rounded-xl font-black tracking-widest text-[10px]">
-            {overview.bookingsToday || 0} NEW BOOKINGS
+            {overview.bookingsToday || 0} {t('newBookings')}
           </Badge>
-          <div className="h-8 w-px bg-slate-200 mx-1" />
+          <div className="h-8 w-px bg-slate-200 dark:bg-zinc-800 mx-1" />
           <div className="flex flex-col items-end px-2">
-            <span className="text-[10px] font-black text-slate-400 uppercase leading-none mb-1">Status</span>
-            <span className="text-xs font-black text-green-600 leading-none">LIVE STREAM</span>
+            <span className="text-[10px] font-black text-slate-400 dark:text-zinc-500 uppercase leading-none mb-1">{t('status')}</span>
+            <span className="text-xs font-black text-green-600 dark:text-green-400 leading-none">{t('liveStream')}</span>
           </div>
         </div>
       </div>
@@ -157,34 +185,38 @@ export function OverviewSection({ overview }: { overview: any }) {
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         <KPICard 
-          title="Net Earnings" 
+          title={t('netEarnings')}
           value={`₹${(overview.netEarnings || 0).toLocaleString()}`} 
           icon={Wallet} 
           trend={`${overview.momGrowth || 0}%`} 
           trendLabel="MoM Growth"
-          description="Net after commission"
+          description={t('earningsDesc')}
+          insight={t('earningsInsight')}
           gradient="from-[#8B004A] to-[#5B2C6F]"
         />
         <KPICard 
-          title="Conversion" 
+          title={t('conversion')}
           value={`${overview.conversionRate || 0}%`} 
           icon={CheckCircle} 
-          description="Booking completion rate"
+          description={t('conversionDesc')}
+          insight={t('conversionInsight')}
           gradient="from-emerald-600 to-teal-600"
         />
         <KPICard 
-          title="Total Volume" 
+          title={t('totalVolume')}
           value={overview.totalBookings || 0} 
           icon={TrendingUp} 
-          subtitle={`${overview.confirmedBookings || 0} Confirmed`}
-          description="All-time booking volume"
+          subtitle={`${overview.confirmedBookings || 0} ${t('confirmed')}`}
+          description={t('volumeDesc')}
+          insight={t('volumeInsight')}
           gradient="from-blue-600 to-indigo-600"
         />
         <KPICard 
-          title="Avg Order" 
+          title={t('avgOrder')}
           value={`₹${(overview.avgBookingValue || 0).toLocaleString()}`} 
           icon={BarChart3} 
-          description="Average transaction value"
+          description={t('avgOrderDesc')}
+          insight={t('avgOrderInsight')}
           gradient="from-amber-500 to-orange-600"
         />
       </div>
@@ -354,33 +386,47 @@ function CustomTooltip({ active, payload, label }: any) {
   return null;
 }
 
-function KPICard({ title, value, icon: Icon, trend, trendLabel, subtitle, description, gradient }: any) {
+function KPICard({ title, value, icon: Icon, trend, trendLabel, subtitle, description, gradient, insight }: any) {
   return (
-    <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 group">
+    <Card className="border-0 shadow-xl bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 group">
       <CardContent className="p-0">
         <div className={`h-1.5 w-full bg-gradient-to-r ${gradient}`} />
-        <div className="p-3 sm:p-6">
-          <div className="flex justify-between items-start mb-2 sm:mb-4">
-            <div className={`p-1.5 sm:p-3 rounded-lg sm:rounded-2xl bg-slate-50 dark:bg-zinc-800/50 group-hover:scale-110 transition-transform duration-500`}>
-              <Icon className="w-4 h-4 sm:w-6 sm:h-6 text-slate-600 dark:text-zinc-300" />
+        <div className="p-3 sm:p-6 flex flex-col justify-between h-full min-h-[190px] sm:min-h-[240px]">
+          <div>
+            <div className="flex justify-between items-start mb-2 sm:mb-4">
+              <div className={`p-1.5 sm:p-3 rounded-lg sm:rounded-2xl bg-slate-50 dark:bg-zinc-800/50 group-hover:scale-110 transition-transform duration-500`}>
+                <Icon className="w-4 h-4 sm:w-6 sm:h-6 text-slate-600 dark:text-zinc-300" />
+              </div>
+              {trend && (
+                <div className="flex items-center gap-0.5 sm:gap-1 bg-green-50 dark:bg-green-950/30 text-green-600 dark:text-green-400 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-xs font-black">
+                  <TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                  {trend}
+                </div>
+              )}
             </div>
-            {trend && (
-              <div className="flex items-center gap-0.5 sm:gap-1 bg-green-50 dark:bg-green-950/30 text-green-600 dark:text-green-400 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-xs font-black">
-                <TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                {trend}
+            <div className="space-y-0.5 sm:space-y-1">
+              <p className="text-[9px] sm:text-xs font-black text-slate-400 dark:text-zinc-500 uppercase tracking-widest">{title}</p>
+              <p className="text-lg sm:text-3xl font-black text-slate-900 dark:text-zinc-100 tracking-tighter truncate">{value}</p>
+            </div>
+          </div>
+          <div>
+            {description && (
+              <p className="text-[8px] sm:text-[10px] text-slate-500 dark:text-zinc-400 font-bold mt-2 sm:mt-4 uppercase tracking-tighter">{description}</p>
+            )}
+            {subtitle && (
+              <p className="text-[10px] sm:text-xs text-slate-400 dark:text-zinc-500 font-bold mt-1 sm:mt-2">{subtitle}</p>
+            )}
+            
+            {/* Live descriptive data insight */}
+            {insight && (
+              <div className="mt-3 p-2 rounded-xl bg-slate-100/50 dark:bg-zinc-800/50 border border-slate-200/20 dark:border-zinc-800/20 flex items-start gap-1.5 animate-pulse">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping mt-1 shrink-0" />
+                <span className="text-[7.5px] sm:text-[9.5px] leading-tight font-medium text-slate-600 dark:text-zinc-300">
+                  {insight}
+                </span>
               </div>
             )}
           </div>
-          <div className="space-y-0.5 sm:space-y-1">
-            <p className="text-[9px] sm:text-xs font-black text-slate-400 dark:text-zinc-500 uppercase tracking-widest">{title}</p>
-            <p className="text-lg sm:text-3xl font-black text-slate-900 dark:text-zinc-100 tracking-tighter truncate">{value}</p>
-          </div>
-          {description && (
-            <p className="text-[8px] sm:text-[10px] text-slate-500 dark:text-zinc-400 font-bold mt-2 sm:mt-4 uppercase tracking-tighter">{description}</p>
-          )}
-          {subtitle && (
-            <p className="text-[10px] sm:text-xs text-slate-400 dark:text-zinc-500 font-bold mt-1 sm:mt-2">{subtitle}</p>
-          )}
         </div>
       </CardContent>
     </Card>
@@ -431,8 +477,8 @@ export function LedgerSection() {
       <div className="flex justify-between items-center">
         <h2 className="text-3xl font-extrabold tracking-tight">Ledger Book</h2>
         <div className="flex gap-4">
-          <Badge className="bg-green-100 text-green-800 hover:bg-green-200 text-sm py-1">Total Earned: ₹{ledger?.totals?.totalNetEarned.toLocaleString()}</Badge>
-          <Badge className="bg-red-100 text-red-800 hover:bg-red-200 text-sm py-1">Total Due: ₹{ledger?.totals?.totalDue.toLocaleString()}</Badge>
+          <Badge className="bg-green-100 text-green-800 hover:bg-green-200 text-sm py-1">Total Earned: ₹{(ledger?.totals?.totalNetEarned || 0).toLocaleString()}</Badge>
+          <Badge className="bg-red-100 text-red-800 hover:bg-red-200 text-sm py-1">Total Due: ₹{(ledger?.totals?.totalDue || 0).toLocaleString()}</Badge>
         </div>
       </div>
 
@@ -529,9 +575,9 @@ export function LedgerSection() {
             <tfoot className="bg-slate-50 border-t-2 border-slate-200 font-bold">
               <tr>
                 <td colSpan={3} className="px-6 py-4 text-right">PAGE TOTALS:</td>
-                <td className="px-6 py-4 text-right">₹{ledger?.totals?.totalRevenue.toLocaleString()}</td>
-                <td className="px-6 py-4 text-right text-green-600">₹{ledger?.totals?.totalNetEarned.toLocaleString()}</td>
-                <td className="px-6 py-4 text-right text-red-600">₹{ledger?.totals?.totalDue.toLocaleString()}</td>
+                <td className="px-6 py-4 text-right">₹{(ledger?.totals?.totalRevenue || 0).toLocaleString()}</td>
+                <td className="px-6 py-4 text-right text-green-600">₹{(ledger?.totals?.totalNetEarned || 0).toLocaleString()}</td>
+                <td className="px-6 py-4 text-right text-red-600">₹{(ledger?.totals?.totalDue || 0).toLocaleString()}</td>
                 <td></td>
               </tr>
             </tfoot>
@@ -839,7 +885,7 @@ export function LaundrySection() {
         <h2 className="text-3xl font-extrabold tracking-tight">Laundry Kanban Pipeline</h2>
         {laundry && (
           <Badge variant="outline" className="text-sm px-3 py-1">
-            Total Revenue: ₹{laundry.totalRevenue.toLocaleString()}
+            Total Revenue: ₹{(laundry?.totalRevenue || 0).toLocaleString()}
           </Badge>
         )}
       </div>

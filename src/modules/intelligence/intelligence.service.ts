@@ -41,12 +41,17 @@ export const intelligenceService = {
     // Manual aggregation because Supabase/PostgREST count is tricky in one line
     const { data: raw } = await supabaseAdmin
       .from('user_telemetry')
-      .select('campus')
+      .select('current_page')
       .gt('last_heartbeat', threshold);
     
     const pulse: Record<string, number> = {};
     raw?.forEach(r => {
-      if (r.campus) pulse[r.campus] = (pulse[r.campus] || 0) + 1;
+      if (r.current_page) {
+        // Group by base path (e.g. /vendors, /profile, /admin)
+        const path = r.current_page.split('?')[0];
+        const group = path === '/' ? 'Home' : path.split('/')[1] || 'Home';
+        pulse[group.toUpperCase()] = (pulse[group.toUpperCase()] || 0) + 1;
+      }
     });
 
     return { success: !error, data: pulse, error: error?.message };
@@ -169,8 +174,12 @@ export const intelligenceService = {
     
     const gtv = payments?.reduce((sum, p) => sum + Number(p.amount), 0) || 0;
 
-    // 2. Conversion (Very simplified stub for now)
-    const funnel = { search: 100, view: 80, book: 40, pay: 20 };
+    // 2. Conversion (Actual from user_telemetry and bookings)
+    const { count: searches } = await supabaseAdmin.from('user_telemetry').select('*', { count: 'exact', head: true }).like('current_page', '%search%').gte('last_heartbeat', today);
+    const { count: views } = await supabaseAdmin.from('user_telemetry').select('*', { count: 'exact', head: true }).like('current_page', '%house%').gte('last_heartbeat', today);
+    const { count: books } = await supabaseAdmin.from('bookings').select('*', { count: 'exact', head: true }).gte('created_at', today);
+    
+    const funnel = { search: searches || 0, view: views || 0, book: books || 0, pay: payments?.length || 0 };
 
     // 3. North Star (Growth * Retention / Burn)
     const northStar = gtv / 1000; // Simplified

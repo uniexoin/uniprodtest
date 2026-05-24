@@ -13,6 +13,7 @@ import { useUIStore } from '@/store/ui.store';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { NotificationCenter } from './notification-center';
 import { ThemeToggle } from './theme-toggle';
+import { LanguageSelector } from './language-selector';
 import { UniExoBrand } from './brand';
 import { haptics } from '@/lib/haptics';
 
@@ -130,6 +131,7 @@ export function Navbar() {
               {isAuthenticated && user ? (
                 <div className="flex items-center gap-3">
                   <NotificationCenter />
+                  <LanguageSelector />
                   <ThemeToggle />
                   <Avatar
                     onClick={openProfileSidebar}
@@ -141,6 +143,7 @@ export function Navbar() {
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
+                  <LanguageSelector />
                   <ThemeToggle />
                   <Button variant="ghost" asChild className="font-bold text-white/80 hover:text-white hover:bg-white/10">
                     <Link href="/login">Login</Link>
@@ -163,6 +166,7 @@ export function Navbar() {
                     </span>
                   )}
                   <NotificationCenter />
+                  <LanguageSelector />
                   <ThemeToggle />
                   <Button
                     onClick={openProfileSidebar}
@@ -178,6 +182,7 @@ export function Navbar() {
                 </>
               ) : (
                 <div className="flex items-center gap-1.5">
+                  <LanguageSelector />
                   <ThemeToggle />
                   <Button variant="ghost" size="sm" asChild className="font-bold text-xs text-white/80 hover:text-white hover:bg-white/10 h-9 px-3">
                     <Link href="/login">Login</Link>
