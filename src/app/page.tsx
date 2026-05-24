@@ -114,7 +114,7 @@ function Landing() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-hidden theme-landing">
+    <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-clip theme-landing">
       {/* Scroll Progress Indicator */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-primary z-[60] origin-left"
@@ -212,7 +212,7 @@ function Landing() {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1, delay: 0.2 }}
-              className="relative hidden lg:block h-full min-h-[600px]"
+              className="relative h-full min-h-[400px] lg:min-h-[600px] mt-10 lg:mt-0 flex justify-center scale-90 sm:scale-100 lg:scale-100"
             >
               <motion.div 
                 style={{ y: heroY }}
@@ -222,7 +222,7 @@ function Landing() {
                   <img
                     src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800&h=1000"
                     alt="Professional Service"
-                    className="rounded-[2.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] object-cover w-[400px] h-[550px] mx-auto transition-transform duration-500 group-hover:rotate-y-6"
+                    className="rounded-[2.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] object-cover w-[300px] h-[450px] lg:w-[400px] lg:h-[550px] mx-auto transition-transform duration-500 group-hover:rotate-y-6"
                   />
                   <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-t from-primary/20 to-transparent pointer-events-none" />
                 </div>
@@ -230,7 +230,7 @@ function Landing() {
                 {/* Floating Notification Badge */}
                 <motion.div 
                   style={{ y: badgeY1 }}
-                  className="glass absolute top-12 -left-16 p-5 rounded-3xl shadow-2xl flex flex-col gap-2 max-w-[220px] animate-float z-30"
+                  className="glass absolute top-8 -left-4 lg:top-12 lg:-left-16 p-4 lg:p-5 rounded-2xl lg:rounded-3xl shadow-2xl flex flex-col gap-2 max-w-[180px] lg:max-w-[220px] animate-float z-30"
                 >
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
@@ -244,7 +244,7 @@ function Landing() {
                 {/* Floating Rating Badge */}
                 <motion.div 
                   style={{ y: badgeY2 }}
-                  className="glass absolute bottom-20 -right-20 p-5 rounded-3xl shadow-2xl flex items-center gap-4 animate-float z-30"
+                  className="glass absolute bottom-12 -right-4 lg:bottom-20 lg:-right-20 p-4 lg:p-5 rounded-2xl lg:rounded-3xl shadow-2xl flex items-center gap-2 lg:gap-4 animate-float z-30"
                 >
                   <div className="flex flex-col">
                     <div className="flex gap-1 text-accent mb-1">
@@ -451,7 +451,7 @@ function Landing() {
               <motion.div 
                 animate={{ y: [0, -20, 0] }}
                 transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                className="absolute -right-16 top-1/3 glass p-4 rounded-2xl shadow-xl z-20 hidden md:block"
+                className="absolute -right-4 lg:-right-16 top-1/3 glass p-4 rounded-2xl shadow-xl z-20"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent">
@@ -564,7 +564,7 @@ function Landing() {
                         <motion.div 
                           animate={{ x: [0, 10, 0] }}
                           transition={{ repeat: Infinity, duration: 3 }}
-                          className="absolute -right-24 top-1/2 -translate-y-1/2 glass p-4 rounded-2xl shadow-2xl w-48 hidden md:block z-20"
+                          className="absolute -right-10 lg:-right-24 top-1/2 -translate-y-1/2 glass p-4 rounded-2xl shadow-2xl w-40 lg:w-48 z-20"
                         >
                           <div className="flex items-center gap-2 mb-2 text-primary">
                             <Zap className="w-4 h-4 fill-current" />
@@ -814,7 +814,7 @@ function Landing() {
               <motion.div 
                 animate={{ x: [0, 10, 0] }}
                 transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                className="absolute -right-10 top-1/2 -translate-y-1/2 space-y-4 hidden md:block"
+                className="absolute -right-4 lg:-right-10 top-1/2 -translate-y-1/2 space-y-4"
               >
                 <div className="glass p-3 rounded-2xl shadow-2xl flex flex-col items-center gap-1 cursor-pointer hover:scale-110 transition-transform">
                   <div className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">₹</div>

@@ -69,7 +69,7 @@ export function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 selection:text-primary-foreground relative font-sans overflow-x-hidden has-bottom-nav md:pb-0 theme-landing">
+    <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 selection:text-primary-foreground relative font-sans overflow-x-clip has-bottom-nav md:pb-0 theme-landing">
       {/* Background Animated Blobs */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -154,67 +154,36 @@ export function Dashboard() {
                 </Button>
               </div>
 
-              {/* Mobile: Horizontal swipeable carousel */}
-              <div className="flex md:hidden gap-4 overflow-x-auto snap-x-mandatory scrollbar-hide -mx-4 px-4 pb-2">
+              {/* Unified Responsive 2x2 Grid for Quick Actions */}
+              <div className="grid grid-cols-2 gap-4 md:gap-6">
                 {quickActions.map((action, idx) => (
-                  <Link key={idx} href={action.href} className="group snap-center flex-shrink-0 w-[75vw]">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: idx * 0.08 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="relative overflow-hidden p-6 rounded-[2rem] bg-surface/40 border border-border/50 active:border-primary/30 transition-all duration-300 h-full flex flex-col justify-between min-h-[200px] backdrop-blur-xl"
-                    >
-                      <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-20`} />
-                      
-                      <div className="relative z-10">
-                        <div className="flex justify-between items-start mb-6">
-                          <div className={`p-4 rounded-2xl bg-surface/60 ${action.iconColor} shadow-xl border border-white/5`}>
-                            <action.icon className="w-8 h-8" />
-                          </div>
-                          <span className="text-[9px] font-black px-2.5 py-1 bg-surface/80 rounded-full tracking-widest text-muted-foreground border border-border">
-                            {action.tag}
-                          </span>
-                        </div>
-                        <h4 className="text-xl font-black mb-1">{action.label}</h4>
-                        <p className="text-muted-foreground text-sm">{action.description}</p>
-                      </div>
-
-                      <div className="relative z-10 mt-6 flex items-center gap-2 text-xs font-bold text-primary">
-                        GO TO SERVICE <ChevronRight className="w-3.5 h-3.5" />
-                      </div>
-                    </motion.div>
-                  </Link>
-                ))}
-              </div>
-
-              {/* Desktop: 2-column grid */}
-              <div className="hidden md:grid grid-cols-2 gap-6">
-                {quickActions.map((action, idx) => (
-                  <Link key={idx} href={action.href} className="group">
+                  <Link key={idx} href={action.href} className="group flex-1">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.1 }}
-                      className="relative overflow-hidden p-8 rounded-[2.5rem] bg-surface/40 border border-border hover:border-primary/30 transition-all duration-500 h-full flex flex-col justify-between backdrop-blur-xl group shadow-2xl"
+                      whileTap={{ scale: 0.95 }}
+                      className="relative overflow-hidden p-5 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] bg-surface/40 border border-border hover:border-primary/30 transition-all duration-500 h-full flex flex-col justify-between backdrop-blur-xl shadow-lg md:shadow-2xl"
                     >
-                      <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+                      <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-20 md:opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
                       
                       <div className="relative z-10">
-                        <div className="flex justify-between items-start mb-8">
-                          <div className={`p-5 rounded-3xl bg-surface/80 ${action.iconColor} group-hover:scale-110 transition-transform duration-500 shadow-2xl border border-white/5`}>
-                            <action.icon className="w-10 h-10" />
+                        <div className="flex flex-col md:flex-row justify-between items-start md:mb-8 gap-3 md:gap-0">
+                          <div className={`p-3 md:p-5 rounded-2xl md:rounded-3xl bg-surface/80 ${action.iconColor} md:group-hover:scale-110 transition-transform duration-500 shadow-xl md:shadow-2xl border border-white/5`}>
+                            <action.icon className="w-6 h-6 md:w-10 md:h-10" />
                           </div>
-                          <span className="text-[10px] font-black px-3 py-1 bg-surface/80 rounded-full tracking-widest text-muted-foreground group-hover:text-foreground transition-colors border border-border">
+                          <span className="text-[8px] md:text-[10px] font-black px-2 md:px-3 py-1 bg-surface/80 rounded-full tracking-widest text-muted-foreground md:group-hover:text-foreground transition-colors border border-border">
                             {action.tag}
                           </span>
                         </div>
-                        <h4 className="text-2xl font-black mb-2 group-hover:translate-x-1 transition-transform duration-500">{action.label}</h4>
-                        <p className="text-muted-foreground group-hover:text-foreground transition-colors">{action.description}</p>
+                        <div className="mt-4 md:mt-0">
+                          <h4 className="text-sm md:text-2xl font-black mb-1 md:mb-2 md:group-hover:translate-x-1 transition-transform duration-500">{action.label}</h4>
+                          <p className="hidden md:block text-muted-foreground group-hover:text-foreground transition-colors text-sm">{action.description}</p>
+                        </div>
                       </div>
 
-                      <div className="relative z-10 mt-12 flex items-center gap-2 text-sm font-bold text-primary opacity-0 group-hover:opacity-100 transition-all duration-500 -translate-x-4 group-hover:translate-x-0">
-                        GO TO SERVICE <ChevronRight className="w-4 h-4" />
+                      <div className="relative z-10 mt-4 md:mt-12 flex items-center gap-1 md:gap-2 text-[10px] md:text-sm font-bold text-primary md:opacity-0 md:group-hover:opacity-100 transition-all duration-500 md:-translate-x-4 md:group-hover:translate-x-0">
+                        GO <ChevronRight className="w-3 h-3 md:w-4 md:h-4" />
                       </div>
                     </motion.div>
                   </Link>
