@@ -118,7 +118,7 @@ export function UniExoDashboard() {
         <MetricCard 
           label="Total Revenue" 
           value={`₹${kpi?.revenue?.total?.toLocaleString() || '0'}`} 
-          subValue={`+₹${kpi?.revenue?.today?.toLocaleString()} today`}
+          subValue={`+₹${(kpi?.revenue?.today || 0).toLocaleString()} today`}
           icon={DollarSign} 
           color="primary" 
         />
