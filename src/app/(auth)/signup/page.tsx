@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Eye, EyeOff, Sparkles, Store, ShieldCheck, ArrowRight, UserPlus } from 'lucide-react';
+import { Eye, EyeOff, Sparkles, Store, ShieldCheck, ArrowRight, ArrowLeft, UserPlus } from 'lucide-react';
 import { useAuthStore } from '@/modules/auth/auth.store';
 import { toast } from 'sonner';
 import { UniExoBrand } from '@/components/brand';
@@ -14,12 +14,44 @@ import { SaaSBackground } from '@/components/saas-background';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/lib/supabase';
 
+const termsContent = (
+  <div className="space-y-4 text-xs sm:text-sm text-white/80 leading-relaxed">
+    <p className="font-bold text-white">Welcome to UniExo Platform.</p>
+    <p>By registering on UniExo, you agree to comply with our community guidelines, campus safety regulations, and fair rental standards.</p>
+    <h4 className="font-black text-secondary uppercase tracking-wider text-[10px] text-accent">1. User Verification & KYC</h4>
+    <p>All members (students & vendors) must complete profile verification. Providing false information, fake IDs, or unverified contact information will result in immediate termination of the account.</p>
+    <h4 className="font-black text-secondary uppercase tracking-wider text-[10px] text-accent">2. Rentals and Transactions</h4>
+    <p>Rental rates, security deposits, and booking procedures are agreed upon between the buyer and vendor. UniExo provides secure token escrow options but is not liable for off-platform transactions.</p>
+    <h4 className="font-black text-secondary uppercase tracking-wider text-[10px] text-accent">3. Conduct & Safety</h4>
+    <p>Any damage to rented vehicles or rooms, failure to pay agreed amounts, or inappropriate behavior will lead to a permanent ban and possible reporting to university authorities.</p>
+  </div>
+);
+
+const privacyContent = (
+  <div className="space-y-4 text-xs sm:text-sm text-white/80 leading-relaxed">
+    <p className="font-bold text-white">UniExo Privacy Commitment.</p>
+    <p>We respect your privacy and only process data essential to safe and secure transaction matching on campus.</p>
+    <h4 className="font-black text-primary uppercase tracking-wider text-[10px] text-accent">1. Data Collected</h4>
+    <p>We collect your email, full name, phone number, university ID details, and business specifications (for vendors) to verify your eligibility on our trusted campus hub.</p>
+    <h4 className="font-black text-primary uppercase tracking-wider text-[10px] text-accent">2. Usage & Protection</h4>
+    <p>Your details are protected using advanced industry-standard encryption protocols. We will never sell or share your data with unauthorized third parties.</p>
+    <h4 className="font-black text-primary uppercase tracking-wider text-[10px] text-accent">3. Account Control</h4>
+    <p>You can request account deletion, data retrieval, or profile updates directly through your account dashboard or support panel at any time.</p>
+  </div>
+);
+
 export default function SignupPage() {
   const router = useRouter();
   const { isAuthenticated, user, _hasHydrated } = useAuthStore();
   const [step, setStep] = useState(0); // 0: Identity, 1: Role, 2: Profile
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [termsOverlay, setTermsOverlay] = useState<{ open: boolean, title: string, content: React.ReactNode }>({
+    open: false,
+    title: '',
+    content: null
+  });
   
   const [formData, setFormData] = useState({
     name: '',
@@ -75,6 +107,12 @@ export default function SignupPage() {
     e.preventDefault();
     if (loading) return;
     
+    if (!acceptedTerms) {
+      toast.error("You must accept the Terms and Conditions and Privacy Policy to register");
+      setError("Please accept the Terms and Conditions and Privacy Policy");
+      return;
+    }
+
     setLoading(true);
     setError('');
 
@@ -147,6 +185,14 @@ export default function SignupPage() {
   return (
     <div className="min-h-[100dvh] bg-background flex items-center justify-center p-4 sm:p-6 font-sans theme-landing relative overflow-hidden selection:bg-primary/30">
       <SaaSBackground />
+
+      <Link 
+        href="/" 
+        className="absolute top-6 left-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/60 dark:bg-black/40 border border-white/60 dark:border-white/10 text-foreground hover:bg-white/80 dark:hover:bg-black/60 transition-all shadow-md backdrop-blur-md text-xs font-bold uppercase tracking-wider group"
+      >
+        <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+        <span>Back to Home</span>
+      </Link>
 
       <AnimatePresence mode="wait">
         <motion.div 
@@ -310,6 +356,34 @@ export default function SignupPage() {
                 </div>
               )}
 
+              <div className="flex items-start gap-3 py-2 px-1">
+                <input 
+                  type="checkbox" 
+                  id="acceptTerms" 
+                  checked={acceptedTerms}
+                  onChange={(e) => setAcceptedTerms(e.target.checked)}
+                  className="mt-1 accent-secondary h-4 w-4 rounded border-white/10 cursor-pointer shrink-0"
+                />
+                <label htmlFor="acceptTerms" className="text-xs text-muted-foreground leading-normal cursor-pointer select-none">
+                  I accept the{" "}
+                  <button 
+                    type="button" 
+                    onClick={() => setTermsOverlay({ open: true, title: "Terms & Conditions", content: termsContent })}
+                    className="text-secondary font-black hover:underline cursor-pointer inline bg-transparent p-0 m-0 border-0"
+                  >
+                    Terms and Conditions
+                  </button>{" "}
+                  and{" "}
+                  <button 
+                    type="button" 
+                    onClick={() => setTermsOverlay({ open: true, title: "Privacy Policy", content: privacyContent })}
+                    className="text-secondary font-black hover:underline cursor-pointer inline bg-transparent p-0 m-0 border-0"
+                  >
+                    Privacy Policy
+                  </button>
+                </label>
+              </div>
+
               {error && (
                 <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="text-red-500 text-xs text-center font-bold bg-red-500/10 py-3 px-4 rounded-xl border border-red-500/20">
                   {error}
@@ -335,6 +409,38 @@ export default function SignupPage() {
           Secured by UniExo Encryption
         </p>
         </motion.div>
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {termsOverlay.open && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in zoom-in-95 duration-200"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              className="w-full max-w-md bg-zinc-950/95 border border-white/10 p-6 sm:p-8 rounded-[2.5rem] shadow-2xl relative flex flex-col max-h-[80vh] text-left"
+            >
+              <div className="flex justify-between items-center mb-4 border-b border-white/10 pb-3">
+                <h3 className="text-lg font-black text-secondary uppercase tracking-wider">{termsOverlay.title}</h3>
+                <button 
+                  type="button"
+                  onClick={() => setTermsOverlay({ open: false, title: '', content: null })}
+                  className="text-muted-foreground hover:text-foreground text-xs font-bold uppercase tracking-widest px-3 py-1 bg-white/5 hover:bg-white/10 rounded-full transition-all"
+                >
+                  Close
+                </button>
+              </div>
+              <div className="overflow-y-auto pr-1 flex-1 custom-scrollbar text-zinc-300">
+                {termsOverlay.content}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );

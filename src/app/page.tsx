@@ -74,6 +74,7 @@ const Counter = ({ value, duration = 2 }: { value: number, duration?: number }) 
 
 function Landing() {
   const [activeTab, setActiveTab] = useState<'house' | 'vehicle' | 'marketplace' | 'laundry'>('house');
+  const router = useRouter();
   
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -200,7 +201,7 @@ function Landing() {
                     className="h-12 pl-12 text-base rounded-2xl border-2 focus-visible:ring-primary/20 bg-surface/50 backdrop-blur-sm placeholder:text-muted-foreground"
                   />
                 </div>
-                <Button size="lg" className="h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-2xl shadow-xl shadow-primary/20 transition-all hover:-translate-y-1 relative overflow-hidden group">
+                <Button onClick={() => router.push('/signup')} size="lg" className="h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-2xl shadow-xl shadow-primary/20 transition-all hover:-translate-y-1 relative overflow-hidden group">
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_2s_infinite] skew-x-[-20deg]" />
                   <span className="relative z-10">Explore Now</span>
                 </Button>
@@ -410,7 +411,7 @@ function Landing() {
               ))}
 
               <motion.div variants={fadeUp} className="pt-6">
-                <Button className="bg-accent hover:bg-accent/90 text-white h-12 px-8 text-base rounded-2xl font-bold shadow-lg shadow-accent/20">
+                <Button onClick={() => router.push('/signup')} className="bg-accent hover:bg-accent/90 text-white h-12 px-8 text-base rounded-2xl font-bold shadow-lg shadow-accent/20">
                   Start Your Search <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </motion.div>
@@ -515,7 +516,7 @@ function Landing() {
               ))}
 
               <motion.div variants={fadeUp} className="pt-6 text-center lg:text-left">
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 px-8 text-base rounded-2xl font-bold shadow-lg shadow-primary/20 relative overflow-hidden group">
+                <Button onClick={() => router.push('/signup')} className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 px-8 text-base rounded-2xl font-bold shadow-lg shadow-primary/20 relative overflow-hidden group">
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_2s_infinite] skew-x-[-20deg]" />
                   <span className="relative z-10 flex items-center">Join as Vendor <ArrowRight className="ml-2 w-5 h-5" /></span>
                 </Button>

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Eye, EyeOff, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, ShieldCheck, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useAuthStore } from '@/modules/auth/auth.store';
 import { toast } from 'sonner';
 import { UniExoBrand } from '@/components/brand';
@@ -107,6 +107,14 @@ export default function LoginPage() {
   return (
     <div className="min-h-[100dvh] bg-background flex items-center justify-center p-4 sm:p-6 theme-landing relative overflow-hidden selection:bg-primary/30">
       <SaaSBackground />
+
+      <Link 
+        href="/" 
+        className="absolute top-6 left-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/60 dark:bg-black/40 border border-white/60 dark:border-white/10 text-foreground hover:bg-white/80 dark:hover:bg-black/60 transition-all shadow-md backdrop-blur-md text-xs font-bold uppercase tracking-wider group"
+      >
+        <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+        <span>Back to Home</span>
+      </Link>
 
       <AnimatePresence mode="wait">
         <motion.div 
