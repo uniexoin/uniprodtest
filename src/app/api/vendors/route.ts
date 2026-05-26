@@ -18,20 +18,26 @@ export const GET = withAuth(async (req, user) => {
       return type;
     };
 
-    const mapped = raw.map(p => ({
-      _id: p.id,
-      businessName: p.vendor_profiles?.[0]?.business_name || p.name,
-      businessType: formatBusinessType(p.vendor_profiles?.[0]?.service_type),
-      businessPhone: p.vendor_profiles?.[0]?.business_phone || p.phone,
-      businessAddress: p.vendor_profiles?.[0]?.business_address,
-      approvalStatus: p.kyc_status || 'pending',
-      createdAt: p.created_at,
-      userId: {
+    const mapped = raw.map(p => {
+      const vp = Array.isArray(p.vendor_profiles)
+        ? p.vendor_profiles[0]
+        : (p.vendor_profiles || {});
+
+      return {
         _id: p.id,
-        name: p.name,
-        email: p.email
-      }
-    }));
+        businessName: vp?.business_name || p.business_name || p.name,
+        businessType: formatBusinessType(vp?.service_type || p.service_type),
+        businessPhone: vp?.business_phone || p.phone,
+        businessAddress: vp?.business_address,
+        approvalStatus: p.kyc_status || 'pending',
+        createdAt: p.created_at,
+        userId: {
+          _id: p.id,
+          name: p.name,
+          email: p.email
+        }
+      };
+    });
 
     return NextResponse.json({ success: true, data: mapped });
   } catch (err: any) {

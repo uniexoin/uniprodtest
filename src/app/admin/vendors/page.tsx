@@ -130,16 +130,12 @@ export default function AdminVendorsPage() {
                   <p className="text-sm text-muted-foreground">
                     Owner: {vendor.userId?.name || 'N/A'} ({vendor.userId?.email || 'N/A'})
                   </p>
-                  {vendor.businessType && (
-                    <p className="text-sm text-muted-foreground">
-                      Type: {vendor.businessType} • Phone: {vendor.businessPhone || 'N/A'}
-                    </p>
-                  )}
-                  {vendor.businessAddress && (
-                    <p className="text-sm text-muted-foreground">
-                      Address: {vendor.businessAddress}
-                    </p>
-                  )}
+                  <p className="text-sm text-muted-foreground">
+                    Type: {vendor.businessType || 'PG/Rooms'} • Phone: {vendor.businessPhone || 'N/A'}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Address: {vendor.businessAddress || 'No Address Provided'}
+                  </p>
                   <p className="text-xs text-muted-foreground">
                     Registered: {new Date(vendor.createdAt).toLocaleDateString()}
                   </p>
