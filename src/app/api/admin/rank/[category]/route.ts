@@ -14,10 +14,14 @@ export const GET = withAuth(async (req: Request, user: any, context: any) => {
       return NextResponse.json({ success: false, error: 'Category required' }, { status: 400 });
     }
 
+    let dbServiceType = category.toLowerCase();
+    if (dbServiceType === 'room') dbServiceType = 'house';
+    if (dbServiceType === 'car') dbServiceType = 'vehicle';
+
     const { data: raw, error } = await supabaseAdmin
       .from('vendor_profiles')
       .select('*, profiles!user_id(*)')
-      .eq('service_type', category.toUpperCase());
+      .eq('service_type', dbServiceType);
 
     if (error) {
       console.error('[API ADMIN RANK GET] Supabase error:', error);
