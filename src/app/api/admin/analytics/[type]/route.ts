@@ -7,7 +7,8 @@ export const GET = withAuth(async (req: Request, user: any, context: any) => {
     return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 403 });
   }
 
-  const type = context?.params?.type;
+  const params = await context?.params;
+  const type = params?.type;
   if (!type) {
     return NextResponse.json({ success: false, error: 'Analytics type required' }, { status: 400 });
   }
@@ -29,14 +30,23 @@ export const GET = withAuth(async (req: Request, user: any, context: any) => {
         .reduce((sum, p) => sum + (p.amount || 0), 0);
 
       // 2. Counts: Users & Active Bookings
-      const { count: usersCount } = await supabaseAdmin
+      const { count: usersCount, error: usersError } = await supabaseAdmin
         .from('profiles')
-        .select('*', { count: 'exact', head: true });
+        .select('id', { count: 'exact', head: true })
+        .eq('role', 'user');
 
-      const { count: activeBookings } = await supabaseAdmin
+      if (usersError) {
+        console.error('[API ADMIN ANALYTICS KPI] Profiles query error:', usersError);
+      }
+
+      const { count: activeBookings, error: bookingsError } = await supabaseAdmin
         .from('bookings')
-        .select('*', { count: 'exact', head: true })
+        .select('id', { count: 'exact', head: true })
         .eq('status', 'confirmed');
+
+      if (bookingsError) {
+        console.error('[API ADMIN ANALYTICS KPI] Bookings query error:', bookingsError);
+      }
 
       return NextResponse.json({
         success: true,
@@ -46,8 +56,8 @@ export const GET = withAuth(async (req: Request, user: any, context: any) => {
             today: todayRevenue || 0,
           },
           counts: {
-            users: usersCount || 0,
-            activeBookings: activeBookings || 0,
+            users: usersCount !== null ? usersCount : 0,
+            activeBookings: activeBookings !== null ? activeBookings : 0,
           }
         }
       });

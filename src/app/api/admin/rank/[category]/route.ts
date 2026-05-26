@@ -9,7 +9,8 @@ export const GET = withAuth(async (req: Request, user: any, context: any) => {
   }
 
   try {
-    const category = context?.params?.category;
+    const params = await context?.params;
+    const category = params?.category;
     if (!category) {
       return NextResponse.json({ success: false, error: 'Category required' }, { status: 400 });
     }
@@ -58,7 +59,8 @@ export const PATCH = withAuth(async (req: Request, user: any, context: any) => {
   }
 
   try {
-    const id = context?.params?.category;
+    const params = await context?.params;
+    const id = params?.category;
     if (!id) {
       return NextResponse.json({ success: false, error: 'Vendor profile ID required' }, { status: 400 });
     }
@@ -78,10 +80,10 @@ export const PATCH = withAuth(async (req: Request, user: any, context: any) => {
     if (error) {
       console.error('[API ADMIN RANK PATCH] Supabase error:', error);
       if (error.code === '42703') {
-        return NextResponse.json({ 
-          success: false, 
-          error: 'The database rank column is missing. Please run migrations or alter table vendor_profiles.' 
-        }, { status: 500 });
+          return NextResponse.json({ 
+            success: false, 
+            error: 'The database rank column is missing. Please run migrations or alter table vendor_profiles.' 
+          }, { status: 500 });
       }
       throw error;
     }

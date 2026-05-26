@@ -204,9 +204,9 @@ export default function SignupPage() {
         <div className="text-center mb-8">
           <motion.div 
             initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: "spring" }}
-            className="w-16 h-16 bg-secondary/10 rounded-2xl flex items-center justify-center mx-auto mb-6"
+            className={`w-16 h-16 ${role === 'user' ? 'bg-primary/10' : 'bg-secondary/10'} rounded-2xl flex items-center justify-center mx-auto mb-6`}
           >
-            <UserPlus className="w-8 h-8 text-secondary" />
+            <UserPlus className={`w-8 h-8 ${role === 'user' ? 'text-primary' : 'text-secondary'}`} />
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
             <UniExoBrand size="lg" className="mb-2 justify-center text-foreground" />
@@ -216,11 +216,11 @@ export default function SignupPage() {
           </motion.h1>
           <div className="flex justify-center gap-2 mt-4">
             {[0, 1, 2].map((i) => (
-              <div key={i} className={`h-1.5 rounded-full transition-all duration-500 ${i <= step ? 'w-8 bg-secondary' : 'w-4 bg-border'}`} />
+              <div key={i} className={`h-1.5 rounded-full transition-all duration-500 ${i <= step ? (role === 'user' ? 'w-8 bg-primary' : 'w-8 bg-secondary') : 'w-4 bg-border'}`} />
             ))}
           </div>
         </div>
-
+ 
         <AnimatePresence mode="wait">
           {step === 0 && (
             <motion.div key="step0" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-6">
@@ -249,37 +249,37 @@ export default function SignupPage() {
                 </svg>
                 Sign up with Google
               </Button>
-
+ 
               <div className="relative py-2">
                 <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10"></div></div>
                 <div className="relative flex justify-center text-xs"><span className="bg-transparent px-2 text-muted-foreground font-bold uppercase tracking-widest">Or</span></div>
               </div>
-
+ 
               <div className="space-y-5">
                 <div className="space-y-2">
                   <Label className="text-foreground text-[11px] font-black uppercase tracking-wider ml-1">Email Address</Label>
-                  <Input name="email" type="email" placeholder="vendor@example.com" value={formData.email} onChange={handleChange} className="h-14 bg-white/40 dark:bg-black/20 border border-white/40 dark:border-white/10 rounded-2xl text-foreground placeholder:text-muted-foreground/60 focus-visible:ring-secondary/30 transition-all text-base px-5 shadow-inner" />
+                  <Input name="email" type="email" placeholder="you@example.com" value={formData.email} onChange={handleChange} className="h-14 bg-white/40 dark:bg-black/20 border border-white/40 dark:border-white/10 rounded-2xl text-foreground placeholder:text-muted-foreground/60 focus-visible:ring-primary/30 transition-all text-base px-5 shadow-inner" />
                 </div>
                 <div className="space-y-2 relative group">
                   <Label className="text-foreground text-[11px] font-black uppercase tracking-wider ml-1">Password</Label>
-                  <Input name="password" type={showPassword ? "text" : "password"} placeholder="•••••••• (Min 6)" value={formData.password} onChange={handleChange} className="h-14 bg-white/40 dark:bg-black/20 border border-white/40 dark:border-white/10 rounded-2xl text-foreground placeholder:text-muted-foreground/60 focus-visible:ring-secondary/30 transition-all text-base px-5 shadow-inner" />
+                  <Input name="password" type={showPassword ? "text" : "password"} placeholder="•••••••• (Min 6)" value={formData.password} onChange={handleChange} className={`h-14 bg-white/40 dark:bg-black/20 border border-white/40 dark:border-white/10 rounded-2xl text-foreground placeholder:text-muted-foreground/60 ${role === 'user' ? 'focus-visible:ring-primary/30' : 'focus-visible:ring-secondary/30'} transition-all text-base px-5 shadow-inner`} />
                   <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-[38px] text-muted-foreground hover:text-foreground transition-colors p-2">
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
                 <div className="space-y-2">
                   <Label className="text-foreground text-[11px] font-black uppercase tracking-wider ml-1">Confirm Password</Label>
-                  <Input name="confirmPassword" type="password" placeholder="••••••••" value={formData.confirmPassword} onChange={handleChange} className="h-14 bg-white/40 dark:bg-black/20 border border-white/40 dark:border-white/10 rounded-2xl text-foreground placeholder:text-muted-foreground/60 focus-visible:ring-secondary/30 transition-all text-base px-5 shadow-inner" />
+                  <Input name="confirmPassword" type="password" placeholder="••••••••" value={formData.confirmPassword} onChange={handleChange} className={`h-14 bg-white/40 dark:bg-black/20 border border-white/40 dark:border-white/10 rounded-2xl text-foreground placeholder:text-muted-foreground/60 ${role === 'user' ? 'focus-visible:ring-primary/30' : 'focus-visible:ring-secondary/30'} transition-all text-base px-5 shadow-inner`} />
                 </div>
               </div>
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button onClick={proceedToRole} className="w-full h-14 bg-secondary text-secondary-foreground font-black text-[13px] tracking-widest uppercase rounded-2xl transition-all shadow-xl shadow-secondary/20 group overflow-hidden relative">
+                <Button onClick={proceedToRole} className={`w-full h-14 ${role === 'user' ? 'bg-primary text-primary-foreground shadow-primary/20' : 'bg-secondary text-secondary-foreground shadow-secondary/20'} font-black text-[13px] tracking-widest uppercase rounded-2xl transition-all shadow-xl group overflow-hidden relative`}>
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] skew-x-[-20deg]" />
                   <span className="relative z-10 flex items-center justify-center gap-2">Next Step <ArrowRight size={16} /></span>
                 </Button>
               </motion.div>
               <div className="text-center pt-4">
-                 <Link href="/login" className="text-muted-foreground text-[11px] font-bold uppercase tracking-wider hover:text-secondary transition-colors underline-offset-4 hover:underline">
+                 <Link href="/login" className={`text-muted-foreground text-[11px] font-bold uppercase tracking-wider ${role === 'user' ? 'hover:text-primary' : 'hover:text-secondary'} transition-colors underline-offset-4 hover:underline`}>
                    Already have access? Log in
                  </Link>
               </div>

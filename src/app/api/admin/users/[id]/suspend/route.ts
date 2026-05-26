@@ -6,7 +6,8 @@ export const PATCH = withAuth(async (req, user, context) => {
   if (user.role !== 'admin') return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 403 });
   
   try {
-    const { id } = context.params;
+    const params = await context?.params;
+    const id = params?.id;
     const { suspended } = await req.json();
     
     const { error } = await supabaseAdmin.from('profiles').update({ is_suspended: suspended }).eq('id', id);

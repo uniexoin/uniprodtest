@@ -9,10 +9,19 @@ export const GET = withAuth(async (req, user) => {
     const { data: raw, error } = await supabaseAdmin.from('profiles').select('*, vendor_profiles(*)').eq('role', 'vendor');
     if (error) throw error;
     
+    const formatBusinessType = (type: string) => {
+      if (!type) return 'Unknown';
+      const t = type.toLowerCase();
+      if (t === 'house' || t === 'room') return 'PG/Rooms';
+      if (t === 'vehicle' || t === 'bike' || t === 'car') return 'Car/Bike Rental';
+      if (t === 'laundry') return 'Laundry Services';
+      return type;
+    };
+
     const mapped = raw.map(p => ({
       _id: p.id,
       businessName: p.vendor_profiles?.[0]?.business_name || p.name,
-      businessType: p.vendor_profiles?.[0]?.business_type || 'Unknown',
+      businessType: formatBusinessType(p.vendor_profiles?.[0]?.service_type),
       businessPhone: p.vendor_profiles?.[0]?.business_phone || p.phone,
       businessAddress: p.vendor_profiles?.[0]?.business_address,
       approvalStatus: p.kyc_status || 'pending',
