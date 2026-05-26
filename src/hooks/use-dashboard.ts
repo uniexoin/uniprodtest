@@ -35,11 +35,26 @@ export const useDashboardRealtime = (role: 'user' | 'vendor' | 'admin') => {
             ['admin', 'payments'],
             ['admin', 'transactions'],
             ['admin', 'reports'],
-            ['admin', 'settings']
+            ['admin', 'settings'],
+            ['admin-kpi'],
+            ['admin-trends'],
+            ['admin-modules'],
+            ['admin-conversion']
         );
     } else if (role === 'vendor') {
-        tables.push('vehicles', 'houses', 'laundry_orders');
-        keys.push(['vendorBookings'], ['vendorVehicles'], ['vendorHouses']);
+        tables.push('vehicles', 'houses', 'laundry_orders', 'payments');
+        keys.push(
+            ['vendorBookings'], 
+            ['vendorVehicles'], 
+            ['vendorHouses'],
+            ['vendorPayments'],
+            ['vendorSalesBreakdown'],
+            ['vendorLedger'],
+            ['vendorDues'],
+            ['vendorBookingTrends'],
+            ['vendorRevenueTimeSeries'],
+            ['vendorRoomOccupancy']
+        );
     } else {
         keys.push(['userBookings'], ['userLaundryOrders'], ['userMarketplaceItems']);
     }

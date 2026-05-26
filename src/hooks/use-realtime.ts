@@ -36,6 +36,14 @@ export const useRealtimeSync = (tables: RealtimeTable[], queryKeys: string[][]) 
             // Also invalidate global dashboard stats if relevant
             queryClient.invalidateQueries({ queryKey: ['vendorDashboardStats'] });
             queryClient.invalidateQueries({ queryKey: ['vendorAnalyticsOverview'] });
+            queryClient.invalidateQueries({ queryKey: ['vendorBookings'] });
+            queryClient.invalidateQueries({ queryKey: ['vendorVehicles'] });
+            queryClient.invalidateQueries({ queryKey: ['vendorHouses'] });
+            queryClient.invalidateQueries({ queryKey: ['vendorPayments'] });
+            queryClient.invalidateQueries({ queryKey: ['admin-kpi'] });
+            queryClient.invalidateQueries({ queryKey: ['admin-trends'] });
+            queryClient.invalidateQueries({ queryKey: ['admin-modules'] });
+            queryClient.invalidateQueries({ queryKey: ['admin-conversion'] });
           }
         }
       )
