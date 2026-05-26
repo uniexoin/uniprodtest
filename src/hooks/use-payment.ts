@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { getAuthHeaders } from '@/lib/api';
 
 interface CreateOrderParams {
     userId: string;
@@ -18,7 +19,10 @@ export const useCreatePaymentOrder = () => {
         mutationFn: async (data: CreateOrderParams) => {
             const res = await fetch('/api/payments/create-order', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    ...getAuthHeaders()
+                },
                 body: JSON.stringify(data),
             });
             const json = await res.json();
@@ -35,7 +39,10 @@ export const useVerifyPayment = () => {
         mutationFn: async (data: VerifyPaymentParams) => {
             const res = await fetch('/api/payments/verify', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    ...getAuthHeaders()
+                },
                 body: JSON.stringify(data),
             });
             const json = await res.json();

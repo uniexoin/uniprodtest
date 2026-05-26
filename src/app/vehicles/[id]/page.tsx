@@ -14,6 +14,7 @@ import { useVehicle } from '@/hooks/use-vehicle';
 import { useCreateBooking } from '@/hooks/use-booking';
 import { useCreatePaymentOrder, useVerifyPayment } from '@/hooks/use-payment';
 import { ListingApprovalStatus, ServiceType } from '@/types';
+import { Lightbox } from '@/components/lightbox';
 
 // Razorpay window interface
 declare global {
@@ -46,6 +47,10 @@ export default function VehicleDetailPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   
   const [activeImage, setActiveImage] = useState<string>('');
+  
+  // Lightbox State
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   useEffect(() => {
     if (startDate && endDate) {
@@ -149,7 +154,7 @@ export default function VehicleDetailPage() {
   };
 
   const handleBookNow = () => {
-    router.push(`/checkout?type=vehicle&id=${id}&name=${encodeURIComponent(vehicle.name)}`);
+    router.push(`/checkout?type=vehicle&id=${id}&name=${encodeURIComponent(vehicle.name)}&startDate=${startDate}&endDate=${endDate}&bookingType=${bookingType}&location=${encodeURIComponent(bookingLocation)}`);
   };
 
   return (
@@ -157,7 +162,7 @@ export default function VehicleDetailPage() {
       {/* Razorpay Checkout Script */}
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
 
-      <div className="container mx-auto px-4 py-8 max-w-6xl theme-car">
+      <div className="container mx-auto px-4 py-8 max-w-6xl theme-car pb-24 lg:pb-8">
         {/* Title & Header */}
         <div className="mb-6">
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">{vehicle.name}</h1>
@@ -179,9 +184,16 @@ export default function VehicleDetailPage() {
             
             {/* Image Gallery */}
             <div className="space-y-4">
-              <div className="aspect-[16/9] overflow-hidden rounded-2xl bg-muted border flex items-center justify-center">
+              <div 
+                className="aspect-[16/9] overflow-hidden rounded-2xl bg-muted border flex items-center justify-center cursor-zoom-in group relative"
+                onClick={() => {
+                  const activeIdx = vehicle.images?.indexOf(activeImage) ?? 0;
+                  setLightboxIndex(activeIdx >= 0 ? activeIdx : 0);
+                  setIsLightboxOpen(true);
+                }}
+              >
                 {activeImage ? (
-                  <img src={activeImage} alt={vehicle.name} className="w-full h-full object-cover" />
+                  <img src={activeImage} alt={vehicle.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102" />
                 ) : (
                   <div className="flex flex-col items-center justify-center text-muted-foreground">
                     <Car className="w-16 h-16 opacity-20 mb-4" />
@@ -304,9 +316,17 @@ export default function VehicleDetailPage() {
                   />
                 </div>
                 
+                <div className="space-y-2">
+                  <Label>Pickup Location (Vendor Location)</Label>
+                  <div className="flex h-10 w-full items-center rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground font-medium">
+                    <MapPin className="w-4 h-4 mr-2 text-primary shrink-0" />
+                    {typeof vehicle.location === 'string' ? vehicle.location : (vehicle as any).location?.address || 'Location TBD'}
+                  </div>
+                </div>
+
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between items-end">
-                    <Label>Required Location for Delivery/Pickup</Label>
+                    <Label>Delivery Location (Optional)</Label>
                     <Button 
                       variant="ghost" 
                       size="sm" 
@@ -319,11 +339,11 @@ export default function VehicleDetailPage() {
                     </Button>
                   </div>
                   <Input 
-                    placeholder="Enter city or specific address..."
+                    placeholder="Enter delivery city or specific address..."
                     value={bookingLocation}
                     onChange={(e) => setBookingLocation(e.target.value)}
                   />
-                  <p className="text-xs text-muted-foreground">This location will be sent to the vendor upon booking.</p>
+                  <p className="text-xs text-muted-foreground">Leave empty if you wish to pick up the vehicle directly from the vendor's location.</p>
                 </div>
 
                 <div className="space-y-2 mb-4">
@@ -361,6 +381,30 @@ export default function VehicleDetailPage() {
           </div>
         </div>
       </div>
+      {/* Mobile Sticky Floating Bar */}
+      {user?.id !== (typeof vehicle.vendorId === 'object' ? vehicle.vendorId?.id || vehicle.vendorId?._id : vehicle.vendorId) && (
+        <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border-t border-border p-4 flex items-center justify-between z-40 shadow-[0_-8px_30px_rgba(0,0,0,0.1)]">
+          <div className="flex flex-col">
+            <span className="text-[10px] uppercase font-bold text-muted-foreground">Total Due</span>
+            <span className="text-lg font-black text-foreground">₹{totalPrice.toLocaleString()}</span>
+          </div>
+          <Button 
+            className="h-12 px-6 rounded-xl font-bold bg-[#8B004A] hover:bg-[#8B004A]/90 text-white flex items-center gap-2 text-xs uppercase tracking-wider"
+            onClick={handleBookNow}
+            disabled={!vehicle.isAvailable || vehicle.approvalStatus !== 'approved'}
+          >
+            Book Now
+          </Button>
+        </div>
+      )}
+
+      <Lightbox 
+        images={vehicle.images || []}
+        currentIndex={lightboxIndex}
+        isOpen={isLightboxOpen}
+        onClose={() => setIsLightboxOpen(false)}
+        onNavigate={(index) => setLightboxIndex(index)}
+      />
     </>
   );
 }

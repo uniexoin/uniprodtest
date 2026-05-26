@@ -14,6 +14,7 @@ import { useAuthStore } from '@/store/auth.store';
 import { useLaundryService } from '@/hooks/use-laundry-services';
 import { useCreateLaundryOrder } from '@/hooks/use-laundry-services';
 import { useCreatePaymentOrder, useVerifyPayment } from '@/hooks/use-payment';
+import { Lightbox } from '@/components/lightbox';
 
 declare global {
   interface Window {
@@ -39,6 +40,10 @@ export default function LaundryDetailPage() {
   const [notes, setNotes] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [pickupType, setPickupType] = useState<'onsite' | 'store'>('store');
+  
+  // Lightbox State
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   if (isLoading) {
     return (
@@ -191,11 +196,14 @@ export default function LaundryDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
             
-            <div className="aspect-[21/9] overflow-hidden rounded-2xl bg-muted border">
+            <div 
+              className="aspect-[21/9] overflow-hidden rounded-2xl bg-muted border cursor-zoom-in group relative"
+              onClick={() => { setLightboxIndex(0); setIsLightboxOpen(true); }}
+            >
               <img 
                 src={service.images?.[0] || 'https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?auto=format&fit=crop&q=80'} 
                 alt={service.name} 
-                className="w-full h-full object-cover" 
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102" 
               />
             </div>
 
@@ -340,6 +348,13 @@ export default function LaundryDetailPage() {
           </div>
         </div>
       </div>
+      <Lightbox 
+        images={service.images || []}
+        currentIndex={lightboxIndex}
+        isOpen={isLightboxOpen}
+        onClose={() => setIsLightboxOpen(false)}
+        onNavigate={(index) => setLightboxIndex(index)}
+      />
     </>
   );
 }

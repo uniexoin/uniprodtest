@@ -32,17 +32,6 @@ export default function GoogleCallbackPage() {
 
         console.log('[GOOGLE CALLBACK] Syncing with server...');
         
-        let pendingData = {};
-        try {
-          const stored = localStorage.getItem('pending_google_signup');
-          if (stored) {
-            pendingData = JSON.parse(stored);
-            localStorage.removeItem('pending_google_signup');
-          }
-        } catch (e) {
-          console.warn('Failed to parse pending google signup data');
-        }
-
         const res = await fetch(`/api/auth/google-sync?_t=${Date.now()}`, {
           method: 'POST',
           headers: { 
@@ -51,8 +40,7 @@ export default function GoogleCallbackPage() {
             'Pragma': 'no-cache'
           },
           body: JSON.stringify({
-            access_token: session.access_token,
-            ...pendingData
+            access_token: session.access_token
           })
         });
 
@@ -61,7 +49,16 @@ export default function GoogleCallbackPage() {
           throw new Error(data.error || "Failed to sync Google account");
         }
 
-        // Setup our app state
+        if (data.profile.onboarding_completed === false) {
+          console.log('[GOOGLE CALLBACK] User needs onboarding, redirecting...');
+          // Keep them authenticated in Supabase but redirect to onboarding before full app access
+          if (isMounted) {
+            router.replace('/onboarding');
+          }
+          return;
+        }
+
+        // Setup our app state for completed users
         const userState: any = {
           id: data.profile.id,
           uniId: data.profile.uniId || '',

@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { getAuthHeaders } from '@/lib/api';
 
 interface CreateBookingParams {
     userId: string;
@@ -21,7 +22,10 @@ export const useCreateBooking = () => {
         mutationFn: async (data: CreateBookingParams) => {
             const res = await fetch('/api/bookings', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    ...getAuthHeaders()
+                },
                 body: JSON.stringify(data),
             });
             const json = await res.json();
@@ -48,7 +52,10 @@ export const useUpdateBookingStatus = () => {
         mutationFn: async ({ bookingId, ...data }: UpdateBookingStatusParams) => {
             const res = await fetch(`/api/bookings/${bookingId}/status`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    ...getAuthHeaders()
+                },
                 body: JSON.stringify(data),
             });
             const json = await res.json();

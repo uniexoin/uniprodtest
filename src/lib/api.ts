@@ -1,5 +1,18 @@
 import axios from 'axios';
 
+export const getAuthHeaders = (): Record<string, string> => {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = localStorage.getItem('uniexo-auth-storage');
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    const token = parsed?.state?.token;
+    return token ? { 'Authorization': `Bearer ${token}` } : {};
+  } catch {
+    return {};
+  }
+};
+
 /**
  * API client for the Next.js API routes.
  */

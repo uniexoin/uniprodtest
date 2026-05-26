@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
-    const { access_token, role, name: customName, phone, university_id, business_name, service_type, onsite_pickup, store_delivery } = await req.json();
+    const { access_token } = await req.json();
 
     if (!access_token) {
       return NextResponse.json({ success: false, error: 'No access token provided' }, { status: 400 });
@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     }
 
     const email = user.email.toLowerCase();
-    const finalName = customName || user.user_metadata?.full_name || user.user_metadata?.name || email.split('@')[0];
+    const finalName = user.user_metadata?.full_name || user.user_metadata?.name || email.split('@')[0];
     const avatar = user.user_metadata?.avatar_url || '';
 
     // Check if profile exists
@@ -57,17 +57,14 @@ export async function POST(req: Request) {
       
       const newProfile = {
         id: user.id, // match the auth.users UUID
-        uni_id: university_id || newUniId,
+        uni_id: newUniId,
         email: email,
         name: finalName,
-        phone: phone || null,
-        role: role || 'user', // use selected role or fallback to user
+        role: 'pending', // Forces onboarding
         auth_provider: 'google',
         avatar_url: avatar,
-        service_type: service_type || null,
-        business_name: business_name || null,
         is_verified: false,
-        onboarding_completed: true,
+        onboarding_completed: false,
       };
 
       const { data: insertedProfile, error: insertError } = await supabase

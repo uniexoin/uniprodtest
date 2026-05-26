@@ -16,8 +16,8 @@ import { api } from '@/lib/api';
 import { useAuthStore } from '@/modules/auth/auth.store';
 import { useHouse } from '@/hooks/use-houses';
 import { useCreateBooking } from '@/hooks/use-booking';
-import { useCreatePaymentOrder, useVerifyPayment } from '@/hooks/use-payment';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Lightbox } from '@/components/lightbox';
 
 // Razorpay window interface
 declare global {
@@ -34,8 +34,6 @@ export default function HouseDetailPage() {
   
   const { data: house, isLoading, error } = useHouse(id);
   const createBooking = useCreateBooking();
-  const createOrder = useCreatePaymentOrder();
-  const verifyPayment = useVerifyPayment();
 
   // Booking state
   const [startDate, setStartDate] = useState('');
@@ -56,6 +54,10 @@ export default function HouseDetailPage() {
   const [selectedVisitDate, setSelectedVisitDate] = useState<string>('');
   const [selectedVisitTime, setSelectedVisitTime] = useState<string>('');
   const [sharingType, setSharingType] = useState<string>('');
+
+  // Lightbox State
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   // Calculate days difference and enforce 12-month limit
   useEffect(() => {
@@ -203,7 +205,10 @@ export default function HouseDetailPage() {
 
           {/* Image Gallery */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-10 h-[300px] md:h-[450px] rounded-2xl overflow-hidden">
-            <div className="md:col-span-2 h-full relative cursor-pointer group">
+            <div 
+              className="md:col-span-2 h-full relative cursor-pointer group"
+              onClick={() => { setLightboxIndex(0); setIsLightboxOpen(true); }}
+            >
               <img 
                 src={house.images?.[0] || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80'} 
                 alt={house.title} 
@@ -214,7 +219,11 @@ export default function HouseDetailPage() {
             {house.images && house.images.length > 1 ? (
               <div className="hidden md:grid col-span-2 grid-cols-2 grid-rows-2 gap-2 h-full">
                 {house.images.slice(1, 5).map((img: string, idx: number) => (
-                  <div key={idx} className="relative cursor-pointer group h-full overflow-hidden">
+                  <div 
+                    key={idx} 
+                    className="relative cursor-pointer group h-full overflow-hidden"
+                    onClick={() => { setLightboxIndex(idx + 1); setIsLightboxOpen(true); }}
+                  >
                     <img 
                       src={img} 
                       alt={`Gallery ${idx + 1}`} 
@@ -478,7 +487,7 @@ export default function HouseDetailPage() {
               <div className="sticky top-24 space-y-6">
                 
                 {/* Actions Card - Hidden for Owner */}
-                {user?.id !== house.vendorId?.toString() && (
+                {user?.id !== (typeof house.vendorId === 'object' ? house.vendorId?.id || house.vendorId?._id : house.vendorId?.toString()) && (
                   <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 pb-6 text-center">
                     <div className="flex gap-3 mb-8">
                       <Button 
@@ -601,7 +610,7 @@ export default function HouseDetailPage() {
       </div>
 
       {/* Floating Action Button (Mobile Only) - Hidden for Owner */}
-      {user?.id !== house.vendorId?.toString() && (
+      {user?.id !== (typeof house.vendorId === 'object' ? house.vendorId?.id || house.vendorId?._id : house.vendorId?.toString()) && (
         <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-4 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-40">
           <div className="flex gap-3 max-w-sm mx-auto">
             <Button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg h-12 shadow-lg shadow-blue-500/30 text-base font-semibold" onClick={() => setIsInterestedModalOpen(true)}>
@@ -833,6 +842,13 @@ export default function HouseDetailPage() {
           </div>
         </DialogContent>
       </Dialog>
+      <Lightbox 
+        images={house.images || []}
+        currentIndex={lightboxIndex}
+        isOpen={isLightboxOpen}
+        onClose={() => setIsLightboxOpen(false)}
+        onNavigate={(index) => setLightboxIndex(index)}
+      />
     </>
   );
 }
