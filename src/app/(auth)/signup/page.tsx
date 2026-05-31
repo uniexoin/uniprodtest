@@ -168,6 +168,11 @@ export default function SignupPage() {
       
       useAuthStore.getState().login(userState, data.token);
 
+      // Set onboarding trigger flag for first-time session
+      try {
+        localStorage.setItem('uniexo_trigger_onboarding', 'true');
+      } catch (e) {}
+
       toast.success("Welcome to UniExo!");
 
       const redirectPath = role === 'vendor' ? '/dashboard' : '/';

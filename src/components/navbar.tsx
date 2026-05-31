@@ -80,7 +80,7 @@ export function Navbar() {
   return (
     <>
       {/* ── Top Navbar ─────────────────────────────────────────── */}
-      <nav className="sticky top-0 z-50 w-full bg-primary border-b border-white/10 theme-landing">
+      <nav className="sticky top-0 z-50 w-full bg-[#0D1B2A] dark:bg-black/60 dark:backdrop-blur-xl border-b border-white/10 theme-landing">
         <div className="container mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
           <div className="flex h-14 md:h-[4.5rem] items-center justify-between">
             {/* Logo & Left Content */}

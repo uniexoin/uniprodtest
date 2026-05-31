@@ -176,13 +176,14 @@ function Landing() {
               <motion.div variants={fadeUp} className="mb-8">
                 <div className="flex flex-wrap gap-4">
                   {[
-                    { icon: Car, label: 'Vehicle', color: 'primary' },
-                    { icon: HomeIcon, label: 'Room', color: 'primary' },
-                    { icon: ShoppingBag, label: 'Item', color: 'primary' },
-                    { icon: WashingMachine, label: 'Laundry', color: 'primary' }
+                    { icon: Car, label: 'Vehicle', color: 'primary', href: '/vehicles' },
+                    { icon: HomeIcon, label: 'Room', color: 'primary', href: '/houses' },
+                    { icon: ShoppingBag, label: 'Item', color: 'primary', href: '/marketplace' },
+                    { icon: WashingMachine, label: 'Laundry', color: 'primary', href: '/laundry' }
                   ].map((item, idx) => (
                     <motion.div 
                       key={idx}
+                      onClick={() => router.push(item.href)}
                       whileHover={{ y: -5, scale: 1.02 }}
                       className={`glass p-4 rounded-2xl flex flex-col items-center justify-center w-28 h-28 cursor-pointer transition-all hover:border-primary/50 group ${item.label === 'Room' ? 'ring-2 ring-accent shadow-accent/10' : ''}`}
                     >

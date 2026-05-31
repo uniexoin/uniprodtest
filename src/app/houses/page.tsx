@@ -1,125 +1,37 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Home, MapPin, Star, ShieldCheck, Heart, Coffee, Wifi, Car, ArrowRight, LayoutGrid, List } from 'lucide-react';
+import { Home, Search } from 'lucide-react';
 import { useHouses } from '@/hooks/use-houses';
 import { useAuthStore } from '@/store/auth.store';
-import Link from 'next/link';
 import { AddHouseDialog } from '@/components/add-house-dialog';
-import { Badge } from '@/components/ui/badge';
-import { haptics } from '@/lib/haptics';
+import { AirbnbListingCard } from '@/components/airbnb-listing-card';
 
-function HouseCard({ room }: { room: any }) {
+function VendorGroup({ vendorName, rooms }: { vendorName: string; rooms: any[] }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      whileHover={{ y: -10 }}
-      whileTap={{ scale: 0.97 }}
-      className="group relative flex flex-col glass rounded-[2rem] md:rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-primary/30 shadow-2xl glow-border tap-feedback"
-    >
-      <Link href={room.href} className="block">
-        <div className="relative aspect-[4/3] overflow-hidden">
-          {room.image ? (
-            <img 
-              src={room.image} 
-              alt={room.title} 
-              className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" 
-            />
-          ) : (
-            <div className="w-full h-full bg-surface flex flex-col items-center justify-center text-muted-foreground">
-              <Home className="w-16 h-16 opacity-10" />
-            </div>
-          )}
-          
-          {/* Overlay Gradients */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
-          <div className="absolute top-4 right-4 flex flex-col gap-2">
-             <button className="p-2.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-white hover:text-accent transition-colors shadow-xl">
-                <Heart className="w-4 h-4" />
-             </button>
-          </div>
-
-          <div className="absolute bottom-4 left-4 flex gap-2">
-            {room.isAvailable === false ? (
-              <Badge className="bg-destructive text-destructive-foreground font-black text-[10px] uppercase tracking-tighter px-3 border-none">
-                BOOKED
-              </Badge>
-            ) : (
-              <Badge className="bg-primary text-primary-foreground font-black text-[10px] uppercase tracking-tighter px-3 border-none">
-                VERIFIED
-              </Badge>
-            )}
-            {room.propertyType === 'pg' && (
-              <Badge className="bg-secondary text-secondary-foreground font-black text-[10px] uppercase tracking-tighter px-3 border-none">
-                PREMIUM PG
-              </Badge>
-            )}
-          </div>
-        </div>
-
-        <div className="p-6">
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="font-black text-xl leading-tight group-hover:text-primary transition-colors line-clamp-1">{room.title}</h3>
-            <div className="flex items-center gap-1 text-xs font-black text-primary">
-              <Star className="w-3 h-3 fill-current" />
-              <span>4.9</span>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-1.5 text-muted-foreground text-sm font-medium mb-4">
-            <MapPin className="w-3.5 h-3.5" />
-            <span className="line-clamp-1">{room.rawLocation}</span>
-          </div>
-
-          <div className="flex gap-4 mb-6">
-             <div className="flex items-center gap-1.5 text-muted-foreground">
-                <Wifi className="w-4 h-4" />
-                <span className="text-[10px] font-bold">WIFI</span>
-             </div>
-             <div className="flex items-center gap-1.5 text-muted-foreground">
-                <Car className="w-4 h-4" />
-                <span className="text-[10px] font-bold">PARKING</span>
-             </div>
-             <div className="flex items-center gap-1.5 text-muted-foreground">
-                <Coffee className="w-4 h-4" />
-                <span className="text-[10px] font-bold">FOOD</span>
-             </div>
-          </div>
-
-          <div className="pt-4 border-t border-border flex items-center justify-between">
-            <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-black text-foreground">₹{room.propertyType === 'pg' ? room.pricePerMonth : room.pricePerDay}</span>
-              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">/ {room.propertyType === 'pg' ? 'MONTH' : 'DAY'}</span>
-            </div>
-            <div className="w-10 h-10 rounded-2xl bg-surface flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500">
-               <ArrowRight className="w-5 h-5" />
-            </div>
-          </div>
-        </div>
-      </Link>
-    </motion.div>
-  );
-}
-
-function VendorGroup({ vendorName, rooms }: { vendorName: string, rooms: any[] }) {
-  return (
-    <div className="space-y-8 mb-20 relative">
-      <div className="flex items-center gap-4 mb-10">
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
-        <div className="flex flex-col items-center">
-           <span className="text-[10px] font-black tracking-[0.3em] text-muted-foreground uppercase mb-1">MANAGED BY</span>
-           <h2 className="text-2xl font-black tracking-tighter text-foreground">{vendorName}</h2>
-        </div>
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
+    <div className="py-6">
+      <div className="flex items-center gap-4 mb-6">
+        <h2 className="text-base font-semibold text-foreground whitespace-nowrap">{vendorName}</h2>
+        <div className="h-px flex-1 bg-border" />
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {rooms.map(room => (
-          <HouseCard key={room.id} room={room} />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {rooms.map((room: any) => (
+          <AirbnbListingCard
+            key={room.id}
+            id={room.id}
+            title={room.title}
+            subtitle={room.rawLocation}
+            secondaryInfo={`Managed by ${room.vendorName}`}
+            images={[room.image]}
+            price={room.propertyType === 'pg' ? room.pricePerMonth : room.pricePerDay}
+            priceUnit={room.propertyType === 'pg' ? 'month' : 'day'}
+            rating={4.9}
+            badge={room.isAvailable === false ? 'BOOKED' : 'VERIFIED'}
+            badgeVariant={room.isAvailable === false ? 'default' : 'success'}
+            href={room.href}
+          />
         ))}
       </div>
     </div>
@@ -154,118 +66,98 @@ export default function HousesPage() {
     return true;
   });
 
+  const filterOptions = [
+    { key: 'all' as const, label: 'All stays' },
+    { key: 'pg' as const, label: 'PGs' },
+    { key: 'room' as const, label: 'Rooms' },
+  ];
+
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 pb-20 theme-house">
-      {/* Hero Header */}
-      <div className="relative pt-20 pb-16 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="flex flex-col md:flex-row justify-between items-end gap-8">
-            <div className="max-w-2xl">
-               <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-               >
-                 <Badge className="bg-primary/10 text-primary border-primary/20 mb-4 font-black tracking-widest px-4 py-1">
-                    VERIFIED STAYS
-                 </Badge>
-                 <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] mb-6">
-                    Find your <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-primary">Perfect Stay.</span>
-                 </h1>
-                 <p className="text-muted-foreground text-lg font-medium">Explore hand-picked PGs and Rooms verified for quality and safety across the campus.</p>
-               </motion.div>
-            </div>
-            {isVendor && <AddHouseDialog />}
+    <div className="min-h-screen bg-background text-foreground pb-20 theme-house">
+      {/* Header */}
+      <div className="container mx-auto px-6 pt-8 pb-2">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-semibold text-foreground">Stays</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Explore verified PGs and rooms near campus
+            </p>
           </div>
+          {isVendor && <AddHouseDialog />}
         </div>
       </div>
 
       <div className="container mx-auto px-6">
         {/* Filter Bar */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mb-16 p-2 bg-surface/40 border border-border rounded-3xl backdrop-blur-3xl">
-          <div className="flex gap-2">
-             <button 
-                onClick={() => setTypeFilter('all')}
-                className={`px-8 py-3 rounded-2xl text-xs font-black tracking-widest transition-all ${typeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-xl shadow-primary/20' : 'text-muted-foreground hover:text-foreground'}`}
-             >
-                ALL STAYS
-             </button>
-             <button 
-                onClick={() => setTypeFilter('pg')}
-                className={`px-8 py-3 rounded-2xl text-xs font-black tracking-widest transition-all ${typeFilter === 'pg' ? 'bg-primary text-primary-foreground shadow-xl shadow-primary/20' : 'text-muted-foreground hover:text-foreground'}`}
-             >
-                PGs ONLY
-             </button>
-             <button 
-                onClick={() => setTypeFilter('room')}
-                className={`px-8 py-3 rounded-2xl text-xs font-black tracking-widest transition-all ${typeFilter === 'room' ? 'bg-primary text-primary-foreground shadow-xl shadow-primary/20' : 'text-muted-foreground hover:text-foreground'}`}
-             >
-                ROOMS ONLY
-             </button>
-          </div>
-          
-          <div className="hidden md:flex items-center gap-6 pr-6">
-             <div className="text-xs font-black text-zinc-500 tracking-widest uppercase">
-                {filteredRooms.length} RESULTS FOUND
-             </div>
-             <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" className="text-lime-400"><LayoutGrid className="w-4 h-4" /></Button>
-                <Button variant="ghost" size="icon" className="text-zinc-600"><List className="w-4 h-4" /></Button>
-             </div>
-          </div>
+        <div className="flex items-center gap-2 py-4 overflow-x-auto scrollbar-hide border-b border-border mb-6">
+          {filterOptions.map((opt) => (
+            <button
+              key={opt.key}
+              onClick={() => setTypeFilter(opt.key)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
+                typeFilter === opt.key
+                  ? 'bg-foreground text-background'
+                  : 'bg-transparent text-muted-foreground border border-border hover:border-foreground hover:text-foreground'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+
+          <span className="ml-auto text-sm text-muted-foreground whitespace-nowrap hidden sm:inline">
+            {filteredRooms.length} {filteredRooms.length === 1 ? 'result' : 'results'}
+          </span>
         </div>
 
+        {/* Content */}
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 py-20">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 py-6">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="aspect-[4/5] rounded-[2rem] bg-white/[0.02] border border-white/5 animate-pulse" />
+              <div key={i} className="space-y-3">
+                <div className="aspect-square rounded-xl bg-muted animate-pulse" />
+                <div className="h-4 bg-muted animate-pulse rounded w-2/3" />
+                <div className="h-3 bg-muted animate-pulse rounded w-1/2" />
+                <div className="h-4 bg-muted animate-pulse rounded w-1/4" />
+              </div>
             ))}
           </div>
         ) : (
-          <div className="space-y-12">
-            <AnimatePresence mode="wait">
-               <motion.div
-                 key={typeFilter}
-                 initial={{ opacity: 0 }}
-                 animate={{ opacity: 1 }}
-                 exit={{ opacity: 0 }}
-                 transition={{ duration: 0.3 }}
-               >
-                {Object.entries(
-                  filteredRooms.reduce((acc: any, room: any) => {
-                    const vendorName = room.vendorName || 'Independent Hosts';
-                    if (!acc[vendorName]) {
-                      acc[vendorName] = { rooms: [] };
-                    }
-                    acc[vendorName].rooms.push(room);
-                    return acc;
-                  }, {} as Record<string, { rooms: typeof filteredRooms }>)
-                )
-                .sort((a, b) => a[0].localeCompare(b[0]))
-                .map(([vendorName, data]: [string, any]) => (
-                  <VendorGroup 
-                    key={vendorName} 
-                    vendorName={vendorName} 
-                    rooms={data.rooms} 
-                  />
-                ))}
+          <div>
+            {Object.entries(
+              filteredRooms.reduce((acc: any, room: any) => {
+                const vendorName = room.vendorName || 'Independent Hosts';
+                if (!acc[vendorName]) {
+                  acc[vendorName] = { rooms: [] };
+                }
+                acc[vendorName].rooms.push(room);
+                return acc;
+              }, {} as Record<string, { rooms: typeof filteredRooms }>)
+            )
+              .sort((a, b) => a[0].localeCompare(b[0]))
+              .map(([vendorName, data]: [string, any]) => (
+                <VendorGroup
+                  key={vendorName}
+                  vendorName={vendorName}
+                  rooms={data.rooms}
+                />
+              ))}
 
-                {filteredRooms.length === 0 && (
-                  <div className="text-center py-40 border border-dashed border-white/10 rounded-[3rem]">
-                    <Home className="w-16 h-16 text-zinc-800 mx-auto mb-6" />
-                    <h3 className="text-2xl font-black mb-2">No matches found</h3>
-                    <p className="text-zinc-500">We couldn't find any stays matching your criteria.</p>
-                    <Button 
-                      onClick={() => setTypeFilter('all')}
-                      variant="outline" 
-                      className="mt-8 border-lime-400/30 text-lime-400 hover:bg-lime-400/5 rounded-2xl px-10 h-14 font-black"
-                    >
-                      CLEAR FILTERS
-                    </Button>
-                  </div>
-                )}
-               </motion.div>
-            </AnimatePresence>
+            {filteredRooms.length === 0 && (
+              <div className="text-center py-24">
+                <Home className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-foreground mb-1">No stays found</h3>
+                <p className="text-sm text-muted-foreground mb-6">
+                  We couldn't find any stays matching your criteria.
+                </p>
+                <Button
+                  onClick={() => setTypeFilter('all')}
+                  variant="outline"
+                  className="rounded-full px-6"
+                >
+                  Clear filters
+                </Button>
+              </div>
+            )}
           </div>
         )}
       </div>

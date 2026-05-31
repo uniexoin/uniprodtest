@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Navbar } from "@/components/navbar";
@@ -12,6 +12,7 @@ import { UniExoProvider } from "@/components/providers/uniexo-provider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import { IntelligencePulse } from "@/components/intelligence-pulse";
+import { OnboardingGuide } from "@/components/onboarding-guide";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,9 +24,59 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const nunitoSans = Nunito_Sans({
+  variable: "--font-nunito-sans",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
+
 export const metadata: Metadata = {
-  title: "UniExo - All-in-One Multi-Service Platform",
-  description: "Experience the premium adaptive UI of UniExo. Vehicles, Houses, Laundry, and Marketplace.",
+  title: {
+    default: "UniExo - All-in-One Multi-Service Platform",
+    template: "%s | UniExo"
+  },
+  description: "Experience the premium adaptive UI of UniExo. Rent elite vehicles, find verified stays & rooms, trade used marketplace products, and book professional campus laundry services instantly.",
+  keywords: [
+    "UniExo", "UniExo Platform", "Campus Rentals", "PG Accommodation", "Hostel Search", 
+    "Campus Vehicle Rental", "Student Marketplace", "Campus Laundry", "Verified Rooms"
+  ],
+  authors: [{ name: "UniExo Team", url: "https://uniexo.in" }],
+  creator: "UniExo Team",
+  metadataBase: new URL("https://uniexo.in"),
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  openGraph: {
+    title: "UniExo - All-in-One Multi-Service Platform",
+    description: "Experience the premium adaptive UI of UniExo. Vehicles, Houses, Laundry, and Marketplace.",
+    url: "https://uniexo.in",
+    siteName: "UniExo",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "UniExo - All-in-One Multi-Service Platform",
+    description: "Experience the premium adaptive UI of UniExo. Vehicles, Houses, Laundry, and Marketplace.",
+  },
+};
+
+export const viewport = {
+  themeColor: "#0D1B2A",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({
@@ -36,12 +87,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} ${nunitoSans.variable} antialiased min-h-screen flex flex-col font-[family-name:var(--font-nunito-sans)]`}
       >
         <Providers>
           <UniExoProvider>
             <CacheManager />
             <IntelligencePulse />
+            <OnboardingGuide />
             <Navbar />
             <GlobalProfileSidebar />
             <main className="flex-1 flex flex-col">

@@ -388,25 +388,29 @@ function CustomTooltip({ active, payload, label }: any) {
 
 function KPICard({ title, value, icon: Icon, trend, trendLabel, subtitle, description, gradient, insight }: any) {
   return (
-    <Card className="border-0 shadow-xl bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 group">
+    <Card className="border-0 shadow-[0_15px_30px_-5px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)] bg-white dark:bg-zinc-900/90 backdrop-blur-2xl rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-rose-500/10 dark:hover:shadow-rose-950/20 transition-all duration-500 hover:-translate-y-1.5 group relative border border-white/50 dark:border-white/5">
       <CardContent className="p-0">
         <div className={`h-1.5 w-full bg-gradient-to-r ${gradient}`} />
-        <div className="p-3 sm:p-6 flex flex-col justify-between h-full min-h-[190px] sm:min-h-[240px]">
+        
+        {/* Ambient background light glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 rounded-full bg-rose-500/5 dark:bg-rose-500/10 blur-3xl pointer-events-none group-hover:scale-150 transition-all duration-700" />
+        
+        <div className="relative z-10 p-4 sm:p-6 flex flex-col justify-between h-full min-h-[190px] sm:min-h-[240px]">
           <div>
             <div className="flex justify-between items-start mb-2 sm:mb-4">
-              <div className={`p-1.5 sm:p-3 rounded-lg sm:rounded-2xl bg-slate-50 dark:bg-zinc-800/50 group-hover:scale-110 transition-transform duration-500`}>
-                <Icon className="w-4 h-4 sm:w-6 sm:h-6 text-slate-600 dark:text-zinc-300" />
+              <div className={`p-2.5 sm:p-3 rounded-2xl bg-gradient-to-br ${gradient} text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-md shadow-rose-500/25`}>
+                <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
               {trend && (
-                <div className="flex items-center gap-0.5 sm:gap-1 bg-green-50 dark:bg-green-950/30 text-green-600 dark:text-green-400 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-xs font-black">
-                  <TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                <div className="flex items-center gap-0.5 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full text-[9px] sm:text-xs font-black shadow-sm">
+                  <TrendingUp className="w-2.5 h-2.5" />
                   {trend}
                 </div>
               )}
             </div>
             <div className="space-y-0.5 sm:space-y-1">
-              <p className="text-[9px] sm:text-xs font-black text-slate-400 dark:text-zinc-500 uppercase tracking-widest">{title}</p>
-              <p className="text-lg sm:text-3xl font-black text-slate-900 dark:text-zinc-100 tracking-tighter truncate">{value}</p>
+              <p className="text-[9px] sm:text-xs font-black text-slate-400 dark:text-zinc-500 uppercase tracking-widest leading-none">{title}</p>
+              <p className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tighter truncate leading-tight group-hover:text-[#8B004A] dark:group-hover:text-rose-400 transition-colors">{value}</p>
             </div>
           </div>
           <div>
@@ -417,11 +421,11 @@ function KPICard({ title, value, icon: Icon, trend, trendLabel, subtitle, descri
               <p className="text-[10px] sm:text-xs text-slate-400 dark:text-zinc-500 font-bold mt-1 sm:mt-2">{subtitle}</p>
             )}
             
-            {/* Live descriptive data insight */}
+            {/* Live dynamic metadata insight */}
             {insight && (
-              <div className="mt-3 p-2 rounded-xl bg-slate-100/50 dark:bg-zinc-800/50 border border-slate-200/20 dark:border-zinc-800/20 flex items-start gap-1.5 animate-pulse">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping mt-1 shrink-0" />
-                <span className="text-[7.5px] sm:text-[9.5px] leading-tight font-medium text-slate-600 dark:text-zinc-300">
+              <div className="mt-3.5 p-2.5 rounded-2xl bg-slate-50 dark:bg-zinc-800/40 border border-slate-200/50 dark:border-white/5 flex items-start gap-2 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] group-hover:border-[#8B004A]/20 dark:group-hover:border-rose-500/20 transition-all duration-300">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mt-0.5 shrink-0 shadow-sm shadow-emerald-500/50" />
+                <span className="text-[7.5px] sm:text-[9.5px] leading-relaxed font-bold text-slate-600 dark:text-zinc-300">
                   {insight}
                 </span>
               </div>

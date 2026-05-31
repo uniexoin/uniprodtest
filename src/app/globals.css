@@ -22,11 +22,12 @@
   }
 
   .dark {
-    --background: #121212;
-    --foreground: #F4F4F4;
-    --muted-foreground: #F4F4F490;
-    --surface: #1E1E1E;
-    --border: #F4F4F420;
+    --background: #08090C;
+    --foreground: #F8FAFC;
+    --muted-foreground: #94A3B8;
+    --surface: #11131A;
+    --border: rgba(255, 255, 255, 0.08);
+    --ring: #E11948;
   }
 
   /* ── Landing Page Theme ────────────────────── */
@@ -49,13 +50,14 @@
     --primary-foreground: #0D1B2A;
     --secondary: #1B2A4A;
     --secondary-foreground: #F4F4F4;
-    --accent: #C9A84C;
-    --accent-foreground: #0D1B2A;
-    --background: #121212;
-    --foreground: #F4F4F4;
-    --muted-foreground: #F4F4F490;
-    --surface: #1E1E1E;
-    --border: #F4F4F415;
+    --accent: #E11948;
+    --accent-foreground: #FFFFFF;
+    --background: #08090C;
+    --foreground: #F8FAFC;
+    --muted-foreground: #94A3B8;
+    --surface: #11131A;
+    --border: rgba(255, 255, 255, 0.06);
+    --ring: #E11948;
   }
 
   /* ── Car Rental Theme ──────────────────────── */
@@ -265,6 +267,73 @@
     filter: blur(8px);
   }
   .glow-border:hover::after { opacity: 0.4; }
+
+  /* ── Airbnb-Style Utilities ────────────────── */
+  .airbnb-card-image {
+    transition: transform 0.3s ease;
+  }
+  .group:hover .airbnb-card-image {
+    transform: scale(1.04);
+  }
+  .airbnb-carousel-btn {
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.15s ease;
+  }
+  .group:hover .airbnb-carousel-btn {
+    opacity: 1;
+  }
+  .airbnb-carousel-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  }
+  .airbnb-carousel-btn:active {
+    transform: scale(0.95);
+  }
+  .airbnb-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,0.6);
+    transition: all 0.2s ease;
+  }
+  .airbnb-dot.active {
+    background: #fff;
+    width: 7px; height: 7px;
+  }
+  .airbnb-filter-pill {
+    padding: 8px 16px;
+    border-radius: 30px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    cursor: pointer;
+    color: var(--foreground);
+    background: transparent;
+  }
+  .airbnb-filter-pill:hover {
+    border-color: var(--foreground);
+  }
+  .airbnb-filter-pill.active {
+    background: var(--foreground);
+    color: var(--background);
+    border-color: var(--foreground);
+  }
+
+  /* ── Onboarding Overlay ─────────────────────── */
+  .onboarding-backdrop {
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+  .onboarding-tooltip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .dark .onboarding-tooltip {
+    box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3);
+  }
 }
 
 /* ── Animation Keyframes ───────────────────────── */

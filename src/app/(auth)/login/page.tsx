@@ -82,6 +82,11 @@ export default function LoginPage() {
       };
       
       useAuthStore.getState().login(userState, data.token);
+      
+      // Set onboarding trigger flag for first-time session
+      try {
+        localStorage.setItem('uniexo_trigger_onboarding', 'true');
+      } catch (e) {}
 
       toast.success("UniExo Access Granted");
 

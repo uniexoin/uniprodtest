@@ -211,16 +211,16 @@ function CheckoutContent() {
 
   if (paymentSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-slate-900 via-zinc-950 to-[#5B2C6F] p-4 text-white">
-        <Card className="p-10 text-center max-w-md mx-auto shadow-2xl border border-white/10 rounded-3xl bg-zinc-900/60 backdrop-blur-2xl text-white">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-background via-surface to-primary/10 dark:from-slate-950 dark:via-zinc-950 dark:to-primary/10 p-4 text-foreground">
+        <Card className="p-10 text-center max-w-md mx-auto shadow-2xl border border-border rounded-3xl bg-surface/80 backdrop-blur-2xl text-foreground dark:bg-zinc-900/60 dark:border-white/10">
           <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
-            <CheckCircle className="w-10 h-10 text-emerald-400" />
+            <CheckCircle className="w-10 h-10 text-emerald-500 dark:text-emerald-400" />
           </div>
-          <h2 className="text-3xl font-black mb-3 uppercase tracking-tighter bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">Booking Confirmed!</h2>
-          <p className="text-zinc-400 text-sm mb-8 leading-relaxed">Your payment was fully secured and verified. The vendor has been updated in real-time.</p>
+          <h2 className="text-3xl font-black mb-3 uppercase tracking-tighter bg-gradient-to-r from-emerald-500 to-teal-500 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">Booking Confirmed!</h2>
+          <p className="text-muted-foreground text-sm mb-8 leading-relaxed">Your payment was fully secured and verified. The vendor has been updated in real-time.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button onClick={() => router.push('/dashboard')} className="bg-white hover:bg-zinc-100 text-zinc-950 rounded-2xl h-12 font-bold px-8 shadow-lg active:scale-95 transition-all">Go to Dashboard</Button>
-            <Button variant="outline" onClick={() => router.push(serviceType === 'house' ? '/houses' : '/vehicles')} className="border-white/10 text-white hover:bg-white/5 rounded-2xl h-12 font-bold px-8 active:scale-95 transition-all">Browse More</Button>
+            <Button onClick={() => router.push('/dashboard')} className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-2xl h-12 font-bold px-8 shadow-lg active:scale-95 transition-all">Go to Dashboard</Button>
+            <Button variant="outline" onClick={() => router.push(serviceType === 'house' ? '/houses' : '/vehicles')} className="border-border text-foreground hover:bg-surface rounded-2xl h-12 font-bold px-8 active:scale-95 transition-all">Browse More</Button>
           </div>
         </Card>
       </div>
@@ -229,10 +229,10 @@ function CheckoutContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-10 h-10 animate-spin text-[#8B004A]" />
-          <span className="text-sm font-bold text-zinc-500 uppercase tracking-widest animate-pulse">Assembling Secure Checkout...</span>
+          <Loader2 className="w-10 h-10 animate-spin text-primary" />
+          <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest animate-pulse">Assembling Secure Checkout...</span>
         </div>
       </div>
     );
@@ -240,11 +240,11 @@ function CheckoutContent() {
 
   if (!serviceData) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
-        <Card className="p-8 text-center max-w-sm bg-zinc-900 border border-white/5 rounded-3xl text-white shadow-2xl">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="p-8 text-center max-w-sm bg-surface border border-border rounded-3xl text-foreground shadow-2xl">
           <h2 className="text-xl font-bold mb-2">Listing Not Found</h2>
-          <p className="text-zinc-500 text-sm mb-6 leading-relaxed">The requested service could not be loaded or has been archived by the vendor.</p>
-          <Button onClick={() => router.back()} className="bg-[#8B004A] hover:bg-[#8B004A]/90 text-white rounded-xl w-full h-11 font-bold">Go Back</Button>
+          <p className="text-muted-foreground text-sm mb-6 leading-relaxed">The requested service could not be loaded or has been archived by the vendor.</p>
+          <Button onClick={() => router.back()} className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl w-full h-11 font-bold">Go Back</Button>
         </Card>
       </div>
     );
@@ -256,29 +256,29 @@ function CheckoutContent() {
   return (
     <>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-zinc-950 to-slate-900 text-white font-sans selection:bg-[#8B004A]/30 pb-28 lg:pb-12">
+      <div className="min-h-screen bg-gradient-to-b from-surface via-background to-surface dark:from-[#08090C] dark:via-[#11131A] dark:to-[#08090C] text-foreground font-sans selection:bg-primary/30 pb-28 lg:pb-12 relative overflow-hidden">
         
         {/* Animated Background Mesh Glow */}
-        <div className="absolute top-0 inset-x-0 h-[40vh] bg-gradient-to-b from-[#8B004A]/10 to-transparent pointer-events-none blur-3xl" />
+        <div className="absolute top-0 inset-x-0 h-[40vh] bg-gradient-to-b from-primary/10 to-transparent pointer-events-none blur-3xl" />
 
         <div className="max-w-5xl mx-auto px-4 py-8 relative z-10">
           {/* Header */}
-          <button onClick={() => router.back()} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-500 hover:text-white mb-8 transition-colors">
+          <button onClick={() => router.back()} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground mb-8 transition-colors bg-transparent border-0 cursor-pointer">
             <ArrowLeft className="w-4 h-4" /> Back to listing
           </button>
 
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-black tracking-tighter uppercase leading-none mb-2">Secure Checkout</h1>
-              <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-[#8B004A] rounded-full animate-ping" />
+              <h1 className="text-3xl sm:text-4xl font-black tracking-tighter uppercase leading-none mb-2 text-foreground">Secure Checkout</h1>
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-primary rounded-full animate-ping" />
                 Razorpay Secure Channel Active
               </p>
             </div>
             
             {/* Step Indicator */}
-            <div className="hidden sm:flex items-center gap-3 bg-zinc-900/60 backdrop-blur-md px-4 py-2.5 rounded-full border border-white/5 text-xs text-zinc-500 font-bold uppercase tracking-wider">
-              <span className="text-white">1. Verify Details</span>
+            <div className="hidden sm:flex items-center gap-3 bg-surface/50 border border-border px-4 py-2.5 rounded-full text-xs text-muted-foreground font-bold uppercase tracking-wider dark:bg-zinc-900/60 dark:border-white/5">
+              <span className="text-foreground dark:text-white">1. Verify Details</span>
               <ChevronRight className="w-3.5 h-3.5" />
               <span>2. Secure Payment</span>
             </div>
@@ -289,9 +289,9 @@ function CheckoutContent() {
             <div className="lg:col-span-3 space-y-6">
               
               {/* Product Preview Card */}
-              <Card className="p-0 overflow-hidden border border-white/5 shadow-2xl rounded-3xl bg-zinc-900/40 backdrop-blur-xl text-white">
+              <Card className="p-0 overflow-hidden border border-border shadow-2xl rounded-3xl bg-surface/30 backdrop-blur-xl dark:bg-zinc-900/40 dark:border-white/5 text-foreground">
                 <div className="flex gap-4 p-5 items-center">
-                  <div className="w-24 h-20 sm:w-28 sm:h-20 rounded-2xl overflow-hidden bg-zinc-950 border border-white/5 flex-shrink-0 relative">
+                  <div className="w-24 h-20 sm:w-28 sm:h-20 rounded-2xl overflow-hidden bg-background border border-border dark:bg-zinc-950 dark:border-white/5 flex-shrink-0 relative">
                     {img ? <img src={img} alt="" className="w-full h-full object-cover" /> : (
                       <div className="w-full h-full flex items-center justify-center text-zinc-700 bg-zinc-950">
                         {serviceType === 'house' ? <Home className="w-8 h-8 opacity-20" /> : <Car className="w-8 h-8 opacity-20" />}
@@ -300,13 +300,13 @@ function CheckoutContent() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1.5">
-                      <span className="text-[9px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-[#8B004A]/20 border border-[#8B004A]/30 text-rose-400">
+                      <span className="text-[9px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary dark:bg-primary/20 dark:text-accent-foreground">
                         {serviceType === 'house' ? (propType === 'pg' ? 'PG Sharing' : 'Room Rent') : 'Vehicle'}
                       </span>
                     </div>
-                    <h3 className="font-extrabold text-lg sm:text-xl truncate text-white leading-tight">{serviceData.title || serviceData.name || serviceName}</h3>
-                    <div className="flex items-center gap-1 text-xs text-zinc-500 font-semibold mt-1">
-                      <MapPin className="w-3.5 h-3.5 text-zinc-600" />
+                    <h3 className="font-extrabold text-lg sm:text-xl truncate text-foreground dark:text-white leading-tight">{serviceData.title || serviceData.name || serviceName}</h3>
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground font-semibold mt-1">
+                      <MapPin className="w-3.5 h-3.5 text-muted-foreground/75" />
                       <span>{serviceData.city || serviceData.location || serviceData.address || 'Location TBD'}</span>
                     </div>
                   </div>
@@ -314,42 +314,42 @@ function CheckoutContent() {
               </Card>
 
               {/* Booking Details Input Cards */}
-              <Card className="p-6 sm:p-8 border border-white/5 shadow-2xl rounded-3xl bg-zinc-900/40 backdrop-blur-xl text-white space-y-6">
-                <h2 className="text-base font-black uppercase tracking-widest text-zinc-400 flex items-center gap-2.5 border-b border-white/5 pb-4">
-                  <Clock className="w-4 h-4 text-rose-400" />
+              <Card className="p-6 sm:p-8 border border-border shadow-2xl rounded-3xl bg-surface/30 backdrop-blur-xl dark:bg-[#11131A]/60 dark:border-white/5 text-foreground space-y-6">
+                <h2 className="text-base font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2.5 border-b border-border dark:border-white/5 pb-4">
+                  <Clock className="w-4 h-4 text-primary dark:text-accent" />
                   Booking Details
                 </h2>
 
                 {serviceType === 'vehicle' && (
                   <div className="space-y-2">
-                    <Label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest ml-1">Duration Type</Label>
+                    <Label className="text-muted-foreground text-[10px] font-black uppercase tracking-widest ml-1">Duration Type</Label>
                     <select 
-                      className="flex h-12 w-full rounded-2xl border border-white/10 bg-zinc-950 px-4 py-2 text-sm font-bold text-white outline-none focus:ring-2 focus:ring-[#8B004A]/50 transition-all cursor-pointer" 
+                      className="flex h-12 w-full rounded-2xl border border-border bg-background px-4 py-2 text-sm font-bold text-foreground outline-none focus:ring-2 focus:ring-primary/50 transition-all cursor-pointer dark:bg-zinc-950 dark:border-white/10 dark:text-white" 
                       value={bookingType} 
                       onChange={e => setBookingType(e.target.value as any)}
                     >
-                      <option value="daily" className="text-zinc-900 bg-white">Per Day</option>
-                      <option value="hourly" className="text-zinc-900 bg-white">Per Hour</option>
+                      <option value="daily" className="text-foreground bg-background dark:text-white dark:bg-zinc-950">Per Day</option>
+                      <option value="hourly" className="text-foreground bg-background dark:text-white dark:bg-zinc-950">Per Hour</option>
                     </select>
                   </div>
                 )}
 
                 {serviceType === 'house' && propType === 'pg' && (
                   <div className="space-y-2">
-                    <Label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest ml-1">Sharing Type</Label>
+                    <Label className="text-muted-foreground text-[10px] font-black uppercase tracking-widest ml-1">Sharing Type</Label>
                     <select 
-                      className="flex h-12 w-full rounded-2xl border border-white/10 bg-zinc-950 px-4 py-2 text-sm font-bold text-white outline-none focus:ring-2 focus:ring-[#8B004A]/50 transition-all cursor-pointer" 
+                      className="flex h-12 w-full rounded-2xl border border-border bg-background px-4 py-2 text-sm font-bold text-foreground outline-none focus:ring-2 focus:ring-primary/50 transition-all cursor-pointer dark:bg-zinc-950 dark:border-white/10 dark:text-white" 
                       value={roomTab} 
                       onChange={e => setRoomTab(e.target.value)}
                     >
-                      <option value="single" className="text-zinc-900 bg-white">Single Sharing</option>
-                      <option value="double" className="text-zinc-900 bg-white">Double Sharing</option>
+                      <option value="single" className="text-foreground bg-background dark:text-white dark:bg-zinc-950">Single Sharing</option>
+                      <option value="double" className="text-foreground bg-background dark:text-white dark:bg-zinc-950">Double Sharing</option>
                     </select>
                   </div>
                 )}
 
                 <div className="space-y-2">
-                  <Label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest ml-1">
+                  <Label className="text-muted-foreground text-[10px] font-black uppercase tracking-widest ml-1">
                     {serviceType === 'house' ? 'Move-in & Move-out Dates' : 'Rental Duration Period'}
                   </Label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -359,7 +359,7 @@ function CheckoutContent() {
                         value={startDate} 
                         onChange={e => setStartDate(e.target.value)} 
                         min={new Date().toISOString().slice(0, bookingType === 'hourly' ? 16 : 10)} 
-                        className="h-12 bg-zinc-950 border-white/10 rounded-2xl text-sm font-bold px-4 focus-visible:ring-[#8B004A]/50 text-white" 
+                        className="h-12 bg-background border-border rounded-2xl text-sm font-bold px-4 focus-visible:ring-primary/50 text-foreground dark:bg-zinc-950 dark:border-white/10 dark:text-white" 
                       />
                     </div>
                     <div className="relative">
@@ -368,7 +368,7 @@ function CheckoutContent() {
                         value={endDate} 
                         onChange={e => setEndDate(e.target.value)} 
                         min={startDate || new Date().toISOString().slice(0, bookingType === 'hourly' ? 16 : 10)} 
-                        className="h-12 bg-zinc-950 border-white/10 rounded-2xl text-sm font-bold px-4 focus-visible:ring-[#8B004A]/50 text-white" 
+                        className="h-12 bg-background border-border rounded-2xl text-sm font-bold px-4 focus-visible:ring-primary/50 text-foreground dark:bg-zinc-950 dark:border-white/10 dark:text-white" 
                       />
                     </div>
                   </div>
@@ -377,15 +377,15 @@ function CheckoutContent() {
                 {serviceType === 'vehicle' && (
                   <div className="space-y-2">
                     <div className="flex justify-between items-center mb-1">
-                      <Label className="text-zinc-400 text-[10px] font-black uppercase tracking-widest ml-1">Delivery Location</Label>
+                      <Label className="text-muted-foreground text-[10px] font-black uppercase tracking-widest ml-1">Delivery Location</Label>
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="h-6 text-[10px] uppercase font-black px-2.5 rounded-lg border border-[#8B004A]/20 hover:bg-[#8B004A]/10 text-rose-400 active:scale-95 transition-all" 
+                        className="h-6 text-[10px] uppercase font-black px-2.5 rounded-lg border border-primary/20 hover:bg-primary/10 text-primary active:scale-95 transition-all dark:border-white/10 dark:text-white" 
                         onClick={handleFetchLocation} 
                         disabled={isFetchingLocation}
                       >
-                        {isFetchingLocation ? <Loader2 className="w-3 h-3 mr-1 animate-spin text-rose-400" /> : <LocateFixed className="w-3 h-3 mr-1" />} 
+                        {isFetchingLocation ? <Loader2 className="w-3 h-3 mr-1 animate-spin text-primary" /> : <LocateFixed className="w-3 h-3 mr-1" />} 
                         Auto-fill
                       </Button>
                     </div>
@@ -393,7 +393,7 @@ function CheckoutContent() {
                       placeholder="Enter specific delivery address..." 
                       value={bookingLocation} 
                       onChange={e => setBookingLocation(e.target.value)} 
-                      className="h-12 bg-zinc-950 border-white/10 rounded-2xl text-sm font-bold px-4 focus-visible:ring-[#8B004A]/50 text-white" 
+                      className="h-12 bg-background border-border rounded-2xl text-sm font-bold px-4 focus-visible:ring-primary/50 text-foreground dark:bg-zinc-950 dark:border-white/10 dark:text-white" 
                     />
                   </div>
                 )}
@@ -402,44 +402,44 @@ function CheckoutContent() {
 
             {/* RIGHT — Payment Card Summary */}
             <div className="lg:col-span-2">
-              <Card className="p-6 sm:p-8 border border-white/5 shadow-2xl rounded-3xl sticky top-24 bg-zinc-900/60 backdrop-blur-2xl text-white">
-                <h2 className="text-base font-black uppercase tracking-widest text-zinc-400 flex items-center gap-2.5 border-b border-white/5 pb-4 mb-6">
-                  <CreditCard className="w-4 h-4 text-rose-400" />
+              <Card className="p-6 sm:p-8 border border-border shadow-2xl rounded-3xl sticky top-24 bg-surface/70 backdrop-blur-2xl text-foreground dark:bg-zinc-900/60 dark:border-white/5">
+                <h2 className="text-base font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2.5 border-b border-border dark:border-white/5 pb-4 mb-6">
+                  <CreditCard className="w-4 h-4 text-primary dark:text-accent" />
                   Payment Summary
                 </h2>
 
                 <div className="space-y-4 text-sm mb-8 font-semibold">
                   <div className="flex justify-between items-center">
-                    <span className="text-zinc-500 uppercase text-xs tracking-wider">{label || 'Calculation details'}</span>
-                    <span className="font-bold text-white text-base">₹{basePrice.toLocaleString()}</span>
+                    <span className="text-muted-foreground uppercase text-xs tracking-wider">{label || 'Calculation details'}</span>
+                    <span className="font-bold text-foreground dark:text-white text-base">₹{basePrice.toLocaleString()}</span>
                   </div>
                   {securityDep > 0 && (
                     <div className="flex justify-between items-center pt-2">
-                      <span className="text-zinc-500 uppercase text-xs tracking-wider flex items-center gap-1.5">
+                      <span className="text-muted-foreground uppercase text-xs tracking-wider flex items-center gap-1.5">
                         Security Deposit
-                        <Info className="w-3.5 h-3.5 text-zinc-600 cursor-help" />
+                        <Info className="w-3.5 h-3.5 text-muted-foreground/70 cursor-help" />
                       </span>
-                      <span className="font-bold text-white text-base">₹{securityDep.toLocaleString()}</span>
+                      <span className="font-bold text-foreground dark:text-white text-base">₹{securityDep.toLocaleString()}</span>
                     </div>
                   )}
-                  <div className="border-t border-white/5 pt-4 flex justify-between items-baseline">
-                    <span className="text-zinc-400 uppercase text-xs font-black tracking-widest">Total Due Now</span>
-                    <span className="text-2xl font-black text-rose-400 tracking-tighter">₹{total.toLocaleString()}</span>
+                  <div className="border-t border-border dark:border-white/5 pt-4 flex justify-between items-baseline">
+                    <span className="text-muted-foreground uppercase text-xs font-black tracking-widest">Total Due Now</span>
+                    <span className="text-2xl font-black text-primary dark:text-accent tracking-tighter">₹{total.toLocaleString()}</span>
                   </div>
                 </div>
 
                 {/* Secure Badge Message */}
-                <div className="mb-6 p-4 rounded-2xl bg-zinc-950 border border-white/5 flex gap-3 text-left">
+                <div className="mb-6 p-4 rounded-2xl bg-background border border-border dark:bg-zinc-950 dark:border-white/5 flex gap-3 text-left">
                   <Shield className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
                   <div className="text-xs space-y-1">
-                    <p className="font-bold text-zinc-300">100% Fully Encrypted</p>
-                    <p className="text-zinc-500 leading-tight">All transactions are direct-mapped and verified instantly via Razorpay's PCI-DSS gateway.</p>
+                    <p className="font-bold text-foreground dark:text-zinc-300">100% Fully Encrypted</p>
+                    <p className="text-muted-foreground leading-tight">All transactions are direct-mapped and verified instantly via Razorpay's PCI-DSS gateway.</p>
                   </div>
                 </div>
 
                 <Button 
                   size="lg" 
-                  className="w-full text-sm font-black uppercase tracking-widest rounded-2xl h-14 bg-gradient-to-r from-[#8B004A] to-[#5B2C6F] hover:shadow-lg hover:shadow-[#8B004A]/25 transition-all text-white border-0 shadow-lg active:scale-98 relative group overflow-hidden" 
+                  className="w-full text-sm font-black uppercase tracking-widest rounded-2xl h-14 bg-primary text-primary-foreground hover:shadow-lg hover:shadow-primary/25 transition-all border-0 shadow-lg active:scale-98 relative group overflow-hidden" 
                   onClick={handlePay} 
                   disabled={isProcessing || !startDate || !endDate}
                 >
@@ -460,14 +460,14 @@ function CheckoutContent() {
         </div>
 
         {/* Mobile Sticky Floating Bar */}
-        <div className="lg:hidden fixed bottom-0 inset-x-0 bg-zinc-950/80 backdrop-blur-xl border-t border-white/5 p-4 flex items-center justify-between z-40 shadow-[0_-8px_30px_rgba(0,0,0,0.5)]">
+        <div className="lg:hidden fixed bottom-0 inset-x-0 bg-background/90 backdrop-blur-xl border-t border-border p-4 flex items-center justify-between z-40 shadow-[0_-8px_30px_rgba(0,0,0,0.5)] dark:bg-zinc-950/80 dark:border-white/5">
           <div className="flex flex-col">
-            <span className="text-[10px] uppercase font-black text-zinc-500 tracking-wider">Total Amount</span>
-            <span className="text-xl font-black text-white">₹{total.toLocaleString()}</span>
+            <span className="text-[10px] uppercase font-black text-muted-foreground tracking-wider">Total Amount</span>
+            <span className="text-xl font-black text-foreground dark:text-white">₹{total.toLocaleString()}</span>
           </div>
           <Button 
             size="lg" 
-            className="h-12 px-6 rounded-xl font-bold bg-[#8B004A] hover:bg-[#8B004A]/90 text-white flex items-center gap-2 active:scale-98 transition-all shadow-lg shadow-[#8B004A]/25 text-xs uppercase tracking-wider"
+            className="h-12 px-6 rounded-xl font-bold bg-primary text-primary-foreground flex items-center gap-2 active:scale-98 transition-all shadow-lg shadow-primary/25 text-xs uppercase tracking-wider"
             onClick={handlePay} 
             disabled={isProcessing || !startDate || !endDate}
           >
@@ -481,8 +481,11 @@ function CheckoutContent() {
 
 export default function CheckoutPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-950 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>}>
-      <CheckoutContent />
-    </Suspense>
+    <>
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
+      <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>}>
+        <CheckoutContent />
+      </Suspense>
+    </>
   );
 }
