@@ -8,11 +8,11 @@ export const useVehicleFleet = () => {
         queryFn: async () => {
             const userStr = localStorage.getItem('uniexo_user');
             const vendorId = userStr ? JSON.parse(userStr).id : '';
-            if (!vendorId) return [];
+            if (!vendorId) return { fleet: [], todayRevenue: 0 };
 
             const res = await fetch(`/api/vehicles/vendor/fleet?vendorId=${vendorId}`);
             const json = await res.json();
-            return json.data || [];
+            return { fleet: json.data || [], todayRevenue: json.todayRevenue || 0 };
         },
         refetchInterval: 3000, // Real-time 3s DB refresh
     });

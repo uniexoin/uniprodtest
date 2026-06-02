@@ -611,7 +611,7 @@ export default function HouseDetailPage() {
 
       {/* Floating Action Button (Mobile Only) - Hidden for Owner */}
       {user?.id !== (typeof house.vendorId === 'object' ? house.vendorId?.id || house.vendorId?._id : house.vendorId?.toString()) && (
-        <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-4 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-40">
+        <div className="lg:hidden fixed bottom-[4.25rem] md:bottom-0 left-0 w-full bg-white border-t border-gray-200 p-4 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-[60]">
           <div className="flex gap-3 max-w-sm mx-auto">
             <Button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg h-12 shadow-lg shadow-blue-500/30 text-base font-semibold" onClick={() => setIsInterestedModalOpen(true)}>
               I'm interested

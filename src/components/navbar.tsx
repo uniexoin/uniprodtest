@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, X, ShieldCheck, User, ArrowLeft, Zap, Home, Car, Bell, LayoutGrid, ShoppingBag, LayoutDashboard, Store } from 'lucide-react';
+import { Menu, X, ShieldCheck, User, ArrowLeft, Zap, Home, Car, Bell, LayoutGrid, ShoppingBag, LayoutDashboard, Store, Heart, Search } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,10 +18,9 @@ import { UniExoBrand } from './brand';
 import { haptics } from '@/lib/haptics';
 
 const USER_NAV_ITEMS = [
-  { href: '/', icon: Home, label: 'Home' },
-  { href: '/vehicles', icon: Car, label: 'Services' },
-  { href: '/orders', icon: ShoppingBag, label: 'Orders' },
-  { href: '/profile', icon: User, label: 'Profile' },
+  { href: '/', icon: Search, label: 'Explore' },
+  { href: '/wishlists', icon: Heart, label: 'Wishlists' },
+  { href: '/profile', icon: User, label: 'Log in' },
 ];
 
 const VENDOR_NAV_ITEMS = [

@@ -6,8 +6,8 @@ export const fleetService = {
       const { data, error } = await supabaseAdmin
         .from('vehicles')
         .select(`
-          id, _id:id, name, registration_number, current_status, expected_return_at,
-          current_booking:bookings!current_booking_id(id, _id:id, end_date, user:profiles!user_id(name))
+          id, _id:id, name, registration_number, current_status, expected_return_at, images, price_per_day,
+          current_booking:bookings!current_booking_id(id, _id:id, start_date, end_date, total_amount, user:profiles!user_id(name))
         `)
         .eq('vendor_id', vendorId)
         .eq('is_deleted', false);
@@ -36,19 +36,35 @@ export const fleetService = {
           _id: v.id,
           name: v.name,
           registrationNumber: v.registration_number,
+          images: v.images || [],
+          pricePerDay: v.price_per_day || 0,
           currentStatus: v.current_status || 'available',
           expectedReturnAt: v.expected_return_at,
           minutesUntilReturn,
           isOverdue,
           currentBooking: currentBooking ? {
             _id: currentBooking.id,
+            startDate: currentBooking.start_date,
             endDate: currentBooking.end_date,
+            totalAmount: currentBooking.total_amount,
             userId: { name: (Array.isArray(currentBooking.user) ? currentBooking.user[0]?.name : currentBooking.user?.name) || 'Customer' }
           } : null
         };
       });
 
-      return { success: true, data: mapped || [] };
+      // Calculate today's revenue
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const { data: todayBookings } = await supabaseAdmin
+        .from('bookings')
+        .select('total_amount')
+        .eq('vendor_id', vendorId)
+        .neq('status', 'cancelled')
+        .gte('created_at', today.toISOString());
+        
+      const todayRevenue = todayBookings?.reduce((sum, b) => sum + (b.total_amount || 0), 0) || 0;
+
+      return { success: true, data: mapped || [], todayRevenue };
     } catch (err: any) {
       console.error('[FLEET SERVICE] getFleet error:', err);
       return { success: false, error: 'Failed to fetch fleet.' };

@@ -460,7 +460,7 @@ function CheckoutContent() {
         </div>
 
         {/* Mobile Sticky Floating Bar */}
-        <div className="lg:hidden fixed bottom-0 inset-x-0 bg-background/90 backdrop-blur-xl border-t border-border p-4 flex items-center justify-between z-40 shadow-[0_-8px_30px_rgba(0,0,0,0.5)] dark:bg-zinc-950/80 dark:border-white/5">
+        <div className="lg:hidden fixed bottom-[4.25rem] md:bottom-0 inset-x-0 bg-background/90 backdrop-blur-xl border-t border-border p-4 flex items-center justify-between z-[60] shadow-[0_-8px_30px_rgba(0,0,0,0.5)] dark:bg-zinc-950/80 dark:border-white/5">
           <div className="flex flex-col">
             <span className="text-[10px] uppercase font-black text-muted-foreground tracking-wider">Total Amount</span>
             <span className="text-xl font-black text-foreground dark:text-white">₹{total.toLocaleString()}</span>

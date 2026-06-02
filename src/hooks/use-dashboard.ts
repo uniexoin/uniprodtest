@@ -361,12 +361,12 @@ export const useVendorRoomOccupancy = () => {
         queryFn: async () => {
             try {
                 const res = await fetch(`/api/vendors/analytics/room-occupancy`, { headers: getAuthHeaders() });
-                if (!res.ok) return [];
+                if (!res.ok) return { rooms: [], todayRevenue: 0 };
                 const json = await res.json();
-                return json.data || [];
-            } catch { return []; }
+                return json.data || { rooms: [], todayRevenue: 0 };
+            } catch { return { rooms: [], todayRevenue: 0 }; }
         },
-        refetchInterval: REALTIME_INTERVAL,
+        refetchInterval: 3000,
         staleTime: REALTIME_STALE,
     });
 };

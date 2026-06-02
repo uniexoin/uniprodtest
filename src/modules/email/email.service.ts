@@ -60,5 +60,51 @@ export const emailService = {
       <p>Please log in to your dashboard to manage this request.</p>
     `;
     return this.sendEmail(to, 'New Booking Request - UniExo', html);
+  },
+
+  /**
+   * Template for Rent Alerts (To Tenant)
+   */
+  async sendRentAlertToTenant(to: string, details: { roomName: string, status: 'overdue' | 'due_soon', days: number, amount: number }) {
+    const isOverdue = details.status === 'overdue';
+    const title = isOverdue ? 'Urgent: Rent Overdue' : 'Reminder: Rent Due Soon';
+    const message = isOverdue 
+      ? `This is a reminder that the rent for <strong>${details.roomName}</strong> is overdue by ${details.days} days.`
+      : `This is a reminder that the rent for <strong>${details.roomName}</strong> is due in ${details.days} days.`;
+      
+    const html = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+        <h2 style="color: ${isOverdue ? '#e11d48' : '#2563eb'};">${title}</h2>
+        <p>${message}</p>
+        <p><strong>Amount Due:</strong> ₹${details.amount}</p>
+        <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+        <p style="font-size: 12px; color: #666;">This is an automated alert from your landlord via UniExo.</p>
+      </div>
+    `;
+    
+    return this.sendEmail(to, `${title} - UniExo`, html);
+  },
+
+  /**
+   * Template for Rent Alerts (To Vendor)
+   */
+  async sendRentAlertToVendor(to: string, details: { roomName: string, tenantName: string, status: 'overdue' | 'due_soon', days: number, amount: number }) {
+    const isOverdue = details.status === 'overdue';
+    const title = isOverdue ? 'Urgent: Tenant Rent Overdue' : 'Reminder: Tenant Rent Due Soon';
+    const message = isOverdue 
+      ? `Your tenant <strong>${details.tenantName}</strong> in <strong>${details.roomName}</strong> needs to pay the rent. It is currently overdue by ${details.days} days.`
+      : `Your tenant <strong>${details.tenantName}</strong> in <strong>${details.roomName}</strong> needs to pay the rent in ${details.days} days.`;
+      
+    const html = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+        <h2 style="color: ${isOverdue ? '#e11d48' : '#2563eb'};">${title}</h2>
+        <p>${message}</p>
+        <p><strong>Amount:</strong> ₹${details.amount}</p>
+        <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+        <p style="font-size: 12px; color: #666;">This is an automated alert from your Room Management Dashboard on UniExo.</p>
+      </div>
+    `;
+    
+    return this.sendEmail(to, `${title} - UniExo`, html);
   }
 };

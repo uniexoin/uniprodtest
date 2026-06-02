@@ -383,7 +383,7 @@ export default function VehicleDetailPage() {
       </div>
       {/* Mobile Sticky Floating Bar */}
       {user?.id !== (typeof vehicle.vendorId === 'object' ? vehicle.vendorId?.id || vehicle.vendorId?._id : vehicle.vendorId) && (
-        <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border-t border-border p-4 flex items-center justify-between z-40 shadow-[0_-8px_30px_rgba(0,0,0,0.1)]">
+        <div className="lg:hidden fixed bottom-[4.25rem] md:bottom-0 inset-x-0 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border-t border-border p-4 flex items-center justify-between z-[60] shadow-[0_-8px_30px_rgba(0,0,0,0.1)]">
           <div className="flex flex-col">
             <span className="text-[10px] uppercase font-bold text-muted-foreground">Total Due</span>
             <span className="text-lg font-black text-foreground">₹{totalPrice.toLocaleString()}</span>

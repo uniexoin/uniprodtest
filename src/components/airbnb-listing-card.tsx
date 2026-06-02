@@ -273,44 +273,26 @@ export function AirbnbListingCard({
 
         {/* ── Text Content ────────────────────────────────────── */}
         <div className="mt-3">
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="text-[15px] font-semibold text-foreground truncate leading-tight flex-1">
-              {title}
-            </h3>
+          <h3 className="text-[15px] font-semibold text-slate-900 truncate leading-tight">
+            {title}
+          </h3>
+          
+          <div className="flex items-center gap-1.5 mt-1 text-[14px] text-slate-600">
+            <span className="truncate">
+              ₹{formattedPrice} {subtitle ? `for ${subtitle}` : ''}
+            </span>
             {rating !== undefined && rating > 0 && (
-              <div className="flex items-center gap-1 shrink-0">
-                <Star className="w-3.5 h-3.5 fill-foreground text-foreground" />
-                <span className="text-sm font-normal text-foreground">
-                  {rating.toFixed(1)}
-                </span>
-              </div>
+              <>
+                <span className="text-slate-400">•</span>
+                <div className="flex items-center gap-1 shrink-0">
+                  <Star className="w-3.5 h-3.5 fill-slate-900 text-slate-900" />
+                  <span className="font-medium text-slate-900">
+                    {rating.toFixed(2)}
+                  </span>
+                </div>
+              </>
             )}
           </div>
-
-          {subtitle && (
-            <p className="text-sm text-muted-foreground truncate mt-0.5 leading-snug">
-              {subtitle}
-            </p>
-          )}
-
-          {secondaryInfo && (
-            <div className="mt-1.5 flex items-center">
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-secondary/80 text-secondary-foreground border border-border/60 hover:bg-secondary transition-colors max-w-full truncate shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-                <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                <span className="truncate">{secondaryInfo}</span>
-              </span>
-            </div>
-          )}
-
-          <p className="mt-1.5 text-[15px] leading-snug">
-            <span className="font-semibold text-foreground">
-              ₹{formattedPrice}
-            </span>
-            <span className="font-normal text-foreground">
-              {' '}
-              / {priceUnit}
-            </span>
-          </p>
         </div>
       </Link>
     </div>

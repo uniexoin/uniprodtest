@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { RoomManagementBoard } from '@/components/room-management-board';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer,
   LineChart, Line, PieChart, Pie, Cell 
@@ -593,97 +594,152 @@ export function LedgerSection() {
 }
 
 // ─── FLEET SECTION (Real-Time) ──────────────────────────────────────────
+function LiveTimer({ expectedReturnAt }: { expectedReturnAt: string }) {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const expected = new Date(expectedReturnAt).getTime();
+  const diffMs = expected - now;
+  const isOverdue = diffMs < 0;
+  const absDiff = Math.abs(diffMs);
+  const hours = Math.floor(absDiff / (1000 * 60 * 60));
+  const minutes = Math.floor((absDiff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((absDiff % (1000 * 60)) / 1000);
+  const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+  return (
+    <span className={`font-mono font-bold ${isOverdue ? 'text-red-600 animate-pulse' : 'text-orange-600'}`}>
+      {isOverdue ? '-' : ''}{timeString}
+      {isOverdue && ' (OVERDUE)'}
+    </span>
+  );
+}
+
 export function FleetSection() {
-  const { data: fleet } = useVehicleFleet();
+  const { data } = useVehicleFleet();
+  const fleet = data?.fleet || [];
+  const todayRevenue = data?.todayRevenue || 0;
   const returnVehicle = useReturnVehicle();
   const toggleMaintenance = useToggleMaintenance();
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-extrabold tracking-tight flex items-center gap-3">
-          <Car className="w-8 h-8 text-blue-600" /> Live Fleet Board
-        </h2>
-        <div className="flex items-center gap-2">
-          <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-          </span>
-          <span className="text-sm font-medium text-muted-foreground">Live Sync Active</span>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 bg-white/40 dark:bg-zinc-900/40 p-6 rounded-[2rem] border border-white/60 dark:border-zinc-800 shadow-inner">
+        <div>
+          <h2 className="text-3xl font-extrabold tracking-tight flex items-center gap-3">
+            <Car className="w-8 h-8 text-blue-600" /> Live Fleet Board
+          </h2>
+          <div className="flex items-center gap-2 mt-2">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+            </span>
+            <span className="text-sm font-medium text-muted-foreground">Live Sync Active</span>
+          </div>
+        </div>
+        
+        {/* Daily Revenue Bar */}
+        <div className="flex flex-col bg-white dark:bg-zinc-900 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-zinc-800 text-center sm:text-right">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Today's Total Revenue</span>
+            <span className="text-3xl font-black text-[#8B004A] dark:text-rose-400 leading-none mt-1">₹{todayRevenue.toLocaleString()}</span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {fleet?.map((v: any) => (
-          <Card key={v._id} className={`overflow-hidden border-l-4 transition-all hover:shadow-lg ${
-            v.currentStatus === 'available' ? 'border-l-green-500' : 
-            v.currentStatus === 'dispatched' ? (v.isOverdue ? 'border-l-red-600 shadow-red-100' : 'border-l-orange-500') : 
-            v.currentStatus === 'maintenance' ? 'border-l-purple-500 shadow-purple-100' :
-            'border-l-gray-500'
+          <Card key={v._id} className={`overflow-hidden border-t-4 transition-all hover:shadow-lg bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md flex flex-col ${
+            v.currentStatus === 'available' ? 'border-t-green-500' : 
+            v.currentStatus === 'dispatched' ? (v.isOverdue ? 'border-t-red-600 shadow-red-100 dark:shadow-red-900/20' : 'border-t-orange-500') : 
+            v.currentStatus === 'maintenance' ? 'border-t-purple-500 shadow-purple-100 dark:shadow-purple-900/20' :
+            'border-t-gray-500'
           }`}>
-            <CardContent className="p-0">
-              <div className="p-5">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="font-bold text-lg">{v.name}</h3>
-                    <p className="text-xs text-muted-foreground">{v.registrationNumber}</p>
+            {/* Vehicle Image */}
+            <div className="relative h-48 w-full bg-slate-100 dark:bg-zinc-800">
+               <img src={v.images?.[0] || 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&q=80'} alt={v.name} className="w-full h-full object-cover" />
+               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+               
+               <div className="absolute bottom-3 left-3 right-3 flex justify-between items-end">
+                  <div className="text-white">
+                    <h3 className="font-bold text-lg leading-tight shadow-sm">{v.name}</h3>
+                    <p className="text-xs font-mono opacity-90">{v.registrationNumber}</p>
                   </div>
-                  <Badge variant="outline" className={`
-                    ${v.currentStatus === 'available' ? 'bg-green-50 text-green-700 border-green-200' : ''}
-                    ${v.currentStatus === 'dispatched' ? 'bg-orange-50 text-orange-700 border-orange-200' : ''}
-                    ${v.currentStatus === 'maintenance' ? 'bg-purple-50 text-purple-700 border-purple-200' : ''}
-                  `}>
+                  <Badge className={`border-0 shadow-lg ${
+                    v.currentStatus === 'available' ? 'bg-green-500 text-white hover:bg-green-600' : 
+                    v.currentStatus === 'dispatched' ? 'bg-orange-500 text-white hover:bg-orange-600' : 
+                    v.currentStatus === 'maintenance' ? 'bg-purple-500 text-white hover:bg-purple-600' : 'bg-gray-500'
+                  }`}>
                     {v.currentStatus.toUpperCase()}
                   </Badge>
-                </div>
+               </div>
+            </div>
 
+            <CardContent className="p-5 flex-1 flex flex-col">
                 {v.currentStatus === 'dispatched' && v.currentBooking ? (
-                  <div className="bg-slate-50 p-3 rounded-lg mb-4 text-sm space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Customer:</span>
-                      <span className="font-medium">{v.currentBooking.userId?.name}</span>
+                  <div className="bg-slate-50 dark:bg-zinc-800/50 p-4 rounded-xl mb-4 text-sm space-y-3 flex-1 border border-slate-100 dark:border-white/5">
+                    <div className="flex justify-between items-center border-b border-slate-200 dark:border-white/5 pb-2">
+                      <span className="text-xs font-bold text-muted-foreground uppercase">Customer</span>
+                      <span className="font-bold text-foreground">{v.currentBooking.userId?.name}</span>
                     </div>
+                    
+                    <div className="flex justify-between items-center border-b border-slate-200 dark:border-white/5 pb-2">
+                      <span className="text-xs font-bold text-muted-foreground uppercase">Booking Window</span>
+                      <div className="text-right flex flex-col">
+                         <span className="font-medium text-xs text-foreground">{new Date(v.currentBooking.startDate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                         <span className="text-muted-foreground text-[10px]">to</span>
+                         <span className="font-medium text-xs text-foreground">{new Date(v.currentBooking.endDate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center border-b border-slate-200 dark:border-white/5 pb-2">
+                      <span className="text-xs font-bold text-muted-foreground uppercase">Revenue Earned</span>
+                      <span className="font-black text-green-600 dark:text-green-400">₹{v.currentBooking.totalAmount || v.pricePerDay}</span>
+                    </div>
+
                     {v.expectedReturnAt && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Return in:</span>
-                        <span className={`font-bold ${v.isOverdue ? 'text-red-600 animate-pulse' : 'text-orange-600'}`}>
-                          {v.minutesUntilReturn > 60 
-                            ? `${Math.floor(v.minutesUntilReturn/60)}h ${v.minutesUntilReturn%60}m` 
-                            : `${v.minutesUntilReturn}m`}
-                          {v.isOverdue && ' (OVERDUE)'}
-                        </span>
+                      <div className="flex justify-between items-center bg-orange-50 dark:bg-orange-500/10 p-2 rounded-lg mt-2">
+                        <span className="text-xs font-bold text-orange-800 dark:text-orange-400 uppercase">Live Timer</span>
+                        <LiveTimer expectedReturnAt={v.expectedReturnAt} />
                       </div>
                     )}
                   </div>
                 ) : v.currentStatus === 'maintenance' ? (
-                  <div className="h-[84px] mb-4 flex items-center justify-center border-2 border-dashed border-purple-200 rounded-lg bg-purple-50/50">
-                    <span className="text-sm text-purple-700 font-medium">Currently in maintenance</span>
+                  <div className="mb-4 flex-1 flex flex-col items-center justify-center p-6 border-2 border-dashed border-purple-200 dark:border-purple-900 rounded-xl bg-purple-50/50 dark:bg-purple-900/10">
+                    <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-full mb-3 text-purple-600 dark:text-purple-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                    </div>
+                    <span className="text-sm text-purple-700 dark:text-purple-400 font-bold text-center">Vehicle is undergoing maintenance</span>
                   </div>
                 ) : (
-                  <div className="h-[84px] mb-4 flex items-center justify-center border-2 border-dashed border-slate-200 rounded-lg bg-slate-50/50">
-                    <span className="text-sm text-muted-foreground font-medium">Ready for dispatch</span>
+                  <div className="mb-4 flex-1 flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-200 dark:border-zinc-700 rounded-xl bg-slate-50/50 dark:bg-zinc-800/30">
+                     <p className="text-sm text-muted-foreground font-bold mb-1">Available for Booking</p>
+                     <p className="text-2xl font-black text-foreground">₹{v.pricePerDay}<span className="text-xs text-muted-foreground font-medium"> / day</span></p>
                   </div>
                 )}
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 mt-auto pt-2">
                   {v.currentStatus === 'available' ? (
                     <>
-                      <VehicleDispatchModal vehicle={v} />
+                      <div className="flex-1">
+                        <VehicleDispatchModal vehicle={v} />
+                      </div>
                       <Button 
                         size="sm" 
                         variant="outline" 
-                        className="w-full border-purple-200 text-purple-700 hover:bg-purple-50"
+                        className="flex-1 border-purple-200 text-purple-700 hover:bg-purple-50 dark:border-purple-900 dark:text-purple-400 dark:hover:bg-purple-900/30 font-bold"
                         onClick={() => toggleMaintenance.mutate({ id: v._id, isEntering: true })}
                         disabled={toggleMaintenance.isPending}
                       >
-                        Send to Maintenance
+                        Maintenance
                       </Button>
                     </>
                   ) : v.currentStatus === 'maintenance' ? (
                     <Button 
                       size="sm" 
                       variant="outline" 
-                      className="w-full border-green-200 text-green-700 hover:bg-green-50"
+                      className="w-full border-green-200 text-green-700 hover:bg-green-50 dark:border-green-900 dark:text-green-400 dark:hover:bg-green-900/30 font-bold h-11"
                       onClick={() => toggleMaintenance.mutate({ id: v._id, isEntering: false })}
                       disabled={toggleMaintenance.isPending}
                     >
@@ -692,19 +748,26 @@ export function FleetSection() {
                   ) : (
                     <Button 
                       size="sm" 
-                      variant="outline" 
-                      className="w-full border-orange-200 text-orange-700 hover:bg-orange-50"
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md shadow-emerald-500/20 h-11"
                       onClick={() => returnVehicle.mutate({ id: v._id, data: {} })}
                       disabled={returnVehicle.isPending}
                     >
-                      {returnVehicle.isPending ? 'Processing...' : 'Mark Returned'}
+                      {returnVehicle.isPending ? 'Processing...' : 'Mark as Returned'}
                     </Button>
                   )}
                 </div>
-              </div>
             </CardContent>
           </Card>
         ))}
+        {fleet?.length === 0 && (
+            <div className="col-span-full py-20 text-center flex flex-col items-center">
+                <div className="w-20 h-20 bg-slate-100 dark:bg-zinc-800 rounded-full flex items-center justify-center mb-4">
+                   <Car className="w-10 h-10 text-slate-400" />
+                </div>
+                <h3 className="text-xl font-bold">No Vehicles in Fleet</h3>
+                <p className="text-muted-foreground mt-2">Add vehicles to your garage to start managing them here.</p>
+            </div>
+        )}
       </div>
 
       <VehicleOperationsHistory />
@@ -823,50 +886,7 @@ function VehicleOperationsHistory() {
 
 // ─── ROOMS SECTION ──────────────────────────────────────────────────────
 export function RoomsSection() {
-  const { data: rooms } = useVendorRoomOccupancy();
-
-  return (
-    <div className="space-y-6">
-      <h2 className="text-3xl font-extrabold tracking-tight">Room Occupancy Grid</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {rooms?.map((room: any) => (
-          <Card key={room.houseId} className="relative overflow-hidden">
-            <div className={`absolute top-0 w-full h-2 
-              ${room.occupancyColor === 'green' ? 'bg-green-500' : ''}
-              ${room.occupancyColor === 'amber' ? 'bg-amber-500' : ''}
-              ${room.occupancyColor === 'red' ? 'bg-red-500' : ''}
-            `} />
-            <CardHeader className="pt-6">
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-xl">{room.title}</CardTitle>
-                <div className="text-center">
-                  <div className="text-2xl font-black">{room.occupancyPct}%</div>
-                  <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">Occupied</div>
-                </div>
-              </div>
-              <CardDescription>{room.propertyType.toUpperCase()} • {room.capacity} beds total</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Currently Occupied</span>
-                  <span className="font-bold">{room.occupied} beds</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Upcoming Vacancies (7d)</span>
-                  <span className="font-bold text-orange-600">{room.upcomingVacancies}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Pending Interest</span>
-                  <span className="font-bold text-blue-600">{room.pendingInterest}</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
+  return <RoomManagementBoard />;
 }
 
 // ─── LAUNDRY PIPELINE SECTION ───────────────────────────────────────────
