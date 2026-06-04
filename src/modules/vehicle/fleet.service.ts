@@ -1,7 +1,7 @@
 import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export const fleetService = {
-  async getFleet(vendorId: string): Promise<{ success: boolean; data?: any[]; error?: string }> {
+  async getFleet(vendorId: string): Promise<{ success: boolean; data?: any[]; todayRevenue?: number; error?: string }> {
     try {
       const { data, error } = await supabaseAdmin
         .from('vehicles')

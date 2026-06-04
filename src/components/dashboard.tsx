@@ -21,11 +21,11 @@ import { useVehicles } from '@/hooks/use-vehicles';
 import { AirbnbListingCard } from '@/components/airbnb-listing-card';
 import Link from 'next/link';
 
-export function Dashboard() {
+export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'homes' | 'experiences' | 'services' }) {
   const { user } = useAuthStore();
   const { data: houses = [], isLoading: isLoadingHouses } = useHouses();
   const { data: vehicles = [], isLoading: isLoadingVehicles } = useVehicles();
-  const [activeCategory, setActiveCategory] = useState<'homes' | 'experiences' | 'services'>('homes');
+  const [activeCategory, setActiveCategory] = useState<'homes' | 'experiences' | 'services'>(initialCategory);
 
   // Match the screenshot exact category structure
   const categories = [

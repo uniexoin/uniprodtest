@@ -173,6 +173,8 @@ export const houseService = {
     } catch (err: any) {
       console.error('[HOUSE SERVICE] upload error:', err);
       return null;
+    }
+  },
   /**
    * Get Room Management data (Live Board) for vendor.
    */
@@ -304,6 +306,8 @@ export const houseService = {
     } catch (err: any) {
       console.error('[HOUSE SERVICE] getRoomManagement error:', err);
       return { success: false, error: 'Failed to fetch room management data.' };
+    }
+  },
   async checkIn(id: string, vendorId: string, payload: any): Promise<{ success: boolean; error?: string }> {
     try {
       const { customerName, customerPhone, customerEmail, startDate, endDate, bookingType, totalAmount } = payload;
