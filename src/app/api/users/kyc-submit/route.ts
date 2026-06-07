@@ -54,7 +54,7 @@ export const POST = withAuth(async (req, user) => {
         kyc_documents: documents,
         updated_at: new Date().toISOString()
       })
-      .eq('id', user.id);
+      .eq('id', user.userId);
 
     if (updateError) {
       throw updateError;

@@ -3,12 +3,14 @@ import crypto from 'crypto';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 import type { CreateOrderInput, VerifyPaymentInput } from './checkout.types';
 
-const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || '';
-const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
+function getKeyId() { return process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || ''; }
+function getKeySecret() { return process.env.RAZORPAY_KEY_SECRET || ''; }
 
 function getRazorpayInstance() {
-  if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) return null;
-  return new Razorpay({ key_id: RAZORPAY_KEY_ID, key_secret: RAZORPAY_KEY_SECRET });
+  const keyId = getKeyId();
+  const keySecret = getKeySecret();
+  if (!keyId || !keySecret) return null;
+  return new Razorpay({ key_id: keyId, key_secret: keySecret });
 }
 
 export const paymentService = {
@@ -44,7 +46,7 @@ export const paymentService = {
       return {
         success: true,
         data: {
-          key: RAZORPAY_KEY_ID,
+          key: getKeyId(),
           amount: order.amount,
           currency: order.currency,
           razorpayOrderId: order.id,
@@ -61,14 +63,14 @@ export const paymentService = {
    */
   async verifyPayment(input: VerifyPaymentInput): Promise<{ success: boolean; error?: string }> {
     try {
-      if (!RAZORPAY_KEY_SECRET) {
+      if (!getKeySecret()) {
         return { success: false, error: 'Payment gateway not configured.' };
       }
 
       // Verify signature
       const body = input.razorpay_order_id + '|' + input.razorpay_payment_id;
       const expectedSignature = crypto
-        .createHmac('sha256', RAZORPAY_KEY_SECRET)
+        .createHmac('sha256', getKeySecret())
         .update(body)
         .digest('hex');
 

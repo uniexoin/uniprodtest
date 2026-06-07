@@ -470,6 +470,8 @@ function VendorDashboard() {
 
   const filteredSections = vendorSections.filter(s => {
     if (!s.serviceType) return true;
+    // Always show fleet and rooms management boards for all vendors
+    if (s.id === 'fleet' || s.id === 'rooms') return true;
     const userType = vendorProfile?.serviceType?.toLowerCase();
     const sectionType = s.serviceType?.toLowerCase();
     if (userType === sectionType) return true;

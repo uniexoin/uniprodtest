@@ -5,7 +5,7 @@ import { withAuth } from '@/lib/api-auth';
 // Fetch vendor profile
 export const GET = withAuth(async (req, user) => {
   try {
-    let targetUserId = user.id;
+    let targetUserId = user.userId;
 
     // If superadmin wants to view another vendor's profile
     if (user.role === 'admin') {
@@ -59,7 +59,7 @@ export const PATCH = withAuth(async (req, user) => {
 
     // 1. Prepare updates for vendor_profiles table
     const vendorUpdates: Record<string, any> = {
-      user_id: user.id,
+      user_id: user.userId,
       updated_at: new Date().toISOString(),
     };
 
@@ -100,7 +100,7 @@ export const PATCH = withAuth(async (req, user) => {
       await supabaseAdmin
         .from('profiles')
         .update(profileUpdates)
-        .eq('id', user.id);
+        .eq('id', user.userId);
     }
 
     return NextResponse.json({ success: true, message: 'Vendor profile updated successfully' });

@@ -52,8 +52,8 @@ export function VendorAnalyticsDashboard() {
     { id: 'overview', label: t('analyticsOverview'), icon: LayoutDashboard },
     { id: 'revenue', label: t('revenueSales'), icon: BarChart3 },
     { id: 'ledger', label: t('ledgerBook'), icon: FileText },
-    ...(serviceType === 'vehicle' ? [{ id: 'fleet', label: t('vehicleFleet'), icon: Car }] : []),
-    ...(serviceType === 'house' || serviceType === 'pg' ? [{ id: 'rooms', label: t('roomPgManager'), icon: Home }] : []),
+    { id: 'fleet', label: t('vehicleFleet'), icon: Car },
+    { id: 'rooms', label: t('roomPgManager'), icon: Home },
     ...(serviceType === 'laundry' ? [{ id: 'laundry', label: t('laundryPipeline'), icon: Shirt }] : []),
   ];
 
