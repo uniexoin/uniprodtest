@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { WashingMachine, MapPin, Shield, Check, User, Plus, Minus } from 'lucide-react';
 import { useAuthStore } from '@/store/auth.store';
+import { useUIStore } from '@/store/ui.store';
 import { useLaundryService } from '@/hooks/use-laundry-services';
 import { useCreateLaundryOrder } from '@/hooks/use-laundry-services';
 import { useCreatePaymentOrder, useVerifyPayment } from '@/hooks/use-payment';
@@ -147,9 +148,12 @@ export default function LaundryDetailPage() {
               razorpay_signature: response.razorpay_signature,
             });
             
-            toast.success('Your payment was successful and order placed.');
+            // Trigger success lottie animation overlay
+            useUIStore.getState().triggerSuccessOverlay('Your payment was successful and order placed.', 2500);
             setIsProcessing(false);
-            router.push('/dashboard');
+            setTimeout(() => {
+              router.push('/dashboard');
+            }, 2500);
             
           } catch (err) {
             toast.error('Payment Verification Failed. Contact support.');

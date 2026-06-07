@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
+import { motion } from 'framer-motion';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Script from 'next/script';
 import { Button } from '@/components/ui/button';
@@ -10,13 +11,40 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { 
   Shield, Car, Home, MapPin, Clock, CreditCard, CheckCircle, 
-  ArrowLeft, Loader2, LocateFixed, Sparkles, ChevronRight, Info 
+  ArrowLeft, Loader2, LocateFixed, Sparkles, ChevronRight, Info, XCircle
 } from 'lucide-react';
 import { useAuthStore } from '@/modules/auth/auth.store';
 import { useCreateBooking } from '@/hooks/use-booking';
 import { useCreatePaymentOrder, useVerifyPayment } from '@/hooks/use-payment';
 
 declare global { interface Window { Razorpay: any; } }
+
+function LottiePlayer({ src, loop = true, autoplay = true }: { src: string; loop?: boolean; autoplay?: boolean }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !containerRef.current) return;
+    
+    let anim: any;
+    import('lottie-web').then((lottieModule) => {
+      anim = lottieModule.default.loadAnimation({
+        container: containerRef.current!,
+        renderer: 'svg',
+        loop,
+        autoplay,
+        path: src,
+      });
+    });
+
+    return () => {
+      if (anim) {
+        anim.destroy();
+      }
+    };
+  }, [src, loop, autoplay]);
+
+  return <div ref={containerRef} className="w-48 h-48 sm:w-64 sm:h-64 mx-auto max-w-full" />;
+}
 
 function CheckoutContent() {
   const searchParams = useSearchParams();
@@ -41,6 +69,7 @@ function CheckoutContent() {
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const [roomTab, setRoomTab] = useState(searchParams.get('roomTab') || 'single');
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [animationPhase, setAnimationPhase] = useState<'pre-checkout' | 'verifying' | 'success' | 'failure' | null>(null);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -152,7 +181,11 @@ function CheckoutContent() {
       : serviceData?.vendor?.id || serviceData?.vendorId;
     if (user?.id === vendorId) { toast.error('Cannot book your own listing.'); return; }
 
+    setAnimationPhase('pre-checkout');
     setIsProcessing(true);
+
+    const minTimer = new Promise(resolve => setTimeout(resolve, 2500));
+
     try {
       const s = new Date(startDate), e = new Date(endDate);
       s.setHours(12,0,0,0); e.setHours(12,0,0,0);
@@ -177,6 +210,12 @@ function CheckoutContent() {
         userId: user!.id, serviceType: serviceType as any, referenceId: bookingId, amount: amt,
       });
 
+      // Wait for min timer to let the pre-checkout animation play
+      await minTimer;
+
+      // Close pre-checkout animation before loading Razorpay
+      setAnimationPhase(null);
+
       const opts = {
         key: orderRes.data.key,
         amount: orderRes.data.amount,
@@ -185,27 +224,43 @@ function CheckoutContent() {
         description: `Booking: ${serviceName}`,
         order_id: orderRes.data.razorpayOrderId,
         handler: async (resp: any) => {
+          setAnimationPhase('verifying');
           try {
             await verifyPayment.mutateAsync({
               razorpay_order_id: resp.razorpay_order_id,
               razorpay_payment_id: resp.razorpay_payment_id,
               razorpay_signature: resp.razorpay_signature,
             });
+            setAnimationPhase('success');
             setPaymentSuccess(true);
             toast.success('Payment successful! Booking confirmed.');
-          } catch { toast.error('Payment verification failed.'); }
+          } catch {
+            setAnimationPhase('failure');
+            toast.error('Payment verification failed.');
+          }
           setIsProcessing(false);
         },
         prefill: { name: user?.name, email: user?.email },
         theme: { color: '#8B004A' },
-        modal: { ondismiss: () => { setIsProcessing(false); toast.error('Payment cancelled.'); } },
+        modal: {
+          ondismiss: () => {
+            setAnimationPhase('failure');
+            setIsProcessing(false);
+            toast.error('Payment cancelled.');
+          }
+        },
       };
       const rzp = new window.Razorpay(opts);
-      rzp.on('payment.failed', () => { setIsProcessing(false); toast.error('Payment failed.'); });
+      rzp.on('payment.failed', () => {
+        setAnimationPhase('failure');
+        setIsProcessing(false);
+        toast.error('Payment failed.');
+      });
       rzp.open();
     } catch (err: any) {
-      toast.error(err.message || 'Booking failed.');
+      setAnimationPhase('failure');
       setIsProcessing(false);
+      toast.error(err.message || 'Booking failed.');
     }
   };
 
@@ -474,6 +529,77 @@ function CheckoutContent() {
             {isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Pay Securely'}
           </Button>
         </div>
+        {animationPhase && (
+          <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/85 backdrop-blur-xl text-white">
+            <div className="max-w-md w-full p-8 text-center space-y-6">
+              
+              {/* Lottie Player Container */}
+              {(animationPhase === 'pre-checkout' || animationPhase === 'verifying') && (
+                <div className="relative">
+                  <LottiePlayer src="/payment_animation.json" />
+                  <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-black/85 to-transparent pointer-events-none" />
+                </div>
+              )}
+
+              {animationPhase === 'pre-checkout' && (
+                <div className="space-y-2 animate-pulse">
+                  <h3 className="text-2xl font-black uppercase tracking-tight text-white">Securing Channel...</h3>
+                  <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Generating Encrypted Token Booking</p>
+                </div>
+              )}
+
+              {animationPhase === 'verifying' && (
+                <div className="space-y-2 animate-pulse">
+                  <h3 className="text-2xl font-black uppercase tracking-tight text-emerald-400">Verifying Payment...</h3>
+                  <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Authenticating Razorpay Signature</p>
+                </div>
+              )}
+
+              {animationPhase === 'success' && (
+                <div className="space-y-6">
+                  <LottiePlayer src="/success.json" loop={false} />
+                  <div className="space-y-2">
+                    <h3 className="text-3xl font-black uppercase tracking-tighter text-emerald-400 bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">Booking Confirmed!</h3>
+                    <p className="text-sm text-zinc-300 leading-relaxed">Your payment has been verified. Redirecting you to the dashboard...</p>
+                  </div>
+                  <Button 
+                    onClick={() => router.push('/dashboard')}
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-bold h-11 w-full border-0"
+                  >
+                    Go to Dashboard
+                  </Button>
+                </div>
+              )}
+
+              {animationPhase === 'failure' && (
+                <div className="space-y-6">
+                  <div className="w-20 h-20 bg-rose-500/10 border border-rose-500/30 rounded-full flex items-center justify-center mx-auto">
+                    <XCircle className="w-10 h-10 text-rose-450" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-2xl font-black uppercase tracking-tight text-rose-400">Transaction Failed</h3>
+                    <p className="text-sm text-zinc-300 leading-relaxed">We could not verify your payment credentials or checkout was cancelled.</p>
+                  </div>
+                  <div className="flex gap-3">
+                    <Button 
+                      onClick={() => setAnimationPhase(null)}
+                      className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl font-bold h-11 border-0"
+                    >
+                      Retry
+                    </Button>
+                    <Button 
+                      onClick={() => router.push('/')}
+                      variant="outline"
+                      className="flex-1 border-zinc-750 text-zinc-300 hover:bg-zinc-800 rounded-xl font-bold h-11"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

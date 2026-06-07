@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuthStore } from '@/modules/auth/auth.store';
+import { useUIStore } from '@/store/ui.store';
 import { toast } from 'sonner';
 
 function VerifyOtpForm() {
@@ -64,14 +65,18 @@ function VerifyOtpForm() {
       // Auto-login after successful verification
       if (data.token && data.profile) {
         useAuthStore.getState().login(data.profile, data.token);
-        toast.success('Verified! Logging you in...', { icon: '✅' });
+        useUIStore.getState().triggerSuccessOverlay("Identity Verified! Welcome to UniExo", 2500);
         
         const redirectPath = data.profile.role === 'admin' ? '/admin' 
           : data.profile.role === 'vendor' ? '/dashboard' : '/';
-        router.replace(redirectPath);
+        setTimeout(() => {
+          router.replace(redirectPath);
+        }, 2500);
       } else {
-        toast.success('OTP verified!', { icon: '✅' });
-        router.push('/login?verified=true');
+        useUIStore.getState().triggerSuccessOverlay("OTP verified successfully!", 2500);
+        setTimeout(() => {
+          router.push('/login?verified=true');
+        }, 2500);
       }
     } catch (err: any) {
       setError(err.message || 'Invalid or expired OTP');

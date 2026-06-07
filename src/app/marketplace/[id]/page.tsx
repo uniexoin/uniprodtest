@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { MapPin, Shield, Check, User, MessageCircle, Handshake, ShoppingBag } from 'lucide-react';
 import { useAuthStore } from '@/store/auth.store';
+import { useUIStore } from '@/store/ui.store';
 import { useMarketplaceItem } from '@/hooks/use-marketplace-items';
 import { useCreateOffer } from '@/hooks/use-offers';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
@@ -70,8 +71,11 @@ export default function MarketplaceDetailPage() {
         offeredPrice: item.price,
         message: 'I want to buy this directly at the listed price.'
       });
-      toast.success('Purchase request sent! The seller will contact you.');
-      router.push('/dashboard');
+      // Trigger success lottie animation overlay
+      useUIStore.getState().triggerSuccessOverlay('Purchase request sent! The seller will contact you.', 2500);
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 2500);
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Failed to submit buy request.');
     }
@@ -89,7 +93,8 @@ export default function MarketplaceDetailPage() {
         offeredPrice: Number(offerPrice),
         message: offerMessage || 'I would like to make an offer for your item.',
       });
-      toast.success('Offer submitted successfully! You can track it in your dashboard.');
+      // Trigger success lottie animation overlay
+      useUIStore.getState().triggerSuccessOverlay('Offer submitted successfully!', 2500);
       setIsOfferModalOpen(false);
       setOfferPrice('');
       setOfferMessage('');

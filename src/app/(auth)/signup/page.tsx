@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Eye, EyeOff, Sparkles, Store, ShieldCheck, ArrowRight, ArrowLeft, UserPlus } from 'lucide-react';
 import { useAuthStore } from '@/modules/auth/auth.store';
+import { useUIStore } from '@/store/ui.store';
 import { toast } from 'sonner';
 import { UniExoBrand } from '@/components/brand';
 import { SaaSBackground } from '@/components/saas-background';
@@ -173,10 +174,13 @@ export default function SignupPage() {
         localStorage.setItem('uniexo_trigger_onboarding', 'true');
       } catch (e) {}
 
-      toast.success("Welcome to UniExo!");
+      // Trigger success lottie animation overlay
+      useUIStore.getState().triggerSuccessOverlay("Welcome to UniExo! Account Created.", 2500);
 
       const redirectPath = role === 'vendor' ? '/dashboard' : '/';
-      router.replace(redirectPath);
+      setTimeout(() => {
+        router.replace(redirectPath);
+      }, 2500);
 
     } catch (err: any) {
       console.error('Finalize error:', err);

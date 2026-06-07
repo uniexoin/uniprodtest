@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, ShieldCheck, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useAuthStore } from '@/modules/auth/auth.store';
+import { useUIStore } from '@/store/ui.store';
 import { toast } from 'sonner';
 import { UniExoBrand } from '@/components/brand';
 import { SaaSBackground } from '@/components/saas-background';
@@ -88,7 +89,8 @@ export default function LoginPage() {
         localStorage.setItem('uniexo_trigger_onboarding', 'true');
       } catch (e) {}
 
-      toast.success("UniExo Access Granted");
+      // Trigger success lottie animation overlay
+      useUIStore.getState().triggerSuccessOverlay("Access Granted! Welcome to UniExo", 2200);
 
       // Determine redirect path
       let redirectPath = '/';
@@ -99,7 +101,9 @@ export default function LoginPage() {
       }
 
       console.log('[LOGIN] Redirecting to:', redirectPath);
-      window.location.href = redirectPath;
+      setTimeout(() => {
+        window.location.href = redirectPath;
+      }, 2200);
     } catch (err: any) {
       console.error('Login error:', err);
       setError(err.message || "Invalid credentials");

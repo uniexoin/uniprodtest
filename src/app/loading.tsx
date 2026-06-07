@@ -1,34 +1,46 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
 export default function Loading() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !containerRef.current) return;
+
+    let anim: any;
+    import('lottie-web').then((lottieModule) => {
+      anim = lottieModule.default.loadAnimation({
+        container: containerRef.current!,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: '/loading_animation.json',
+      });
+    });
+
+    return () => {
+      if (anim) {
+        anim.destroy();
+      }
+    };
+  }, []);
+
   return (
     <div className="min-h-[70vh] w-full flex flex-col items-center justify-center theme-landing">
       <div className="relative">
         {/* Outer Glow */}
-        <div className="absolute inset-0 bg-primary/20 blur-[40px] rounded-full animate-pulse" />
+        <div className="absolute inset-0 bg-primary/10 blur-[40px] rounded-full animate-pulse" />
         
-        {/* Spinner */}
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-          className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full relative z-10"
-        />
+        {/* Lottie Animation */}
+        <div ref={containerRef} className="w-48 h-48 relative z-10 mx-auto" />
       </div>
       
-      <div className="mt-8 flex flex-col items-center gap-2">
-        <h2 className="text-sm font-black tracking-[0.3em] text-foreground uppercase animate-pulse">Synchronizing</h2>
-        <div className="flex gap-1">
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              animate={{ opacity: [0.2, 1, 0.2] }}
-              transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2 }}
-              className="w-1.5 h-1.5 rounded-full bg-primary"
-            />
-          ))}
-        </div>
+      <div className="mt-4 flex flex-col items-center gap-2">
+        <h2 className="text-xs font-black tracking-[0.25em] text-primary bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent animate-pulse uppercase">
+          Synchronizing Workspace...
+        </h2>
       </div>
     </div>
   );
