@@ -376,22 +376,36 @@ function InsightCard({ icon: Icon, title, desc, confidence }: any) {
 
 function MetricCard({ label, value, subValue, icon: Icon, color }: any) {
   const colors: any = {
-    primary: 'text-primary bg-primary/10',
-    secondary: 'text-secondary bg-secondary/10',
-    accent: 'text-accent bg-accent/10',
+    primary: 'text-primary bg-primary/10 dark:bg-rose-500/10 dark:text-rose-400',
+    secondary: 'text-secondary bg-secondary/10 dark:bg-sky-500/10 dark:text-sky-400',
+    accent: 'text-accent bg-accent/10 dark:bg-amber-500/10 dark:text-amber-400',
+  };
+
+  const borders: any = {
+    primary: 'hover:border-primary/40 dark:hover:border-rose-500/40 shadow-primary/5 dark:shadow-rose-500/5',
+    secondary: 'hover:border-secondary/40 dark:hover:border-sky-500/40 shadow-secondary/5 dark:shadow-sky-500/5',
+    accent: 'hover:border-accent/40 dark:hover:border-amber-500/40 shadow-accent/5 dark:shadow-amber-500/5',
   };
 
   return (
-    <Card className="p-8 bg-surface border-border rounded-[2.5rem] hover:bg-surface/80 transition-all group shadow-xl">
-      <div className="flex items-start justify-between mb-6">
-        <div className={`p-4 rounded-2xl ${colors[color] || colors.primary}`}>
-          <Icon className="w-6 h-6" />
+    <motion.div
+      whileHover={{ y: -6, scale: 1.01 }}
+      whileTap={{ scale: 0.98 }}
+      className="flex w-full h-full"
+    >
+      <Card className={`p-8 bg-surface border-border/60 dark:border-white/5 rounded-[2.5rem] hover:bg-surface/90 transition-all duration-300 group shadow-xl flex flex-col justify-between w-full border ${borders[color] || borders.primary}`}>
+        <div>
+          <div className="flex items-start justify-between mb-6">
+            <div className={`p-4 rounded-2xl ${colors[color] || colors.primary} group-hover:scale-110 group-hover:rotate-6 transition-all duration-500`}>
+              <Icon className="w-6 h-6" />
+            </div>
+            <div className="h-2 w-2 rounded-full bg-border group-hover:bg-primary dark:group-hover:bg-rose-500 transition-colors duration-500" />
+          </div>
+          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">{label}</p>
+          <p className="text-3xl font-black text-foreground mb-2 group-hover:text-primary dark:group-hover:text-rose-400 transition-colors duration-300">{value}</p>
         </div>
-        <div className="h-2 w-2 rounded-full bg-border group-hover:bg-primary transition-colors" />
-      </div>
-      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">{label}</p>
-      <p className="text-3xl font-black text-foreground mb-2">{value}</p>
-      <p className="text-xs font-bold text-muted-foreground/60 uppercase tracking-tighter">{subValue}</p>
-    </Card>
+        <p className="text-xs font-bold text-muted-foreground/60 uppercase tracking-tighter mt-2">{subValue}</p>
+      </Card>
+    </motion.div>
   );
 }

@@ -54,40 +54,50 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
   );
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 pb-24 has-bottom-nav font-sans">
+    <div className="min-h-screen bg-slate-50/50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 pb-24 has-bottom-nav font-sans">
       
       {/* ── Sticky Top Header ──────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 bg-white shadow-sm pb-2 pt-4 shadow-slate-100/50">
+      <header className="sticky top-0 z-40 bg-white/80 dark:bg-zinc-950/70 backdrop-blur-xl border-b border-slate-100 dark:border-white/5 pb-2 pt-4 shadow-sm shadow-slate-100/10 dark:shadow-none">
         <div className="container mx-auto px-4 sm:px-6 md:px-8">
           
           {/* Search Pill - Exactly like screenshot */}
-          <div className="flex items-center justify-center bg-white rounded-[1.8rem] shadow-[0_3px_15px_rgba(0,0,0,0.08)] border border-slate-100 py-3.5 px-6 mb-5 cursor-text max-w-xl mx-auto">
-            <Search className="w-5 h-5 text-slate-800 mr-3 stroke-[2.5]" />
-            <span className="text-[15px] font-semibold text-slate-900">Start your search</span>
+          <div className="flex items-center justify-center bg-white dark:bg-zinc-900/60 hover:border-slate-300 dark:hover:border-zinc-700 hover:shadow-lg transition-all duration-300 rounded-[1.8rem] shadow-[0_3px_15px_rgba(0,0,0,0.08)] border border-slate-100 dark:border-zinc-800 py-3.5 px-6 mb-5 cursor-text max-w-xl mx-auto">
+            <Search className="w-5 h-5 text-slate-800 dark:text-zinc-300 mr-3 stroke-[2.5]" />
+            <span className="text-[15px] font-semibold text-slate-950 dark:text-zinc-200">Start your search</span>
           </div>
 
           {/* Categories - Exactly like screenshot */}
           <div className="flex items-center justify-center gap-8 overflow-x-auto scrollbar-hide px-2">
-            {categories.map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`relative flex flex-col items-center gap-1.5 pb-2 min-w-fit transition-all ${
-                  activeCategory === cat.id ? 'text-slate-900 border-b-[2.5px] border-slate-900' : 'text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                {cat.isNew && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-sm tracking-wider z-10">
-                    NEW
-                  </span>
-                )}
-                {/* Fallback to lucide if custom icons are missing */}
-                <div className="h-7 flex items-center justify-center relative">
-                    <cat.icon className={`w-6 h-6 ${activeCategory === cat.id ? 'stroke-[2.5] text-slate-900' : 'stroke-[1.5] text-slate-400'}`} />
-                </div>
-                <span className="text-[12px] font-medium whitespace-nowrap">{cat.label}</span>
-              </button>
-            ))}
+            {categories.map(cat => {
+              const isActive = activeCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`relative flex flex-col items-center gap-1.5 pb-3 pt-2 min-w-fit transition-all duration-300 ${
+                    isActive ? 'text-slate-900 dark:text-zinc-100 font-bold' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-zinc-200'
+                  }`}
+                >
+                  {cat.isNew && (
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-md tracking-wider z-10 animate-bounce-soft">
+                      NEW
+                    </span>
+                  )}
+                  {/* Fallback to lucide if custom icons are missing */}
+                  <div className="h-7 flex items-center justify-center relative">
+                      <cat.icon className={`w-6 h-6 transition-all duration-300 ${isActive ? 'stroke-[2.5] text-slate-900 dark:text-zinc-100 scale-110' : 'stroke-[1.5] text-slate-400 dark:text-zinc-500'}`} />
+                  </div>
+                  <span className="text-[12px] font-semibold tracking-wide uppercase">{cat.label}</span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeCategoryBorder"
+                      className="absolute bottom-0 left-0 right-0 h-[3px] bg-slate-900 dark:bg-zinc-100 rounded-full"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       </header>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -98,38 +99,56 @@ export function VendorAnalyticsDashboard() {
 
         {/* Mobile: Grid of pills */}
         <nav className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 lg:hidden p-1.5 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-sm rounded-2xl border border-white/50 dark:border-white/10 mb-4">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => handleTabChange(item.id)}
-              className={`flex flex-col items-center justify-center gap-1 p-2 rounded-xl text-[11px] font-bold transition-all duration-300 ${
-                section === item.id
-                  ? 'bg-[#8B004A] text-white shadow-lg shadow-[#8B004A]/20 scale-[1.02]'
-                  : 'text-slate-500 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-zinc-800 hover:text-[#8B004A] dark:hover:text-rose-400'
-              }`}
-            >
-              <item.icon className={`w-4 h-4 ${section === item.id ? 'scale-110' : ''}`} />
-              <span className="leading-tight text-center truncate w-full">{item.label}</span>
-            </button>
-          ))}
+          {navItems.map((item) => {
+            const isActive = section === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleTabChange(item.id)}
+                className={`relative flex flex-col items-center justify-center gap-1 p-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all duration-300 ${isActive
+                    ? 'text-white scale-[1.02]'
+                    : 'text-slate-500 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-zinc-800 hover:text-[#8B004A] dark:hover:text-rose-400'
+                  }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeVendorAnalyticsMobilePill"
+                    className="absolute inset-0 bg-[#8B004A] rounded-xl shadow-lg shadow-[#8B004A]/25 -z-10"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <item.icon className={`w-4 h-4 transition-transform duration-300 ${isActive ? 'scale-110' : ''}`} />
+                <span className="leading-tight text-center truncate w-full relative z-10">{item.label}</span>
+              </button>
+            );
+          })}
         </nav>
 
         {/* Desktop: Vertical sidebar list */}
         <nav className="hidden lg:flex flex-col gap-2 p-2 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-sm rounded-2xl border border-white/50 dark:border-zinc-850">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => handleTabChange(item.id)}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold whitespace-nowrap transition-all group ${
-                section === item.id
-                  ? 'bg-[#8B004A] text-zinc-100 shadow-lg shadow-[#8B004A]/30 scale-[1.02]'
-                  : 'text-slate-600 dark:text-zinc-400 hover:bg-white dark:hover:bg-zinc-800 hover:text-[#8B004A] dark:hover:text-rose-400 hover:shadow-md dark:hover:shadow-none'
-              }`}
-            >
-              <item.icon className={`w-4 h-4 transition-transform duration-500 ${section === item.id ? 'scale-110' : 'group-hover:rotate-12'}`} />
-              {item.label}
-            </button>
-          ))}
+          {navItems.map((item) => {
+            const isActive = section === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleTabChange(item.id)}
+                className={`relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black transition-all duration-300 group ${isActive
+                    ? 'text-white scale-[1.02]'
+                    : 'text-slate-600 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-zinc-800 hover:text-[#8B004A] dark:hover:text-rose-400'
+                  }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeVendorAnalyticsDesktopPill"
+                    className="absolute inset-0 bg-[#8B004A] rounded-xl shadow-lg shadow-[#8B004A]/20 -z-10"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <item.icon className={`w-4 h-4 transition-transform duration-500 ${isActive ? 'scale-110' : 'group-hover:rotate-12'}`} />
+                <span className="relative z-10">{item.label}</span>
+              </button>
+            );
+          })}
         </nav>
       </aside>
 
@@ -389,52 +408,60 @@ function CustomTooltip({ active, payload, label }: any) {
 
 function KPICard({ title, value, icon: Icon, trend, trendLabel, subtitle, description, gradient, insight }: any) {
   return (
-    <Card className="border-0 shadow-[0_15px_30px_-5px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)] bg-white dark:bg-zinc-900/90 backdrop-blur-2xl rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-rose-500/10 dark:hover:shadow-rose-950/20 transition-all duration-500 hover:-translate-y-1.5 group relative border border-white/50 dark:border-white/5">
-      <CardContent className="p-0">
-        <div className={`h-1.5 w-full bg-gradient-to-r ${gradient}`} />
-        
-        {/* Ambient background light glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 rounded-full bg-rose-500/5 dark:bg-rose-500/10 blur-3xl pointer-events-none group-hover:scale-150 transition-all duration-700" />
-        
-        <div className="relative z-10 p-4 sm:p-6 flex flex-col justify-between h-full min-h-[190px] sm:min-h-[240px]">
+    <motion.div
+      whileHover={{ y: -6, scale: 1.01 }}
+      whileTap={{ scale: 0.98 }}
+      className="flex w-full h-full"
+    >
+      <Card className="border-0 shadow-[0_15px_30px_-5px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)] bg-white dark:bg-zinc-900/90 backdrop-blur-2xl rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-rose-500/10 dark:hover:shadow-rose-950/20 transition-all duration-500 group relative border border-white/50 dark:border-white/5 flex flex-col w-full">
+        <CardContent className="p-0 flex flex-col h-full justify-between">
           <div>
-            <div className="flex justify-between items-start mb-2 sm:mb-4">
-              <div className={`p-2.5 sm:p-3 rounded-2xl bg-gradient-to-br ${gradient} text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-md shadow-rose-500/25`}>
-                <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
-              {trend && (
-                <div className="flex items-center gap-0.5 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full text-[9px] sm:text-xs font-black shadow-sm">
-                  <TrendingUp className="w-2.5 h-2.5" />
-                  {trend}
-                </div>
-              )}
-            </div>
-            <div className="space-y-0.5 sm:space-y-1">
-              <p className="text-[9px] sm:text-xs font-black text-slate-400 dark:text-zinc-500 uppercase tracking-widest leading-none">{title}</p>
-              <p className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tighter truncate leading-tight group-hover:text-[#8B004A] dark:group-hover:text-rose-400 transition-colors">{value}</p>
-            </div>
-          </div>
-          <div>
-            {description && (
-              <p className="text-[8px] sm:text-[10px] text-slate-500 dark:text-zinc-400 font-bold mt-2 sm:mt-4 uppercase tracking-tighter">{description}</p>
-            )}
-            {subtitle && (
-              <p className="text-[10px] sm:text-xs text-slate-400 dark:text-zinc-500 font-bold mt-1 sm:mt-2">{subtitle}</p>
-            )}
+            <div className={`h-1.5 w-full bg-gradient-to-r ${gradient}`} />
             
-            {/* Live dynamic metadata insight */}
-            {insight && (
-              <div className="mt-3.5 p-2.5 rounded-2xl bg-slate-50 dark:bg-zinc-800/40 border border-slate-200/50 dark:border-white/5 flex items-start gap-2 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] group-hover:border-[#8B004A]/20 dark:group-hover:border-rose-500/20 transition-all duration-300">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mt-0.5 shrink-0 shadow-sm shadow-emerald-500/50" />
-                <span className="text-[7.5px] sm:text-[9.5px] leading-relaxed font-bold text-slate-600 dark:text-zinc-300">
-                  {insight}
-                </span>
+            {/* Ambient background light glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 rounded-full bg-rose-500/5 dark:bg-rose-500/10 blur-3xl pointer-events-none group-hover:scale-150 transition-all duration-700" />
+            
+            <div className="relative z-10 p-4 sm:p-6 flex flex-col justify-between h-full">
+              <div>
+                <div className="flex justify-between items-start mb-2 sm:mb-4">
+                  <div className={`p-2.5 sm:p-3 rounded-2xl bg-gradient-to-br ${gradient} text-white group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-md shadow-rose-500/25`}>
+                    <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </div>
+                  {trend && (
+                    <div className="flex items-center gap-0.5 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full text-[9px] sm:text-xs font-black shadow-sm">
+                      <TrendingUp className="w-2.5 h-2.5" />
+                      {trend}
+                    </div>
+                  )}
+                </div>
+                <div className="space-y-0.5 sm:space-y-1">
+                  <p className="text-[9px] sm:text-xs font-black text-slate-400 dark:text-zinc-500 uppercase tracking-widest leading-none">{title}</p>
+                  <p className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tighter truncate leading-tight group-hover:text-[#8B004A] dark:group-hover:text-rose-400 transition-colors">{value}</p>
+                </div>
               </div>
-            )}
+              <div>
+                {description && (
+                  <p className="text-[8px] sm:text-[10px] text-slate-500 dark:text-zinc-400 font-bold mt-2 sm:mt-4 uppercase tracking-tighter">{description}</p>
+                )}
+                {subtitle && (
+                  <p className="text-[10px] sm:text-xs text-slate-400 dark:text-zinc-500 font-bold mt-1 sm:mt-2">{subtitle}</p>
+                )}
+                
+                {/* Live dynamic metadata insight */}
+                {insight && (
+                  <div className="mt-3.5 p-2.5 rounded-2xl bg-slate-50 dark:bg-zinc-800/40 border border-slate-200/50 dark:border-white/5 flex items-start gap-2 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] group-hover:border-[#8B004A]/20 dark:group-hover:border-rose-500/20 transition-all duration-300">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mt-0.5 shrink-0 shadow-sm shadow-emerald-500/50" />
+                    <span className="text-[7.5px] sm:text-[9.5px] leading-relaxed font-bold text-slate-600 dark:text-zinc-300">
+                      {insight}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }
 

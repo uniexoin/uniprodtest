@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
@@ -486,36 +487,56 @@ function VendorDashboard() {
       <aside className="lg:w-64 shrink-0">
         {/* Mobile: Compact icon pill grid */}
         <nav className="grid grid-cols-3 gap-1.5 lg:hidden p-2 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-sm rounded-2xl border border-white/50 dark:border-white/10">
-          {filteredSections.map((s) => (
-            <button
-              key={s.id}
-              onClick={() => handleTabChange(s.id)}
-              className={`flex flex-col items-center justify-center gap-1 p-2.5 rounded-xl text-[10px] font-bold transition-all duration-300 ${section === s.id
-                  ? 'bg-[#8B004A] text-white shadow-lg shadow-[#8B004A]/20 scale-[1.03]'
-                  : 'text-slate-500 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-zinc-800 hover:text-[#8B004A] dark:hover:text-rose-400'
-                }`}
-            >
-              <s.icon className={`w-4 h-4 ${section === s.id ? 'scale-110' : ''}`} />
-              <span className="leading-tight text-center truncate w-full">{s.label.replace(' & ', ' ')}</span>
-            </button>
-          ))}
+          {filteredSections.map((s) => {
+            const isActive = section === s.id;
+            return (
+              <button
+                key={s.id}
+                onClick={() => handleTabChange(s.id)}
+                className={`relative flex flex-col items-center justify-center gap-1 p-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all duration-300 ${isActive
+                    ? 'text-white scale-[1.03]'
+                    : 'text-slate-500 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-zinc-800/60 hover:text-[#8B004A] dark:hover:text-rose-400'
+                  }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeTabMobilePill"
+                    className="absolute inset-0 bg-[#8B004A] rounded-xl shadow-lg shadow-[#8B004A]/25 -z-10"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <s.icon className={`w-4 h-4 transition-transform duration-300 ${isActive ? 'scale-110' : ''}`} />
+                <span className="leading-tight text-center truncate w-full relative z-10">{s.label.replace(' & ', ' ')}</span>
+              </button>
+            );
+          })}
         </nav>
 
         {/* Desktop: Vertical sidebar list */}
-        <nav className="hidden lg:flex flex-col gap-2 p-2 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-sm rounded-2xl border border-white/50 dark:border-zinc-800">
-          {filteredSections.map((s) => (
-            <button
-              key={s.id}
-              onClick={() => handleTabChange(s.id)}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold whitespace-nowrap transition-all duration-300 group ${section === s.id
-                  ? 'bg-[#8B004A] text-white shadow-xl shadow-[#8B004A]/20 scale-[1.02]'
-                  : 'text-slate-500 dark:text-zinc-400 hover:bg-white dark:hover:bg-zinc-800 hover:text-[#8B004A] dark:hover:text-rose-400 hover:shadow-md dark:hover:shadow-none'
-                }`}
-            >
-              <s.icon className={`w-4 h-4 transition-transform duration-500 ${section === s.id ? 'scale-110' : 'group-hover:rotate-12'}`} />
-              {s.label}
-            </button>
-          ))}
+        <nav className="hidden lg:flex flex-col gap-1.5 p-2 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-sm rounded-2xl border border-white/50 dark:border-zinc-800">
+          {filteredSections.map((s) => {
+            const isActive = section === s.id;
+            return (
+              <button
+                key={s.id}
+                onClick={() => handleTabChange(s.id)}
+                className={`relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black transition-all duration-300 group ${isActive
+                    ? 'text-white scale-[1.02]'
+                    : 'text-slate-500 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-zinc-800/60 hover:text-[#8B004A] dark:hover:text-rose-400'
+                  }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeTabDesktopPill"
+                    className="absolute inset-0 bg-[#8B004A] rounded-xl shadow-xl shadow-[#8B004A]/20 -z-10"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <s.icon className={`w-4 h-4 transition-transform duration-500 ${isActive ? 'scale-110' : 'group-hover:rotate-12'}`} />
+                <span className="relative z-10">{s.label}</span>
+              </button>
+            );
+          })}
         </nav>
 
         {/* Vendor Status — hidden on mobile to save space */}

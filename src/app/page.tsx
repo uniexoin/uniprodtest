@@ -176,19 +176,20 @@ function Landing() {
               <motion.div variants={fadeUp} className="mb-8">
                 <div className="flex flex-wrap gap-4">
                   {[
-                    { icon: Car, label: 'Vehicle', color: 'primary', href: '/vehicles' },
-                    { icon: HomeIcon, label: 'Room', color: 'primary', href: '/houses' },
-                    { icon: ShoppingBag, label: 'Item', color: 'primary', href: '/marketplace' },
-                    { icon: WashingMachine, label: 'Laundry', color: 'primary', href: '/laundry' }
+                    { icon: Car, label: 'Vehicle', href: '/vehicles', borderHover: 'hover:border-indigo-500 hover:shadow-[0_15px_30px_-5px_rgba(99,102,241,0.25)]', iconColor: 'text-indigo-500 dark:text-indigo-400' },
+                    { icon: HomeIcon, label: 'Room', href: '/houses', borderHover: 'hover:border-amber-500 hover:shadow-[0_15px_30px_-5px_rgba(245,158,11,0.25)]', iconColor: 'text-amber-500 dark:text-amber-400' },
+                    { icon: ShoppingBag, label: 'Item', href: '/marketplace', borderHover: 'hover:border-pink-500 hover:shadow-[0_15px_30px_-5px_rgba(236,72,153,0.25)]', iconColor: 'text-pink-500 dark:text-pink-400' },
+                    { icon: WashingMachine, label: 'Laundry', href: '/laundry', borderHover: 'hover:border-cyan-500 hover:shadow-[0_15px_30px_-5px_rgba(6,182,212,0.25)]', iconColor: 'text-cyan-500 dark:text-cyan-400' }
                   ].map((item, idx) => (
                     <motion.div 
                       key={idx}
                       onClick={() => router.push(item.href)}
-                      whileHover={{ y: -5, scale: 1.02 }}
-                      className={`glass p-4 rounded-2xl flex flex-col items-center justify-center w-28 h-28 cursor-pointer transition-all hover:border-primary/50 group ${item.label === 'Room' ? 'ring-2 ring-accent shadow-accent/10' : ''}`}
+                      whileHover={{ y: -8, scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`glass p-4 rounded-2xl flex flex-col items-center justify-center w-28 h-28 cursor-pointer transition-all duration-300 border border-border/40 dark:border-white/5 ${item.borderHover}`}
                     >
-                      <item.icon className="w-8 h-8 text-primary mb-3 group-hover:scale-110 transition-transform" />
-                      <span className="text-xs font-bold uppercase tracking-wider">{item.label}</span>
+                      <item.icon className={`w-8 h-8 mb-3 transition-transform duration-500 group-hover:scale-115 group-hover:rotate-6 ${item.iconColor}`} />
+                      <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-200">{item.label}</span>
                     </motion.div>
                   ))}
                 </div>

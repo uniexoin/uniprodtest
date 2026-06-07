@@ -273,20 +273,20 @@ export function AirbnbListingCard({
 
         {/* ── Text Content ────────────────────────────────────── */}
         <div className="mt-3">
-          <h3 className="text-[15px] font-semibold text-slate-900 truncate leading-tight">
+          <h3 className="text-[15px] font-semibold text-slate-900 dark:text-zinc-100 truncate leading-tight">
             {title}
           </h3>
           
-          <div className="flex items-center gap-1.5 mt-1 text-[14px] text-slate-600">
+          <div className="flex items-center gap-1.5 mt-1 text-[14px] text-slate-600 dark:text-zinc-400">
             <span className="truncate">
               ₹{formattedPrice} {subtitle ? `for ${subtitle}` : ''}
             </span>
             {rating !== undefined && rating > 0 && (
               <>
-                <span className="text-slate-400">•</span>
+                <span className="text-slate-400 dark:text-zinc-600">•</span>
                 <div className="flex items-center gap-1 shrink-0">
-                  <Star className="w-3.5 h-3.5 fill-slate-900 text-slate-900" />
-                  <span className="font-medium text-slate-900">
+                  <Star className="w-3.5 h-3.5 fill-slate-900 text-slate-900 dark:fill-zinc-300 dark:text-zinc-300" />
+                  <span className="font-medium text-slate-900 dark:text-zinc-300">
                     {rating.toFixed(2)}
                   </span>
                 </div>
