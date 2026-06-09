@@ -9,13 +9,17 @@ import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { ProtectedRoute } from '@/components/protected-route';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PaymentsReceivedView } from './elite-components/PaymentsReceivedView';
+import { ProfileView } from './elite-components/ProfileView';
+import { LaundrySettingsView } from './elite-components/LaundrySettingsView';
+import { LaundryPipelineView } from './elite-components/LaundryPipelineView';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   CalendarCheck, ShoppingBag, Wallet, Car, Home, Package,
   TrendingUp, Clock, CheckCircle, XCircle, LayoutDashboard,
   ListOrdered, Store, CreditCard, Shirt, Handshake, ShieldAlert, WashingMachine,
-  Zap, Activity
+  Zap, Activity, BarChart3, FileText
 } from 'lucide-react';
 import { useMyOffers, useUpdateOfferStatus } from '@/hooks/use-offers';
 import {
@@ -28,12 +32,10 @@ import { AddVehicleDialog } from '@/components/add-vehicle-dialog';
 import { AddHouseDialog } from '@/components/add-house-dialog';
 import { useUpdateBookingStatus } from '@/hooks/use-booking';
 import { useDeleteVehicle } from '@/hooks/use-vehicles';
-import { useVendorLaundryService, useUpdateVendorLaundryService } from '@/hooks/use-laundry-services';
 import { useVendorInsights } from '@/hooks/use-intelligence';
 import { VendorAnalyticsDashboard, OverviewSection, RevenueSection, LedgerSection, FleetSection, RoomsSection, LaundrySection } from './vendor-analytics';
 
 // ─── Sidebar navigation ─────────────────────────────────────────────
-import { BarChart3, FileText } from 'lucide-react';
 
 const userSections = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -57,6 +59,7 @@ const vendorSections = [
   { id: 'intelligence', label: 'Intelligence & Surge', icon: Zap },
   { id: 'payments', label: 'Payments Received', icon: CreditCard },
   { id: 'offers', label: 'Offers Received', icon: Handshake, serviceType: 'marketplace' },
+  { id: 'profile', label: 'Profile Settings', icon: FileText },
 ];
 
 // ─── Status badge helper ────────────────────────────────────────────
@@ -471,12 +474,10 @@ function VendorDashboard() {
 
   const filteredSections = vendorSections.filter(s => {
     if (!s.serviceType) return true;
-    // Always show fleet and rooms management boards for all vendors
     if (s.id === 'fleet' || s.id === 'rooms') return true;
     const userType = vendorProfile?.serviceType?.toLowerCase();
     const sectionType = s.serviceType?.toLowerCase();
     if (userType === sectionType) return true;
-    // Map room/pg to house features
     if ((userType === 'room' || userType === 'pg') && sectionType === 'house') return true;
     return false;
   });
@@ -588,9 +589,6 @@ function VendorDashboard() {
                 <AddHouseDialog />
               </div>
             )}
-            <Button asChild variant="outline" className="rounded-xl h-9 sm:h-11 text-xs sm:text-sm border-[#8B004A]/20 text-[#8B004A] hover:bg-[#8B004A] hover:text-white transition-all font-bold">
-              <Link href="/profile">Profile Settings</Link>
-            </Button>
           </div>
         </div>
 
@@ -599,7 +597,10 @@ function VendorDashboard() {
         {section === 'ledger' && <LedgerSection />}
         {section === 'fleet' && <FleetSection />}
         {section === 'rooms' && <RoomsSection />}
-        {section === 'laundry-pipeline' && <LaundrySection />}
+        {section === 'laundry-pipeline' && <LaundryPipelineView />}
+        {section === 'profile' && <ProfileView />}
+        {section === 'laundry-settings' && <LaundrySettingsView />}
+        {section === 'payments' && <PaymentsReceivedView />}
 
         {section === 'vehicles' && (
           <>
@@ -946,87 +947,6 @@ function VendorDashboard() {
           </>
         )}
         {section === 'intelligence' && <VendorIntelligenceSection vendorId={user?.id || ''} />}
-        {section === 'payments' && (
-          <>
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold tracking-tight">Payments Received</h2>
-              <div className="text-right">
-                <p className="text-sm text-muted-foreground">Total Earned</p>
-                <p className="text-xl font-bold text-green-600">₹{totalEarned.toLocaleString()}</p>
-              </div>
-            </div>
-            {loadingPayments ? (
-              <div className="space-y-3">{Array.from({ length: 3 }).map((_, i) => <Card key={i} className="p-6 animate-pulse"><div className="h-4 bg-muted rounded w-48" /></Card>)}</div>
-            ) : payments.length === 0 ? (
-              <Card className="p-12 text-center">
-                <CreditCard className="w-12 h-12 mx-auto text-muted-foreground/50 mb-4" />
-                <h3 className="text-lg font-medium">No payments received yet</h3>
-                <p className="text-muted-foreground text-sm mt-1">When users pay for your bookings, transactions appear here.</p>
-              </Card>
-            ) : (
-              <Card className="overflow-hidden bg-transparent border-0 md:border md:bg-card">
-                {/* Mobile View */}
-                <div className="space-y-4 md:hidden">
-                  {payments.map((p: any) => (
-                    <Card key={p.id} className="p-4 hover:shadow-md transition-shadow">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <span className="text-[10px] text-muted-foreground">{new Date(p.created_at).toLocaleDateString()}</span>
-                          <h4 className="font-bold text-sm text-foreground mt-0.5">{p.user?.name || 'Customer'}</h4>
-                          <p className="text-[10px] text-muted-foreground">{p.user?.email}</p>
-                        </div>
-                        <Badge variant={p.status === 'captured' ? 'default' : 'secondary'} className={p.status === 'captured' ? 'bg-green-100 text-green-700' : ''}>
-                          {p.status}
-                        </Badge>
-                      </div>
-                      <div className="flex justify-between items-center pt-2 border-t border-border/40 text-xs">
-                        <span className="text-muted-foreground font-mono">Booking: {p.booking_id.slice(0, 8)}...</span>
-                        <span className="font-bold text-green-600">₹{p.amount}</span>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-
-                {/* Desktop View */}
-                <div className="overflow-x-auto hidden md:block">
-                  <table className="w-full text-sm">
-                    <thead className="bg-muted/50"><tr>
-                      <th className="px-4 py-3 text-left font-medium">Date</th>
-                      <th className="px-4 py-3 text-left font-medium">Customer</th>
-                      <th className="px-4 py-3 text-left font-medium">Booking ID</th>
-                      <th className="px-4 py-3 text-left font-medium">Amount</th>
-                      <th className="px-4 py-3 text-left font-medium">Status</th>
-                    </tr></thead>
-                    <tbody className="divide-y">
-                      {payments.map((p: any) => (
-                        <tr key={p.id} className="hover:bg-muted/30 transition-colors">
-                          <td className="px-4 py-3 text-muted-foreground">{new Date(p.created_at).toLocaleDateString()}</td>
-                          <td className="px-4 py-3 font-medium">
-                            <div>
-                              <p>{p.user?.name || 'Customer'}</p>
-                              <p className="text-[10px] text-muted-foreground">{p.user?.email}</p>
-                            </div>
-                          </td>
-                          <td className="px-4 py-3 text-xs font-mono">{p.booking_id.slice(0, 8)}...</td>
-                          <td className="px-4 py-3 font-bold text-green-600">₹{p.amount}</td>
-                          <td className="px-4 py-3">
-                            <Badge variant={p.status === 'captured' ? 'default' : 'secondary'} className={p.status === 'captured' ? 'bg-green-100 text-green-700' : ''}>
-                              {p.status}
-                            </Badge>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </Card>
-            )}
-          </>
-        )}
-
-        {section === 'laundry-settings' && (
-          <LaundryServiceSettings />
-        )}
         {section === 'my-orders' && (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold tracking-tight">My Purchases & Bookings</h2>
@@ -1120,138 +1040,6 @@ function WalletSection() {
       <Card className="p-6 text-center text-muted-foreground">
         <CreditCard className="w-10 h-10 mx-auto mb-3 opacity-50" />
         <p className="text-sm">Transaction history will appear here as you make bookings and receive payments.</p>
-      </Card>
-    </>
-  );
-}
-
-// ─── LAUNDRY SERVICE SETTINGS (VENDOR) ──────────────────────────────
-function LaundryServiceSettings() {
-  const { data: service, isLoading } = useVendorLaundryService();
-  const updateService = useUpdateVendorLaundryService();
-  const [onsiteCharge, setOnsiteCharge] = useState('');
-
-  if (isLoading) {
-    return (
-      <div className="space-y-3">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <Card key={i} className="p-6 animate-pulse">
-            <div className="h-4 bg-muted rounded w-48" />
-          </Card>
-        ))}
-      </div>
-    );
-  }
-
-  if (!service) {
-    return (
-      <Card className="p-12 text-center">
-        <WashingMachine className="w-12 h-12 mx-auto text-muted-foreground/50 mb-4" />
-        <h3 className="text-lg font-medium">No Laundry Service Found</h3>
-        <p className="text-muted-foreground text-sm mt-1">Your laundry service will appear here once approved by admin.</p>
-      </Card>
-    );
-  }
-
-  const handleToggle = async (field: 'onsitePickup' | 'onStoreService', value: boolean) => {
-    // Prevent disabling both
-    if (field === 'onsitePickup' && !value && !service.onStoreService) return;
-    if (field === 'onStoreService' && !value && !service.onsitePickup) return;
-
-    try {
-      await updateService.mutateAsync({ [field]: value });
-    } catch (err: any) {
-      console.error(err);
-    }
-  };
-
-  const handleSaveCharge = async () => {
-    try {
-      await updateService.mutateAsync({ onsitePickupCharge: Number(onsiteCharge) || 0 });
-    } catch (err: any) {
-      console.error(err);
-    }
-  };
-
-  return (
-    <>
-      <h2 className="text-2xl font-bold tracking-tight">My Laundry Service</h2>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Service Mode Settings</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-sm text-muted-foreground">
-            Control how customers can use your laundry service. Changes take effect immediately.
-          </p>
-
-          {/* On Store Toggle */}
-          <div className="flex items-center justify-between p-4 rounded-xl border">
-            <div>
-              <p className="font-medium">🏪 On Store Service</p>
-              <p className="text-xs text-muted-foreground">Customers drop clothes at your store</p>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleToggle('onStoreService', !service.onStoreService)}
-              disabled={updateService.isPending}
-              className={`w-12 h-7 rounded-full transition-colors flex items-center ${service.onStoreService ? 'bg-primary justify-end' : 'bg-muted justify-start'
-                }`}
-            >
-              <div className="w-5 h-5 rounded-full bg-white shadow mx-1 transition-all" />
-            </button>
-          </div>
-
-          {/* Onsite Pickup Toggle */}
-          <div className="flex items-center justify-between p-4 rounded-xl border">
-            <div>
-              <p className="font-medium">🚚 Onsite Pickup</p>
-              <p className="text-xs text-muted-foreground">You pick up clothes from customer location</p>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleToggle('onsitePickup', !service.onsitePickup)}
-              disabled={updateService.isPending}
-              className={`w-12 h-7 rounded-full transition-colors flex items-center ${service.onsitePickup ? 'bg-primary justify-end' : 'bg-muted justify-start'
-                }`}
-            >
-              <div className="w-5 h-5 rounded-full bg-white shadow mx-1 transition-all" />
-            </button>
-          </div>
-
-          {/* Pickup Charge */}
-          {service.onsitePickup && (
-            <div className="p-4 rounded-xl border space-y-3">
-              <p className="font-medium text-sm">Onsite Pickup Charge</p>
-              <p className="text-xs text-muted-foreground">Current: ₹{service.onsitePickupCharge || 0}</p>
-              <div className="flex gap-2">
-                <input
-                  type="number"
-                  min="0"
-                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm"
-                  placeholder="Enter new charge"
-                  value={onsiteCharge}
-                  onChange={(e) => setOnsiteCharge(e.target.value)}
-                />
-                <Button
-                  size="sm"
-                  onClick={handleSaveCharge}
-                  disabled={updateService.isPending || !onsiteCharge}
-                >
-                  Update
-                </Button>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200/50 dark:border-blue-800/30">
-        <CardContent className="pt-6 text-sm text-blue-700 dark:text-blue-400">
-          <p className="font-medium mb-1">💡 Tip</p>
-          <p>Toggling these settings instantly changes what customers see. If you enable onsite pickup, customers will see a pickup option with your charge added to their total.</p>
-        </CardContent>
       </Card>
     </>
   );

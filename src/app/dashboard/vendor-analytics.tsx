@@ -58,7 +58,7 @@ export function VendorAnalyticsDashboard() {
     ...(serviceType === 'laundry' ? [{ id: 'laundry', label: t('laundryPipeline'), icon: Shirt }] : []),
   ];
 
-  if (loadingOverview) return <div className="p-8 text-center animate-pulse text-[#8B004A] dark:text-rose-400">Loading Analytics Engine...</div>;
+  // Loading handled gracefully - no blocking screen
 
   const handleTabChange = (id: string) => {
     startTransition(() => {
@@ -472,27 +472,64 @@ export function RevenueSection() {
   const serviceType = overview?.serviceType;
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-3xl font-extrabold tracking-tight">Revenue & Sales</h2>
+    <div className="space-y-8 animate-fade-in">
+      <div className="flex items-center justify-between">
+        <h2 className="font-headline-lg text-headline-lg text-on-surface">Revenue & Sales</h2>
+        <div className="flex gap-2">
+           <button className="px-4 py-2 rounded-full bg-surface-container border border-outline/20 text-sm font-semibold text-secondary hover:bg-surface-variant transition-colors">Export CSV</button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+         <div className="glass-panel p-6 rounded-2xl relative overflow-hidden">
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/5 rounded-full blur-2xl pointer-events-none"></div>
+            <p className="font-label-md text-label-md text-secondary uppercase tracking-widest mb-2">Total Revenue</p>
+            <p className="font-headline-lg text-headline-lg text-primary text-4xl mb-1">₹{(overview?.netEarnings || 0).toLocaleString()}</p>
+            <div className="flex items-center gap-1 text-on-tertiary-container bg-tertiary-container/10 px-2 py-0.5 rounded-full w-fit">
+               <span className="material-symbols-outlined text-[10px]">trending_up</span>
+               <span className="text-[10px] font-bold">+12.5% this month</span>
+            </div>
+         </div>
+         <div className="glass-panel p-6 rounded-2xl relative overflow-hidden">
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-secondary/5 rounded-full blur-2xl pointer-events-none"></div>
+            <p className="font-label-md text-label-md text-secondary uppercase tracking-widest mb-2">Pending Clearances</p>
+            <p className="font-headline-lg text-headline-lg text-on-surface text-4xl mb-1">₹{(overview?.pendingEarnings || 0).toLocaleString()}</p>
+            <div className="flex items-center gap-1 text-secondary text-[10px] font-bold px-2 py-0.5 rounded-full w-fit bg-surface-container">
+               To be cleared in 2-3 days
+            </div>
+         </div>
+         <div className="glass-panel p-6 rounded-2xl relative overflow-hidden flex flex-col justify-center items-center text-center">
+            <div className="w-12 h-12 bg-primary text-on-primary rounded-full flex items-center justify-center mb-3 shadow-lg">
+               <span className="material-symbols-outlined">account_balance_wallet</span>
+            </div>
+            <p className="font-title-lg text-title-lg text-sm text-on-surface font-semibold mb-1">Ready for Withdrawal</p>
+            <button className="text-primary text-sm font-bold hover:underline">Manage Wallet</button>
+         </div>
+      </div>
+
       {sales && (
-        <Card className="shadow-lg border-0">
-          <CardHeader>
-            <CardTitle>Monthly Revenue Growth</CardTitle>
-          </CardHeader>
-          <CardContent className="h-[400px]">
+        <section className="glass-panel p-8 rounded-3xl mt-8">
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="font-headline-md text-headline-md text-on-surface">Revenue Dynamics</h3>
+            <select className="bg-surface-container border border-outline/20 text-on-surface font-title-lg text-title-lg text-sm px-4 py-2 rounded-lg outline-none cursor-pointer hover:bg-surface-variant transition-colors">
+              <option>Last 12 Months</option>
+              <option>Last 6 Months</option>
+            </select>
+          </div>
+          <div className="h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={sales.monthlySeries}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <RechartsTooltip cursor={{ fill: 'transparent' }} />
-                {(!serviceType || serviceType === 'vehicle') && <Bar dataKey="vehicle" stackId="a" fill="#8B004A" radius={[0, 0, 4, 4]} />}
-                {(!serviceType || serviceType === 'house') && <Bar dataKey="house" stackId="a" fill="#5B2C6F" />}
-                {(!serviceType || serviceType === 'laundry') && <Bar dataKey="laundry" stackId="a" fill="#D2B4DE" radius={[4, 4, 0, 0]} />}
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#87717730" />
+                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{fill: '#5c5f60', fontSize: 12}} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{fill: '#5c5f60', fontSize: 12}} />
+                <RechartsTooltip cursor={{ fill: 'rgba(112, 13, 62, 0.05)' }} contentStyle={{ backgroundColor: '#191c1d', borderRadius: '12px', border: 'none', color: '#fff' }} />
+                {(!serviceType || serviceType === 'vehicle') && <Bar dataKey="vehicle" stackId="a" fill="#4d0027" radius={[0, 0, 4, 4]} />}
+                {(!serviceType || serviceType === 'house') && <Bar dataKey="house" stackId="a" fill="#700d3e" />}
+                {(!serviceType || serviceType === 'laundry') && <Bar dataKey="laundry" stackId="a" fill="#f57ba9" radius={[4, 4, 0, 0]} />}
               </BarChart>
             </ResponsiveContainer>
-          </CardContent>
-        </Card>
+          </div>
+        </section>
       )}
     </div>
   );

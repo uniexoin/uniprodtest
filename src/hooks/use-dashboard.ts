@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { useRealtimeSync } from './use-realtime';
 
@@ -98,6 +98,7 @@ export const useVendorBookings = (page = 1, limit = 10) => {
         },
         refetchInterval: REALTIME_INTERVAL,
         staleTime: REALTIME_STALE,
+        placeholderData: keepPreviousData,
     });
 };
 
@@ -272,6 +273,7 @@ export const useVendorAnalyticsOverview = () => {
         },
         refetchInterval: REALTIME_INTERVAL,
         staleTime: REALTIME_STALE,
+        placeholderData: keepPreviousData,
     });
 };
 
@@ -304,6 +306,7 @@ export const useVendorLedger = (page = 1, limit = 20) => {
         },
         refetchInterval: REALTIME_INTERVAL,
         staleTime: REALTIME_STALE,
+        placeholderData: keepPreviousData,
     });
 };
 
@@ -336,6 +339,7 @@ export const useVendorBookingTrends = (days = 30) => {
         },
         refetchInterval: REALTIME_INTERVAL,
         staleTime: REALTIME_STALE,
+        placeholderData: keepPreviousData,
     });
 };
 
@@ -368,6 +372,7 @@ export const useVendorRoomOccupancy = () => {
         },
         refetchInterval: 3000,
         staleTime: REALTIME_STALE,
+        placeholderData: keepPreviousData,
     });
 };
 
@@ -385,5 +390,6 @@ export const useVendorPayments = (page = 1, limit = 20) => {
         },
         refetchInterval: REALTIME_INTERVAL,
         staleTime: REALTIME_STALE,
+        placeholderData: keepPreviousData,
     });
 };

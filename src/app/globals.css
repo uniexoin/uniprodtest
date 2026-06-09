@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
 @layer base {
   :root {
     --radius: 1rem;
@@ -159,6 +162,67 @@
     --surface: #121430;
     --border: #F8F9FF15;
     --accent: #F72585;
+  }
+
+  /* ── Elite Vendor Theme (Stitch Design) ────────── */
+  .theme-vendor-elite {
+    --primary: #4d0027;
+    --primary-foreground: #ffffff;
+    --primary-container: #700d3e;
+    --on-primary-container: #f57ba9;
+    --secondary: #5c5f60;
+    --secondary-foreground: #ffffff;
+    --secondary-container: #e1e3e4;
+    --on-secondary-container: #626566;
+    --tertiary: #002b12;
+    --tertiary-container: #00431f;
+    --on-tertiary-container: #36b96a;
+    --background: #f4f5f7;
+    --foreground: #0b1c30;
+    --surface: #f8f9ff;
+    --surface-variant: #d3e4fe;
+    --surface-container: #e5eeff;
+    --surface-container-low: #eff4ff;
+    --surface-container-high: #dce9ff;
+    --on-surface: #0b1c30;
+    --on-surface-variant: #554247;
+    --outline: #877177;
+    --outline-variant: #dac0c6;
+    --error: #ba1a1a;
+    --error-container: #ffdad6;
+    --on-error: #ffffff;
+    --on-error-container: #93000a;
+    --border: #87717730;
+  }
+  .dark .theme-vendor-elite {
+    /* Mapped to dark equivalents or kept dark plum focused */
+    --primary: #ffb0ca;
+    --primary-foreground: #3e001f;
+    --primary-container: #700d3e;
+    --on-primary-container: #ffd9e3;
+    --secondary: #c5c7c8;
+    --secondary-foreground: #191c1d;
+    --secondary-container: #454748;
+    --on-secondary-container: #e1e3e4;
+    --tertiary: #7efba4;
+    --tertiary-container: #005228;
+    --on-tertiary-container: #9af8be;
+    --background: #191c1d;
+    --foreground: #e1e3e4;
+    --surface: #191c1d;
+    --surface-variant: #454748;
+    --surface-container: #213145;
+    --surface-container-low: #1c2631;
+    --surface-container-high: #293b51;
+    --on-surface: #e1e3e4;
+    --on-surface-variant: #c5c7c8;
+    --outline: #8a9296;
+    --outline-variant: #454748;
+    --error: #ffb4ab;
+    --error-container: #93000a;
+    --on-error: #690005;
+    --on-error-container: #ffdad6;
+    --border: #8a929630;
   }
 }
 
@@ -396,6 +460,42 @@
 .animate-glow       { animation: glow-pulse 2s ease-in-out infinite; }
 .animate-spin-slow  { animation: spin-slow 8s linear infinite; }
 .animate-bounce-soft { animation: bounce-soft 2s ease-in-out infinite; }
+
+/* ── Vendorelite Glass Panels ────────────────────── */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 4px 22px rgba(0, 0, 0, 0.04);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.025);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(77, 0, 39, 0.05);
+}
+
+/* Background Flow effect (CSS fallback for WebGL) */
+@keyframes slow-move {
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
+}
+
+.flow-bg {
+  background: linear-gradient(-45deg, #fce4ec, #f3e5f5, #e8eaf6, #efebe9);
+  background-size: 400% 400%;
+  animation: slow-move 20s ease infinite;
+}
 
 /* Staggered delays for children */
 .stagger-1 { animation-delay: 0.05s; }

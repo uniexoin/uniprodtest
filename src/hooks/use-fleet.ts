@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/modules/auth/auth.store';
 
@@ -15,6 +15,7 @@ export const useVehicleFleet = () => {
             return { fleet: json.data || [], todayRevenue: json.todayRevenue || 0 };
         },
         refetchInterval: 3000, // Real-time 3s DB refresh
+        placeholderData: keepPreviousData,
     });
 };
 
@@ -111,5 +112,6 @@ export const useVehicleOperations = () => {
             return json.data || [];
         },
         refetchInterval: 5000,
+        placeholderData: keepPreviousData,
     });
 };
