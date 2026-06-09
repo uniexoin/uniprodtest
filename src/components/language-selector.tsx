@@ -9,15 +9,15 @@ export function LanguageSelector() {
     setMounted(true);
     // If the script is already loaded and the init function exists, call it to re-render
     // when navigating between pages (since Next.js doesn't reload the page completely)
-    if (window.google && window.google.translate && window.google.translate.TranslateElement) {
+    if ((window as any).google && (window as any).google.translate && (window as any).google.translate.TranslateElement) {
       // Clear the element first just in case
       const el = document.getElementById('google_translate_element');
       if (el) el.innerHTML = '';
       
       try {
-        new window.google.translate.TranslateElement({
+        new (window as any).google.translate.TranslateElement({
           pageLanguage: 'en',
-          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+          layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE,
           autoDisplay: false
         }, 'google_translate_element');
       } catch (e) {
