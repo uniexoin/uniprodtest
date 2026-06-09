@@ -3,9 +3,11 @@
 import { ArrowLeft, Bell, MapPin, Wallet, Bitcoin, CreditCard, ShieldCheck, Box } from 'lucide-react';
 import Link from 'next/link';
 import { useMarketplaceItem } from '@/hooks/use-marketplace-items';
+import { use } from 'react';
 
-export default function CheckoutPage({ params }: { params: { id: string } }) {
-  const { data: item, isLoading } = useMarketplaceItem(params.id);
+export default function CheckoutPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params);
+  const { data: item, isLoading } = useMarketplaceItem(resolvedParams.id);
 
   if (isLoading || !item) {
     return (
@@ -22,7 +24,7 @@ export default function CheckoutPage({ params }: { params: { id: string } }) {
     <div className="min-h-screen bg-[#0A0F1C] text-foreground pb-12">
       {/* Top Nav */}
       <div className="p-4 pt-safe flex justify-between items-center bg-[#0A0F1C] sticky top-0 z-50 border-b border-white/5">
-        <Link href={`/marketplace/${params.id}`} className="p-2 text-white/80 hover:text-white transition-colors tap-feedback">
+        <Link href={`/marketplace/${resolvedParams.id}`} className="p-2 text-white/80 hover:text-white transition-colors tap-feedback">
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <span className="font-black text-white text-lg tracking-tight">Uniexo</span>

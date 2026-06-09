@@ -3,9 +3,11 @@
 import { ArrowLeft, Heart, Share2, ShieldCheck, Battery, Bluetooth, Weight, Palette, MessageSquare, Truck, Package } from 'lucide-react';
 import Link from 'next/link';
 import { useMarketplaceItem } from '@/hooks/use-marketplace-items';
+import { use } from 'react';
 
-export default function MarketplaceItemPage({ params }: { params: { id: string } }) {
-  const { data: item, isLoading } = useMarketplaceItem(params.id);
+export default function MarketplaceItemPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params);
+  const { data: item, isLoading } = useMarketplaceItem(resolvedParams.id);
 
   if (isLoading || !item) {
     return (
@@ -118,7 +120,7 @@ export default function MarketplaceItemPage({ params }: { params: { id: string }
         <button className="flex-1 py-4 rounded-2xl bg-white/5 border border-white/10 text-xs font-black uppercase tracking-widest text-white hover:bg-white/10 transition-colors">
           Add to Cart
         </button>
-        <Link href={`/marketplace/${params.id}/checkout`} className="flex-1 py-4 rounded-2xl bg-[#C3C6FF] text-black text-xs font-black uppercase tracking-widest text-center hover:bg-white transition-colors shadow-[0_0_20px_rgba(195,198,255,0.3)] flex items-center justify-center">
+        <Link href={`/marketplace/${resolvedParams.id}/checkout`} className="flex-1 py-4 rounded-2xl bg-[#C3C6FF] text-black text-xs font-black uppercase tracking-widest text-center hover:bg-white transition-colors shadow-[0_0_20px_rgba(195,198,255,0.3)] flex items-center justify-center">
           Secure Item
         </Link>
       </div>
