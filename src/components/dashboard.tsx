@@ -13,7 +13,10 @@ import {
   MapPin,
   TrendingUp,
   Map,
-  Tag
+  Tag,
+  User,
+  Heart,
+  ShieldCheck
 } from 'lucide-react';
 import { useAuthStore } from '@/modules/auth/auth.store';
 import { useHouses } from '@/hooks/use-houses';
