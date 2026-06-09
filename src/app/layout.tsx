@@ -16,6 +16,7 @@ import { IntelligencePulse } from "@/components/intelligence-pulse";
 import { OnboardingGuide } from "@/components/onboarding-guide";
 import { SuccessAnimationOverlay } from "@/components/success-animation-overlay";
 import { GlobalLoaderOverlay } from "@/components/global-loader-overlay";
+import { PricingBadge } from "@/components/pricing-badge";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -95,6 +96,7 @@ export default function RootLayout({
         <Providers>
           <UniExoProvider>
             <CacheManager />
+            <PricingBadge />
             <IntelligencePulse />
             <OnboardingGuide />
             <Navbar />
