@@ -610,6 +610,7 @@
   }
   .dark .premium-scrollbar::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.25);
+  }
 }
 
 /* Hide Google Translate Widget and Top Bar */
