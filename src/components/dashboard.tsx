@@ -18,20 +18,26 @@ import {
 import { useAuthStore } from '@/modules/auth/auth.store';
 import { useHouses } from '@/hooks/use-houses';
 import { useVehicles } from '@/hooks/use-vehicles';
+import { useLaundryServices } from '@/hooks/use-laundry-services';
+import { useMarketplaceItems } from '@/hooks/use-marketplace-items';
 import { AirbnbListingCard } from '@/components/airbnb-listing-card';
 import Link from 'next/link';
 
-export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'homes' | 'experiences' | 'services' }) {
+export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'homes' | 'experiences' | 'services' | 'marketplace' }) {
   const { user } = useAuthStore();
   const { data: houses = [], isLoading: isLoadingHouses } = useHouses();
   const { data: vehicles = [], isLoading: isLoadingVehicles } = useVehicles();
-  const [activeCategory, setActiveCategory] = useState<'homes' | 'experiences' | 'services'>(initialCategory);
+  const { data: laundryServices = [], isLoading: isLoadingLaundry } = useLaundryServices();
+  const { data: marketplaceItems = [], isLoading: isLoadingMarketplace } = useMarketplaceItems();
+  
+  const [activeCategory, setActiveCategory] = useState<'homes' | 'experiences' | 'services' | 'marketplace'>(initialCategory);
 
   // Match the screenshot exact category structure
   const categories = [
     { id: 'homes', label: 'Homes', icon: Home, isNew: false, image: '/homes-icon.png' },
     { id: 'experiences', label: 'Experiences', icon: Car, isNew: true, image: '/exp-icon.png' },
     { id: 'services', label: 'Services', icon: WashingMachine, isNew: true, image: '/serv-icon.png' },
+    { id: 'marketplace', label: 'Marketplace', icon: ShoppingBag, isNew: true, image: '/market-icon.png' },
   ] as const;
 
   const popularHomes = houses.filter((h: any) => h.propertyType === 'room' || h.propertyType === 'house').slice(0, 6);
@@ -117,7 +123,7 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
             >
               {activeCategory === 'homes' && (
                 <>
-                  <Section title="Popular homes in Noida">
+                  <Section title="Popular homes">
                     {isLoadingHouses ? (
                       [1, 2, 3].map(i => (
                         <div key={i} className="min-w-[85vw] w-[85vw] sm:min-w-[320px] sm:w-[320px] snap-center shrink-0 space-y-3">
@@ -133,6 +139,7 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                             id={room._id}
                             title={room.title}
                             subtitle={`${room.pricePerMonth ? '1 month' : '1 night'}`}
+                            secondaryInfo={room.city}
                             images={room.images?.length ? room.images : ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267']}
                             price={room.pricePerMonth || room.pricePerDay || 0}
                             priceUnit={room.pricePerMonth ? 'month' : 'night'}
@@ -145,7 +152,7 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                     )}
                   </Section>
 
-                  <Section title="Available in Gurgaon District this weekend">
+                  <Section title="Available this weekend">
                     {isLoadingHouses ? (
                       [1, 2, 3].map(i => (
                         <div key={i} className="min-w-[85vw] w-[85vw] sm:min-w-[320px] sm:w-[320px] snap-center shrink-0 space-y-3">
@@ -161,6 +168,7 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                             id={room._id}
                             title={room.title}
                             subtitle={`${room.pricePerMonth ? '1 month' : '1 night'}`}
+                            secondaryInfo={room.city}
                             images={room.images?.length ? room.images : ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267']}
                             price={room.pricePerMonth || room.pricePerDay || 0}
                             priceUnit={room.pricePerMonth ? 'month' : 'night'}
@@ -172,6 +180,7 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                       ))
                     )}
                   </Section>
+
                 </>
               )}
 
@@ -192,6 +201,7 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                             id={vehicle._id}
                             title={`${vehicle.brand} ${vehicle.model}`}
                             subtitle="1 trip"
+                            secondaryInfo={vehicle.location}
                             images={vehicle.images?.length ? vehicle.images : ['https://images.unsplash.com/photo-1555215695-3004980ad54e']}
                             price={vehicle.pricePerDay || 0}
                             priceUnit="trip"
@@ -203,34 +213,105 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                       ))
                     )}
                   </Section>
+                  
+                  {/* Cross-selling in Experiences */}
+                  <Section title="Marketplace Essentials" showArrow={true}>
+                    {isLoadingMarketplace ? (
+                      [1, 2].map(i => (
+                        <div key={i} className="min-w-[85vw] w-[85vw] sm:min-w-[320px] sm:w-[320px] snap-center shrink-0 space-y-3">
+                           <div className="aspect-[4/3] bg-slate-100 rounded-3xl animate-pulse" />
+                           <div className="h-4 bg-slate-100 rounded w-2/3 animate-pulse" />
+                        </div>
+                      ))
+                    ) : (
+                      marketplaceItems.slice(0, 4).map((item: any) => (
+                        <div key={item._id} className="min-w-[85vw] w-[85vw] sm:min-w-[320px] sm:w-[320px] snap-center shrink-0">
+                          <AirbnbListingCard
+                            id={item._id}
+                            title={item.title}
+                            subtitle={item.condition}
+                            secondaryInfo={item.location}
+                            images={item.images?.length ? item.images : ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e']}
+                            price={item.price || 0}
+                            priceUnit="item"
+                            rating={0}
+                            href={`/marketplace/${item._id}`}
+                          />
+                        </div>
+                      ))
+                    )}
+                  </Section>
                 </>
               )}
               
               {activeCategory === 'services' && (
-                <div className="px-6 py-12 text-center text-slate-500">
-                  <WashingMachine className="w-12 h-12 mx-auto mb-4 opacity-20" />
-                  <p>Services coming soon.</p>
-                </div>
+                <>
+                  <Section title="Top Rated Services">
+                    {isLoadingLaundry ? (
+                      [1, 2, 3].map(i => (
+                        <div key={i} className="min-w-[85vw] w-[85vw] sm:min-w-[320px] sm:w-[320px] snap-center shrink-0 space-y-3">
+                           <div className="aspect-[4/3] bg-slate-100 rounded-3xl animate-pulse" />
+                           <div className="h-4 bg-slate-100 rounded w-2/3 animate-pulse" />
+                           <div className="h-4 bg-slate-100 rounded w-1/3 animate-pulse" />
+                        </div>
+                      ))
+                    ) : (
+                      laundryServices.map((service: any) => (
+                        <div key={service._id} className="min-w-[85vw] w-[85vw] sm:min-w-[320px] sm:w-[320px] snap-center shrink-0">
+                          <AirbnbListingCard
+                            id={service._id}
+                            title={service.name}
+                            subtitle="Laundry Service"
+                            secondaryInfo={service.providerName}
+                            images={service.images?.length ? service.images : ['https://images.unsplash.com/photo-1545173168-9f1947eebb7f']}
+                            price={service.services?.[0]?.price || 0}
+                            priceUnit={service.services?.[0]?.unit || 'kg'}
+                            rating={4.9}
+                            href={`/services/${service._id}`}
+                          />
+                        </div>
+                      ))
+                    )}
+                  </Section>
+                </>
+              )}
+
+              {activeCategory === 'marketplace' && (
+                <>
+                  <Section title="Campus Marketplace">
+                    {isLoadingMarketplace ? (
+                      [1, 2, 3].map(i => (
+                        <div key={i} className="min-w-[85vw] w-[85vw] sm:min-w-[320px] sm:w-[320px] snap-center shrink-0 space-y-3">
+                           <div className="aspect-[4/3] bg-slate-100 rounded-3xl animate-pulse" />
+                           <div className="h-4 bg-slate-100 rounded w-2/3 animate-pulse" />
+                           <div className="h-4 bg-slate-100 rounded w-1/3 animate-pulse" />
+                        </div>
+                      ))
+                    ) : (
+                      marketplaceItems.map((item: any) => (
+                        <div key={item._id} className="min-w-[85vw] w-[85vw] sm:min-w-[320px] sm:w-[320px] snap-center shrink-0">
+                          <AirbnbListingCard
+                            id={item._id}
+                            title={item.title}
+                            subtitle={item.condition}
+                            secondaryInfo={item.location}
+                            images={item.images?.length ? item.images : ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e']}
+                            price={item.price || 0}
+                            priceUnit="item"
+                            rating={0}
+                            href={`/marketplace/${item._id}`}
+                          />
+                        </div>
+                      ))
+                    )}
+                  </Section>
+                </>
               )}
             </motion.div>
           </AnimatePresence>
 
         </div>
       </main>
-
-      {/* Floating Price Tooltip (like in screenshot) */}
-      <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-40">
-        <motion.div 
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="bg-white px-5 py-3 rounded-full shadow-[0_4px_24px_rgba(0,0,0,0.12)] border border-slate-100 flex items-center gap-3 whitespace-nowrap"
-        >
-          <div className="w-6 h-6 rounded bg-[#ff385c] flex items-center justify-center -rotate-45 shadow-sm">
-             <Tag className="w-3.5 h-3.5 text-white stroke-[2.5]" />
-          </div>
-          <span className="font-bold text-slate-900 text-[14px]">Prices include all fees</span>
-        </motion.div>
-      </div>
 
     </div>
   );

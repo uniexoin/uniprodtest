@@ -276,6 +276,11 @@ export function AirbnbListingCard({
           <h3 className="text-[15px] font-semibold text-slate-900 dark:text-zinc-100 truncate leading-tight">
             {title}
           </h3>
+          {secondaryInfo && (
+            <p className="text-[14px] text-slate-500 dark:text-zinc-400 mt-0.5 truncate">
+              {secondaryInfo}
+            </p>
+          )}
           
           <div className="flex items-center gap-1.5 mt-1 text-[14px] text-slate-600 dark:text-zinc-400">
             <span className="truncate">

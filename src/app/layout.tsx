@@ -16,7 +16,6 @@ import { IntelligencePulse } from "@/components/intelligence-pulse";
 import { OnboardingGuide } from "@/components/onboarding-guide";
 import { SuccessAnimationOverlay } from "@/components/success-animation-overlay";
 import { GlobalLoaderOverlay } from "@/components/global-loader-overlay";
-import { PricingBadge } from "@/components/pricing-badge";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -96,7 +95,6 @@ export default function RootLayout({
         <Providers>
           <UniExoProvider>
             <CacheManager />
-            <PricingBadge />
             <IntelligencePulse />
             <OnboardingGuide />
             <Navbar />
@@ -134,7 +132,7 @@ export default function RootLayout({
             }
           `}
         </Script>
-        <div id="google_translate_element" style={{ display: 'none' }}></div>
+
         <Script id="clarity-script" strategy="afterInteractive">
           {`
             (function(c,l,a,r,i,t,y){
