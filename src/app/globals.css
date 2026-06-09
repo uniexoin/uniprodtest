@@ -629,3 +629,29 @@ body {
 .VIpgJd-ZVi9od-ORHb-OEVmcd {
   display: none !important;
 }
+/* Hide the Powered by Google text and logo */
+.goog-te-gadget {
+  font-size: 0 !important;
+  color: transparent !important;
+}
+.goog-te-gadget img, .goog-logo-link {
+  display: none !important;
+}
+.goog-te-gadget span {
+  display: none !important;
+}
+/* Ensure the select dropdown looks clean */
+.goog-te-combo {
+  background: transparent !important;
+  color: inherit !important;
+  border: none !important;
+  padding: 4px 8px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  outline: none !important;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.dark .goog-te-combo {
+  color: white !important;
+}

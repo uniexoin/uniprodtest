@@ -17,6 +17,7 @@ export function LanguageSelector() {
       try {
         new (window as any).google.translate.TranslateElement({
           pageLanguage: 'en',
+          includedLanguages: 'hi,bn,te,mr,ta,ur,gu,ml,kn,or,pa,as,sa',
           layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE,
           autoDisplay: false
         }, 'google_translate_element');

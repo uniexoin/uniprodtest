@@ -184,64 +184,132 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                 </>
               )}
 
-              {activeCategory === 'experiences' && (
-                <>
-                  <Section title="Featured experiences">
-                    {isLoadingVehicles ? (
-                      [1, 2, 3].map(i => (
-                        <div key={i} className="min-w-[85vw] w-[85vw] sm:min-w-[320px] sm:w-[320px] snap-center shrink-0 space-y-3">
-                           <div className="aspect-[3/4] bg-slate-100 rounded-3xl animate-pulse" />
-                           <div className="h-4 bg-slate-100 rounded w-2/3 animate-pulse" />
+              {activeCategory === 'marketplace' && (
+                <div className="flex flex-col gap-6">
+                  {/* Hero / Header */}
+                  <div className="flex flex-col gap-2 pt-2">
+                    <h1 className="text-3xl font-black tracking-tight">Marketplace</h1>
+                    <p className="text-sm font-medium text-muted-foreground max-w-[280px]">
+                      Discover premium tech and high-end lifestyle gear.
+                    </p>
+                  </div>
+
+                  {/* Search */}
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <Search className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Search products..."
+                      className="w-full bg-surface border border-border text-sm rounded-2xl pl-10 pr-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
+                    />
+                  </div>
+
+                  {/* Filters */}
+                  <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
+                    {['All Items', 'Tech', 'Audio', 'Cameras'].map((filter, i) => (
+                      <button
+                        key={filter}
+                        className={`snap-start whitespace-nowrap px-5 py-2 rounded-full text-[11px] font-black uppercase tracking-wider transition-all ${
+                          i === 0
+                            ? 'bg-[#E3FF00] text-black shadow-[0_0_15px_rgba(227,255,0,0.3)] border border-[#E3FF00]'
+                            : 'bg-surface border border-border text-muted-foreground hover:text-foreground hover:border-muted-foreground/30'
+                        }`}
+                      >
+                        {filter}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Featured Deal */}
+                  {marketplaceItems.length > 0 && (
+                    <Link href={`/marketplace/${marketplaceItems[0]._id}`} className="group tap-feedback block mt-4">
+                      <div className="relative overflow-hidden rounded-[2rem] bg-[#0A0F1C] border border-white/5 p-6 flex flex-col shadow-2xl">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
+                        
+                        <div className="inline-flex px-3 py-1 bg-[#E3FF00] text-black text-[9px] font-black uppercase tracking-widest rounded-full self-start mb-4">
+                          Featured Deal
                         </div>
-                      ))
-                    ) : (
-                      vehicles.slice(0, 6).map((vehicle: any) => (
-                        <div key={vehicle._id} className="min-w-[85vw] w-[85vw] sm:min-w-[320px] sm:w-[320px] snap-center shrink-0">
-                          <AirbnbListingCard
-                            id={vehicle._id}
-                            title={`${vehicle.brand} ${vehicle.model}`}
-                            subtitle="1 trip"
-                            secondaryInfo={vehicle.location}
-                            images={vehicle.images?.length ? vehicle.images : ['https://images.unsplash.com/photo-1555215695-3004980ad54e']}
-                            price={vehicle.pricePerDay || 0}
-                            priceUnit="trip"
-                            rating={4.7}
-                            badge={vehicle.isAvailable ? undefined : 'Booked'}
-                            href={`/vehicles/${vehicle._id}`}
-                          />
+                        
+                        <h2 className="text-4xl font-black text-white leading-tight mb-4 z-10 w-2/3 line-clamp-3">
+                          {marketplaceItems[0].title}
+                        </h2>
+                        
+                        <p className="text-[11px] text-white/60 font-medium leading-relaxed mb-6 max-w-[200px] z-10 line-clamp-3">
+                          {marketplaceItems[0].description || marketplaceItems[0].condition || 'Premium listing in excellent condition.'}
+                        </p>
+                        
+                        <div className="flex items-end justify-between mb-6 z-10">
+                          <div className="text-2xl font-black text-white tracking-tighter">${marketplaceItems[0].price}</div>
+                          <div className="flex items-center gap-1.5 text-[#E3FF00]">
+                            <User className="w-3.5 h-3.5" />
+                            <span className="text-[10px] font-black uppercase tracking-widest">14 Interested</span>
+                          </div>
                         </div>
-                      ))
-                    )}
-                  </Section>
-                  
-                  {/* Cross-selling in Experiences */}
-                  <Section title="Marketplace Essentials" showArrow={true}>
+
+                        <div className="w-1/2 bg-[#C3C6FF] text-black py-3 rounded-2xl text-xs font-black text-center mb-6 hover:bg-white transition-colors z-10 shadow-[0_0_20px_rgba(195,198,255,0.4)]">
+                          Secure Item
+                        </div>
+
+                        <div className="absolute -bottom-8 -right-8 w-[240px] h-[240px] z-0 group-hover:scale-105 transition-transform duration-500">
+                          <img src={marketplaceItems[0].images?.[0] || "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80"} alt={marketplaceItems[0].title} className="w-full h-full object-cover object-center rounded-2xl opacity-90 mix-blend-screen drop-shadow-2xl" />
+                        </div>
+                      </div>
+                    </Link>
+                  )}
+
+                  {/* Grid of Items */}
+                  <div className="grid grid-cols-1 gap-6 mt-4">
                     {isLoadingMarketplace ? (
-                      [1, 2].map(i => (
-                        <div key={i} className="min-w-[85vw] w-[85vw] sm:min-w-[320px] sm:w-[320px] snap-center shrink-0 space-y-3">
-                           <div className="aspect-[4/3] bg-slate-100 rounded-3xl animate-pulse" />
-                           <div className="h-4 bg-slate-100 rounded w-2/3 animate-pulse" />
-                        </div>
+                      [1,2].map(i => (
+                        <div key={i} className="aspect-[4/3] rounded-[2rem] bg-[#0A0F1C] border border-white/5 animate-pulse" />
+                      ))
+                    ) : marketplaceItems.length > 0 ? (
+                      marketplaceItems.map((item: any) => (
+                        <Link key={item._id} href={`/marketplace/${item._id}`} className="group flex flex-col tap-feedback">
+                          <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden bg-[#0A0F1C] border border-white/5 mb-3">
+                            <div className="absolute top-3 left-3 z-10 px-2.5 py-1 bg-black/50 backdrop-blur-md text-white/80 text-[8px] font-black uppercase tracking-widest rounded-full border border-white/10">
+                              {item.category || 'Item'}
+                            </div>
+                            <div className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 text-white/70 hover:text-white hover:bg-black/60 transition-colors">
+                              <Heart className="w-4 h-4" />
+                            </div>
+                            <img src={item.images?.[0] || 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80'} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                          </div>
+                          <div className="flex justify-between items-start mb-1">
+                            <h3 className="font-bold text-base text-foreground">{item.title}</h3>
+                            <span className="font-black text-base text-[#E3FF00] drop-shadow-[0_0_8px_rgba(227,255,0,0.3)]">${item.price}</span>
+                          </div>
+                          <div className="flex items-center gap-3 text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-3">
+                            <span className="flex items-center gap-1"><ShieldCheck className="w-3 h-3" /> VERIFIED</span>
+                            <span className="flex items-center gap-1"><User className="w-3 h-3" /> {item.condition || 'Used'}</span>
+                          </div>
+                          <div className="w-full py-2.5 rounded-xl border border-border text-center text-[10px] font-black uppercase tracking-widest text-foreground hover:bg-surface transition-colors">
+                            View Details
+                          </div>
+                        </Link>
                       ))
                     ) : (
-                      marketplaceItems.slice(0, 4).map((item: any) => (
-                        <div key={item._id} className="min-w-[85vw] w-[85vw] sm:min-w-[320px] sm:w-[320px] snap-center shrink-0">
-                          <AirbnbListingCard
-                            id={item._id}
-                            title={item.title}
-                            subtitle={item.condition}
-                            secondaryInfo={item.location}
-                            images={item.images?.length ? item.images : ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e']}
-                            price={item.price || 0}
-                            priceUnit="item"
-                            rating={0}
-                            href={`/marketplace/${item._id}`}
-                          />
-                        </div>
-                      ))
+                      <div className="text-center py-10 text-muted-foreground text-sm">No items available right now.</div>
                     )}
-                  </Section>
-                </>
+                  </div>
+
+                  {/* Sell Banner */}
+                  <div className="mt-8 mb-4 relative overflow-hidden rounded-[2rem] bg-[#111625] border border-white/5 p-8 flex flex-col items-center text-center">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20" />
+                    <h3 className="text-3xl font-black text-white leading-tight tracking-tight mb-4 relative z-10">
+                      Sell your<br />tech<br />instantly
+                    </h3>
+                    <p className="text-xs font-medium text-white/60 mb-8 max-w-[200px] relative z-10">
+                      Get a premium valuation for your used devices in under 60 seconds.
+                    </p>
+                    <Link href="/sell" className="w-full sm:w-auto bg-[#E3FF00] text-black px-8 py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-[#cce600] transition-colors relative z-10 shadow-[0_0_20px_rgba(227,255,0,0.25)] tap-feedback">
+                      List Item Now
+                    </Link>
+                  </div>
+
+                </div>
               )}
               
               {activeCategory === 'services' && (
