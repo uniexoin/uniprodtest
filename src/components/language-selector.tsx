@@ -41,6 +41,19 @@ export function LanguageSelector() {
     haptics.light();
     setLanguage(code);
     setIsOpen(false);
+    
+    // Set Google Translate cookie
+    document.cookie = `googtrans=/en/${code}; path=/;`;
+    // Also set it for the specific domain just in case
+    document.cookie = `googtrans=/en/${code}; path=/; domain=${window.location.hostname};`;
+    
+    // If English is selected, we want to clear the translations
+    if (code === 'en') {
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
+    }
+    
+    window.location.reload();
   };
 
   return (
