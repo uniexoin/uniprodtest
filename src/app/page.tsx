@@ -125,22 +125,22 @@ function Landing() {
       {/* 1. Hero Section - Dynamic & High-Conversion */}
       <section className="relative pt-16 pb-10 md:pt-24 md:pb-16 overflow-hidden">
         {/* Background Decorative Blobs */}
-        <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl -z-10 animate-drift" />
-        <div className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[500px] h-[500px] bg-accent/5 rounded-full blur-3xl -z-10 animate-drift stagger-3" />
+        <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[600px] h-[600px] bg-gradient-to-br from-indigo-500/10 to-violet-500/8 rounded-full blur-3xl -z-10 animate-drift" />
+        <div className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[500px] h-[500px] bg-gradient-to-tr from-violet-500/8 via-fuchsia-500/5 to-transparent rounded-full blur-3xl -z-10 animate-drift stagger-3" />
         
         {/* Floating Particles */}
         <motion.div 
           animate={{ y: [0, -50, 0], x: [0, 30, 0] }}
           transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          className="absolute top-1/4 left-1/4 w-4 h-4 bg-primary/20 rounded-full blur-sm"
+          className="absolute top-1/4 left-1/4 w-4 h-4 bg-indigo-500/20 rounded-full blur-sm"
         />
         <motion.div 
           animate={{ y: [0, 60, 0], x: [0, -40, 0], rotate: [0, 10, 0] }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-1/3 right-1/3 w-6 h-6 bg-accent/20 rounded-full blur-md"
+          className="absolute bottom-1/3 right-1/3 w-6 h-6 bg-violet-500/20 rounded-full blur-md"
         />
-        <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent -z-10" />
-        <div className="absolute top-0 left-1/2 w-px h-full bg-gradient-to-b from-transparent via-primary/10 to-transparent -z-10" />
+        <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent -z-10" />
+        <div className="absolute top-0 left-1/2 w-px h-full bg-gradient-to-b from-transparent via-violet-500/10 to-transparent -z-10" />
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -150,7 +150,7 @@ function Landing() {
               className="max-w-2xl"
               style={{ y: heroY }}
             >
-              <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-6">
+              <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-bold mb-6">
                 <Zap className="w-3 h-3 fill-current" />
                 <span>INDIA'S LARGEST MULTI-SERVICE HUB</span>
               </motion.div>
@@ -163,7 +163,7 @@ function Landing() {
                     initial="hidden" animate="visible" variants={wordReveal}
                     className="inline-block mr-[0.2em]"
                   >
-                    {word === "Needs" ? <span className="text-primary underline decoration-primary/30 underline-offset-8 italic">Needs</span> : word}
+                    {word === "Needs" ? <span className="text-gradient-indigo underline decoration-indigo-500/30 underline-offset-8 italic">Needs</span> : word}
                   </motion.span>
                 ))}
               </h1>
@@ -184,8 +184,9 @@ function Landing() {
                     <motion.div 
                       key={idx}
                       onClick={() => router.push(item.href)}
-                      whileHover={{ y: -8, scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ y: -10, scale: 1.06 }}
+                      whileTap={{ scale: 0.94 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 15 }}
                       className={`glass p-4 rounded-2xl flex flex-col items-center justify-center w-28 h-28 cursor-pointer transition-all duration-300 border border-border/40 dark:border-white/5 ${item.borderHover}`}
                     >
                       <item.icon className={`w-8 h-8 mb-3 transition-transform duration-500 group-hover:scale-115 group-hover:rotate-6 ${item.iconColor}`} />
@@ -329,35 +330,51 @@ function Landing() {
           initial="hidden" animate="visible" variants={staggerContainer}
           className="container mx-auto px-4 md:px-8 mt-12 lg:mt-16 relative z-20"
         >
-          <div className="glass rounded-[3rem] p-8 md:p-12 grid grid-cols-2 md:grid-cols-4 gap-12 border-border shadow-2xl bg-surface/50">
-            <motion.div variants={fadeUp} className="flex flex-col items-center justify-center text-center">
-              <div className="w-16 h-16 rounded-3xl bg-primary/10 flex items-center justify-center mb-6 shadow-inner group-hover:rotate-12 transition-transform">
-                <HomeIcon className="w-8 h-8 text-primary" />
-              </div>
+          <div className="glass-premium pulse-shadow-indigo rounded-[3rem] p-8 md:p-12 grid grid-cols-2 md:grid-cols-4 gap-12 border border-white/20 shadow-2xl bg-surface/50 backdrop-blur-2xl">
+            <motion.div variants={fadeUp} className="flex flex-col items-center justify-center text-center group">
+              <motion.div 
+                whileHover={{ rotate: 12, scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                className="w-16 h-16 rounded-3xl bg-indigo-500/10 flex items-center justify-center mb-6 shadow-inner group-hover:shadow-[0_0_20px_rgba(99,102,241,0.3)] transition-all"
+              >
+                <HomeIcon className="w-8 h-8 text-indigo-500" />
+              </motion.div>
               <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-2">Properties</p>
               <h3 className="text-3xl md:text-4xl font-black text-foreground"><Counter value={15000} />+</h3>
             </motion.div>
             
-            <motion.div variants={fadeUp} className="flex flex-col items-center justify-center text-center">
-              <div className="w-16 h-16 rounded-3xl bg-secondary/10 flex items-center justify-center mb-6 shadow-inner">
-                <Car className="w-8 h-8 text-secondary" />
-              </div>
+            <motion.div variants={fadeUp} className="flex flex-col items-center justify-center text-center group">
+              <motion.div 
+                whileHover={{ rotate: -12, scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                className="w-16 h-16 rounded-3xl bg-amber-500/10 flex items-center justify-center mb-6 shadow-inner group-hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all"
+              >
+                <Car className="w-8 h-8 text-amber-500" />
+              </motion.div>
               <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-2">Vehicles</p>
               <h3 className="text-3xl md:text-4xl font-black text-foreground"><Counter value={300} />K+</h3>
             </motion.div>
 
             <motion.div variants={fadeUp} className="flex flex-col items-center justify-center text-center group">
-              <div className="w-16 h-16 rounded-3xl bg-accent/10 flex items-center justify-center mb-6 shadow-inner group-hover:scale-110 group-hover:rotate-6 transition-all">
-                <Star className="w-8 h-8 text-accent" />
-              </div>
+              <motion.div 
+                whileHover={{ rotate: 12, scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                className="w-16 h-16 rounded-3xl bg-pink-500/10 flex items-center justify-center mb-6 shadow-inner group-hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] transition-all"
+              >
+                <Star className="w-8 h-8 text-pink-500" />
+              </motion.div>
               <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-2">Reviews</p>
               <h3 className="text-3xl md:text-4xl font-black text-foreground"><Counter value={45} />K+</h3>
             </motion.div>
 
             <motion.div variants={fadeUp} className="flex flex-col items-center justify-center text-center group">
-              <div className="w-16 h-16 rounded-3xl bg-primary/10 flex items-center justify-center mb-6 shadow-inner group-hover:scale-110 group-hover:-rotate-6 transition-all">
-                <Zap className="w-8 h-8 text-primary" />
-              </div>
+              <motion.div 
+                whileHover={{ rotate: -12, scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                className="w-16 h-16 rounded-3xl bg-cyan-500/10 flex items-center justify-center mb-6 shadow-inner group-hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all"
+              >
+                <Zap className="w-8 h-8 text-cyan-500" />
+              </motion.div>
               <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-2">Active Users</p>
               <h3 className="text-3xl md:text-4xl font-black text-foreground"><Counter value={250} />K+</h3>
             </motion.div>
@@ -608,33 +625,47 @@ function Landing() {
             </p>
 
             {/* Premium Tabs */}
-            <div className="flex justify-center gap-3 flex-wrap p-2 glass max-w-fit mx-auto rounded-[2rem] border-border shadow-xl bg-surface/30">
+            <div className="flex justify-center gap-3 flex-wrap p-2 glass max-w-fit mx-auto rounded-[2rem] border-border shadow-xl bg-surface/30 relative">
               {[
                 { id: 'house', label: 'Houses', icon: HomeIcon },
                 { id: 'vehicle', label: 'Vehicles', icon: Car },
                 { id: 'marketplace', label: 'Used Items', icon: ShoppingBag },
                 { id: 'laundry', label: 'Laundry', icon: WashingMachine }
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-3 px-8 py-3.5 rounded-[1.5rem] text-sm font-bold transition-all duration-300 ${
-                    activeTab === tab.id 
-                      ? 'bg-primary text-primary-foreground shadow-xl shadow-primary/30' 
-                      : 'text-muted-foreground hover:bg-surface'
-                  }`}
-                >
-                  <tab.icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-primary-foreground' : 'text-primary'}`} /> 
-                  {tab.label}
-                </button>
-              ))}
+              ].map((tab) => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id as any)}
+                    className={`relative flex items-center gap-3 px-8 py-3.5 rounded-[1.5rem] text-sm font-bold transition-all duration-300 ${
+                      isActive 
+                        ? 'text-primary-foreground' 
+                        : 'text-muted-foreground hover:bg-surface/50'
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeStorefrontTab"
+                        className="absolute inset-0 bg-primary rounded-[1.5rem] shadow-xl shadow-primary/30 -z-10"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                    <tab.icon className={`w-5 h-5 ${isActive ? 'text-primary-foreground' : 'text-primary'}`} /> 
+                    {tab.label}
+                  </button>
+                );
+              })}
             </div>
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center min-h-[550px]">
             {/* Dynamic Mobile Mock UI */}
-            <div className="relative mx-auto w-full max-w-[360px] perspective-[1000px]">
-              <div className="border-[12px] border-slate-900 rounded-[3.5rem] bg-white shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] overflow-hidden aspect-[9/19] flex flex-col pt-10 relative group transition-transform duration-500 hover:rotate-y-3">
+            <div className="relative mx-auto w-full max-w-[360px] perspective-[1200px]">
+              <motion.div 
+                whileHover={{ rotateY: 10, rotateX: 5, scale: 1.02, z: 50 }}
+                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                className="border-[12px] border-slate-900 rounded-[3.5rem] bg-white shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] hover:shadow-[0_60px_120px_-20px_rgba(99,102,241,0.25)] overflow-hidden aspect-[9/19] flex flex-col pt-10 relative group transition-all duration-500"
+              >
                 
                 <AnimatePresence mode="wait">
                   {/* HOUSE MOCK */}
@@ -811,21 +842,32 @@ function Landing() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+              </motion.div>
 
               {/* Floating Interaction Elements */}
               <motion.div 
-                animate={{ x: [0, 10, 0] }}
-                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                className="absolute -right-4 lg:-right-10 top-1/2 -translate-y-1/2 space-y-4"
+                animate={{ y: [0, -10, 0] }}
+                transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
+                className="absolute -right-4 lg:-right-10 top-1/2 -translate-y-1/2 space-y-4 z-30"
               >
-                <div className="glass p-3 rounded-2xl shadow-2xl flex flex-col items-center gap-1 cursor-pointer hover:scale-110 transition-transform">
+                <div className="glass-premium pulse-shadow-indigo p-3 rounded-2xl shadow-2xl flex flex-col items-center gap-1 cursor-pointer hover:scale-110 transition-transform">
                   <div className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">₹</div>
-                  <span className="text-[8px] font-black uppercase">Payment</span>
+                  <span className="text-[8px] font-black uppercase text-slate-700 dark:text-slate-200">Payment</span>
                 </div>
-                <div className="glass p-3 rounded-2xl shadow-2xl flex flex-col items-center gap-1 cursor-pointer hover:scale-110 transition-transform">
-                  <div className="w-8 h-8 rounded-xl bg-blue-100 flex items-center justify-center text-primary font-bold">W</div>
-                  <span className="text-[8px] font-black uppercase">Web Link</span>
+                <div className="glass-premium pulse-shadow-indigo p-3 rounded-2xl shadow-2xl flex flex-col items-center gap-1 cursor-pointer hover:scale-110 transition-transform">
+                  <div className="w-8 h-8 rounded-xl bg-blue-100 flex items-center justify-center text-indigo-600 font-bold">W</div>
+                  <span className="text-[8px] font-black uppercase text-slate-700 dark:text-slate-200">Web Link</span>
+                </div>
+              </motion.div>
+
+              <motion.div 
+                animate={{ y: [0, 10, 0] }}
+                transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+                className="absolute -left-4 lg:-left-10 top-1/3 space-y-4 z-30"
+              >
+                <div className="glass-premium pulse-shadow-rose p-3 rounded-2xl shadow-2xl flex flex-col items-center gap-1 cursor-pointer hover:scale-110 transition-transform">
+                  <div className="w-8 h-8 rounded-xl bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center text-pink-600 font-bold">★</div>
+                  <span className="text-[8px] font-black uppercase text-slate-700 dark:text-slate-200">Reviews</span>
                 </div>
               </motion.div>
             </div>

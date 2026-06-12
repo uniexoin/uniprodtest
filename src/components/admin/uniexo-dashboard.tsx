@@ -88,12 +88,12 @@ export function UniExoDashboard() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-4xl font-black tracking-tighter text-foreground flex items-center gap-3">
-            UniExo <span className="text-primary italic">Control</span>
+            UniExo <span className="text-gradient-neon italic">Control</span>
             {isConnected && (
               <motion.div
-                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="w-3 h-3 rounded-full bg-primary shadow-[0_0_10px_var(--primary)]"
+                animate={{ scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="w-3 h-3 rounded-full bg-green-500 neon-glow-cyber"
               />
             )}
           </h1>
@@ -163,8 +163,8 @@ export function UniExoDashboard() {
               <AreaChart data={trends}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#22c55e" stopOpacity={0.4}/>
+                    <stop offset="95%" stopColor="#84cc16" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
@@ -188,10 +188,11 @@ export function UniExoDashboard() {
                 <Area 
                   type="monotone" 
                   dataKey="amount" 
-                  stroke="var(--primary)" 
+                  stroke="#22c55e" 
                   strokeWidth={4}
                   fillOpacity={1} 
                   fill="url(#colorRevenue)" 
+                  style={{ filter: 'drop-shadow(0px 4px 6px rgba(34, 197, 148, 0.4))' }}
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -347,7 +348,7 @@ function FunnelStep({ label, value, percent, icon: Icon, color }: any) {
           <motion.div 
             initial={{ width: 0 }}
             animate={{ width: `${percent}%` }}
-            className={`h-full ${color.startsWith('bg-') ? color : `bg-${color}`} rounded-full`}
+            className={`h-full ${color.startsWith('bg-') ? color : `bg-${color}`} rounded-full shadow-[0_0_10px_currentColor]`}
           />
         </div>
       </div>
@@ -389,11 +390,12 @@ function MetricCard({ label, value, subValue, icon: Icon, color }: any) {
 
   return (
     <motion.div
-      whileHover={{ y: -6, scale: 1.01 }}
+      whileHover={{ y: -8, scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
+      transition={{ type: "spring", stiffness: 400, damping: 15 }}
       className="flex w-full h-full"
     >
-      <Card className={`p-8 bg-surface border-border/60 dark:border-white/5 rounded-[2.5rem] hover:bg-surface/90 transition-all duration-300 group shadow-xl flex flex-col justify-between w-full border ${borders[color] || borders.primary}`}>
+      <Card className={`p-8 bg-surface border-border/60 dark:border-white/5 rounded-[2.5rem] hover:bg-surface/90 transition-all duration-300 group shadow-xl flex flex-col justify-between w-full border ${borders[color] || borders.primary} hover:shadow-[0_0_25px_rgba(34,197,94,0.15)]`}>
         <div>
           <div className="flex items-start justify-between mb-6">
             <div className={`p-4 rounded-2xl ${colors[color] || colors.primary} group-hover:scale-110 group-hover:rotate-6 transition-all duration-500`}>

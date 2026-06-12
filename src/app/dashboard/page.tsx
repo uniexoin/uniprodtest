@@ -487,7 +487,7 @@ function VendorDashboard() {
       {/* Sidebar — mobile: icon pill grid, desktop: vertical list */}
       <aside className="lg:w-64 shrink-0">
         {/* Mobile: Compact icon pill grid */}
-        <nav className="grid grid-cols-3 gap-1.5 lg:hidden p-2 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-sm rounded-2xl border border-white/50 dark:border-white/10">
+        <nav className="grid grid-cols-3 gap-1.5 lg:hidden p-2 glass-premium rounded-2xl border border-white/50 dark:border-white/10">
           {filteredSections.map((s) => {
             const isActive = section === s.id;
             return (
@@ -502,8 +502,8 @@ function VendorDashboard() {
                 {isActive && (
                   <motion.div
                     layoutId="activeTabMobilePill"
-                    className="absolute inset-0 bg-[#8B004A] rounded-xl shadow-lg shadow-[#8B004A]/25 -z-10"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    className="absolute inset-0 bg-[#8B004A] rounded-xl shadow-[0_0_20px_rgba(139,0,74,0.35)] -z-10"
+                    transition={{ type: 'spring', stiffness: 420, damping: 22 }}
                   />
                 )}
                 <s.icon className={`w-4 h-4 transition-transform duration-300 ${isActive ? 'scale-110' : ''}`} />
@@ -514,7 +514,7 @@ function VendorDashboard() {
         </nav>
 
         {/* Desktop: Vertical sidebar list */}
-        <nav className="hidden lg:flex flex-col gap-1.5 p-2 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-sm rounded-2xl border border-white/50 dark:border-zinc-800">
+        <nav className="hidden lg:flex flex-col gap-1.5 p-2 glass-premium rounded-2xl border border-white/50 dark:border-zinc-800">
           {filteredSections.map((s) => {
             const isActive = section === s.id;
             return (
@@ -529,8 +529,8 @@ function VendorDashboard() {
                 {isActive && (
                   <motion.div
                     layoutId="activeTabDesktopPill"
-                    className="absolute inset-0 bg-[#8B004A] rounded-xl shadow-xl shadow-[#8B004A]/20 -z-10"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    className="absolute inset-0 bg-[#8B004A] rounded-xl shadow-[0_0_20px_rgba(139,0,74,0.35)] -z-10"
+                    transition={{ type: 'spring', stiffness: 420, damping: 22 }}
                   />
                 )}
                 <s.icon className={`w-4 h-4 transition-transform duration-500 ${isActive ? 'scale-110' : 'group-hover:rotate-12'}`} />
@@ -555,7 +555,8 @@ function VendorDashboard() {
       {/* Content */}
       <div className="flex-1 space-y-6">
         {/* Quick Actions Header */}
-        <div className="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md p-4 sm:p-6 lg:p-8 rounded-2xl lg:rounded-3xl border border-white/20 dark:border-white/10 shadow-xl flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center justify-between gap-4 lg:gap-6">
+        <div className="relative overflow-hidden bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md p-4 sm:p-6 lg:p-8 rounded-2xl lg:rounded-3xl border border-white/20 dark:border-white/10 shadow-xl flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center justify-between gap-4 lg:gap-6">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 via-pink-500 to-[#8B004A]" />
           <div className="space-y-1">
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tighter text-[#8B004A] dark:text-rose-400">
               Welcome back, {user?.name?.split(' ')[0] || 'Vendor'} 👋
@@ -572,7 +573,7 @@ function VendorDashboard() {
               onClick={handleManualRefresh}
               disabled={isRefreshing}
               className={`rounded-xl h-9 sm:h-11 text-xs sm:text-sm border-blue-200 dark:border-zinc-800 text-slate-700 dark:text-zinc-200 bg-white dark:bg-zinc-900 shadow-md font-bold flex items-center gap-2 hover:bg-slate-50 transition-all ${
-                isRefreshing ? 'animate-pulse' : ''
+                isRefreshing ? 'animate-pulse pulse-shadow-rose' : 'hover:shadow-[0_0_15px_rgba(139,0,74,0.2)]'
               }`}
             >
               <Activity className={`w-4 h-4 text-[#8B004A] dark:text-rose-400 ${isRefreshing ? 'animate-spin' : ''}`} />

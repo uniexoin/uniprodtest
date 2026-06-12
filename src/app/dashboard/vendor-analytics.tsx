@@ -263,8 +263,8 @@ export function OverviewSection({ overview = {} }: { overview: any }) {
                 <LineChart data={trends}>
                   <defs>
                     <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#8B004A" stopOpacity={0.1}/>
-                      <stop offset="95%" stopColor="#8B004A" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#8B004A" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#e11948" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -288,6 +288,7 @@ export function OverviewSection({ overview = {} }: { overview: any }) {
                     strokeWidth={4} 
                     dot={{ r: 4, fill: '#8B004A', strokeWidth: 2, stroke: '#fff' }}
                     activeDot={{ r: 6, strokeWidth: 0 }}
+                    style={{ filter: 'drop-shadow(0px 4px 6px rgba(139, 0, 74, 0.4))' }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -409,11 +410,12 @@ function CustomTooltip({ active, payload, label }: any) {
 function KPICard({ title, value, icon: Icon, trend, trendLabel, subtitle, description, gradient, insight }: any) {
   return (
     <motion.div
-      whileHover={{ y: -6, scale: 1.01 }}
+      whileHover={{ y: -6, scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
+      transition={{ type: "spring", stiffness: 400, damping: 15 }}
       className="flex w-full h-full"
     >
-      <Card className="border-0 shadow-[0_15px_30px_-5px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)] bg-white dark:bg-zinc-900/90 backdrop-blur-2xl rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-rose-500/10 dark:hover:shadow-rose-950/20 transition-all duration-500 group relative border border-white/50 dark:border-white/5 flex flex-col w-full">
+      <Card className="border-0 shadow-[0_15px_30px_-5px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)] bg-white dark:bg-zinc-900/90 backdrop-blur-2xl rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-rose-500/10 dark:hover:shadow-rose-950/20 transition-all duration-500 group relative border border-white/50 dark:border-white/5 flex flex-col w-full glass-card-premium">
         <CardContent className="p-0 flex flex-col h-full justify-between">
           <div>
             <div className={`h-1.5 w-full bg-gradient-to-r ${gradient}`} />

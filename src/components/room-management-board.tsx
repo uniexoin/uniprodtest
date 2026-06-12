@@ -62,7 +62,7 @@ function RoomCheckInModal({ room }: { room: any }) {
                     Check In Tenant
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px] glass-premium border border-white/20 dark:border-white/10 shadow-2xl backdrop-blur-2xl">
                 <DialogHeader>
                     <DialogTitle>Check In: {room.title}</DialogTitle>
                 </DialogHeader>
@@ -170,12 +170,13 @@ export function RoomManagementBoard() {
         {rooms?.map((r: any) => (
           <motion.div
             key={r._id}
-            whileHover={{ y: -6, scale: 1.01 }}
+            whileHover={{ y: -8, scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300, damping: 15 }}
             className={`overflow-hidden rounded-3xl bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md flex flex-col border border-slate-200/50 dark:border-zinc-800 shadow-sm transition-all duration-300 ${
-              r.currentStatus === 'available' ? 'shadow-green-500/5 hover:border-green-500/40' : 
-              r.currentBooking?.rentStatus === 'overdue' ? 'shadow-red-500/10 hover:border-red-600/40' : 
-              r.currentBooking?.rentStatus === 'due_soon' ? 'shadow-blue-500/10 hover:border-blue-500/40' : 
-              'shadow-emerald-500/10 hover:border-emerald-500/40'
+              r.currentStatus === 'available' ? 'shadow-green-500/5 hover:border-green-500/40 hover:shadow-[0_0_20px_rgba(34,197,94,0.15)]' : 
+              r.currentBooking?.rentStatus === 'overdue' ? 'shadow-red-500/10 hover:border-red-600/40 hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]' : 
+              r.currentBooking?.rentStatus === 'due_soon' ? 'shadow-blue-500/10 hover:border-blue-500/40 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)]' : 
+              'shadow-emerald-500/10 hover:border-emerald-500/40 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]'
             }`}
           >
             {/* Room Image */}
