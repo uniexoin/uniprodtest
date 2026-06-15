@@ -1,6 +1,43 @@
 import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export const marketplaceService = {
+  async listItems(filters?: { category?: string }) {
+    try {
+      let query = supabaseAdmin
+        .from('marketplace_items')
+        .select('*, seller:profiles!seller_id(id, name, email, avatar_url)')
+        .eq('is_deleted', false)
+        .eq('is_sold', false)
+        .order('created_at', { ascending: false });
+
+      if (filters?.category && filters.category !== 'all') {
+        query = query.ilike('category', filters.category);
+      }
+
+      const { data, error } = await query;
+      return { success: !error, data: data || [], error: error?.message };
+    } catch (err: any) {
+      console.error('[MARKETPLACE SERVICE] listItems error:', err);
+      return { success: false, error: err.message };
+    }
+  },
+
+  async getItemById(id: string) {
+    try {
+      const { data, error } = await supabaseAdmin
+        .from('marketplace_items')
+        .select('*, seller:profiles!seller_id(id, name, email, avatar_url)')
+        .eq('id', id)
+        .eq('is_deleted', false)
+        .maybeSingle();
+
+      return { success: !error, data, error: error?.message };
+    } catch (err: any) {
+      console.error('[MARKETPLACE SERVICE] getItemById error:', err);
+      return { success: false, error: err.message };
+    }
+  },
+
   async createItem(input: {
     sellerId: string;
     title: string;

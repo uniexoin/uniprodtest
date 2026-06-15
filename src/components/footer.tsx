@@ -68,39 +68,39 @@ export function Footer() {
   };
 
   const aboutContent = (
-    <div className="space-y-4 text-sm leading-relaxed text-zinc-300">
-      <p className="font-bold text-white">About UniExo Platform</p>
+    <div className="space-y-4 text-sm leading-relaxed text-muted-foreground">
+      <p className="font-bold text-foreground">About UniExo Platform</p>
       <p>UniExo is India's leading unified multi-service ecosystem specifically optimized for university and college campuses. We bridge the gap between students, local vendors, and service partners to deliver verified peer-to-peer sharing and professional micro-services.</p>
-      <h4 className="font-bold text-white">Our Vision</h4>
+      <h4 className="font-bold text-foreground">Our Vision</h4>
       <p>To eliminate resource waste, high commissions, and transaction friction on college campuses by offering a secure, verified, and community-trusted listing and booking system.</p>
-      <h4 className="font-bold text-white">Core Pillars</h4>
+      <h4 className="font-bold text-foreground">Core Pillars</h4>
       <p><strong>100% Verified Community:</strong> Only registered students and approved micro-businesses with active KYC are allowed to lease or rent on our hub.</p>
       <p><strong>Token Escrow Safety:</strong> Safeguard bookings using secure token protection, preventing scam listings and payment disputes.</p>
     </div>
   );
 
   const privacyContent = (
-    <div className="space-y-4 text-sm leading-relaxed text-zinc-300">
-      <p className="font-bold text-white">UniExo Comprehensive Privacy Policy</p>
+    <div className="space-y-4 text-sm leading-relaxed text-muted-foreground">
+      <p className="font-bold text-foreground">UniExo Comprehensive Privacy Policy</p>
       <p>Your trust is our highest priority. We deploy bank-grade encryption techniques to store, transmit, and process your platform interactions.</p>
-      <h4 className="font-bold text-white">1. Information Gathering</h4>
+      <h4 className="font-bold text-foreground">1. Information Gathering</h4>
       <p>We gather full names, university ID details, email addresses, phone contacts, service category definitions (for businesses), and device details to verify users and match orders securely.</p>
-      <h4 className="font-bold text-white">2. KYC & Document Verification</h4>
+      <h4 className="font-bold text-foreground">2. KYC & Document Verification</h4>
       <p>Uploads of government IDs or university identification cards are processed strictly for verification. These documents are securely held in encrypted cloud databases and never shared.</p>
-      <h4 className="font-bold text-white">3. Third Party Integrations</h4>
+      <h4 className="font-bold text-foreground">3. Third Party Integrations</h4>
       <p>We work with trusted SMS gateways, payment APIs, and university checkups to authorize account operations. None of these partners are authorized to utilize your details for marketing purposes.</p>
     </div>
   );
 
   const termsContent = (
-    <div className="space-y-4 text-sm leading-relaxed text-zinc-300">
-      <p className="font-bold text-white">UniExo Comprehensive Terms of Service</p>
+    <div className="space-y-4 text-sm leading-relaxed text-muted-foreground">
+      <p className="font-bold text-foreground">UniExo Comprehensive Terms of Service</p>
       <p>Welcome to UniExo. By utilizing our dashboard, applications, or site, you agree to comply with standard campus codes of conduct, local legislation, and these terms.</p>
-      <h4 className="font-bold text-white">1. Eligible Users</h4>
+      <h4 className="font-bold text-foreground">1. Eligible Users</h4>
       <p>Account creation is restricted to current college students, certified faculties, and verified vendor companies surrounding designated campuses.</p>
-      <h4 className="font-bold text-white">2. Rental Safeguards</h4>
+      <h4 className="font-bold text-foreground">2. Rental Safeguards</h4>
       <p>Lessees are solely responsible for matching vehicle conditions, key safety handovers, and return deadlines. Damages, late returns, or unpaid balances are subject to community penalties and reporting.</p>
-      <h4 className="font-bold text-white">3. Platform Commissions</h4>
+      <h4 className="font-bold text-foreground">3. Platform Commissions</h4>
       <p>UniExo charges nominal service and maintenance fees for booking matching. These fees are detailed dynamically before checkout finalization.</p>
     </div>
   );
@@ -136,7 +136,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="relative overflow-hidden w-full mt-auto has-bottom-nav md:pb-0 theme-landing" style={{ background: 'linear-gradient(170deg, #0D1B2A 0%, #111827 60%, #0D1B2A 100%)' }}>
+    <footer className="relative overflow-hidden w-full mt-auto has-bottom-nav md:pb-0 bg-background border-t border-border">
       
       {/* ── Decorative Background Elements ── */}
       {/* Gold glow orb top-left */}
@@ -166,7 +166,7 @@ export function Footer() {
             <Link href="/" className="mb-5 inline-block">
               <UniExoBrand size="lg" />
             </Link>
-            <p className="text-white/50 text-sm max-w-xs leading-relaxed">
+            <p className="text-muted-foreground text-sm max-w-xs leading-relaxed">
               The platform for renting vehicles, rooms, buying used items, and finding laundry services.
             </p>
             {/* Animated gold accent bar */}
@@ -180,11 +180,11 @@ export function Footer() {
                 {section.links.map(link => (
                   <li key={link.label}>
                     {(link as any).onClick ? (
-                      <button onClick={(link as any).onClick} className="text-white/50 hover:text-accent transition-colors text-sm text-left">
+                      <button onClick={(link as any).onClick} className="text-muted-foreground hover:text-accent transition-colors text-sm text-left">
                         {link.label}
                       </button>
                     ) : (
-                      <Link href={link.href} className="text-white/50 hover:text-accent transition-colors text-sm">{link.label}</Link>
+                      <Link href={link.href} className="text-muted-foreground hover:text-accent transition-colors text-sm">{link.label}</Link>
                     )}
                   </li>
                 ))}
@@ -196,16 +196,16 @@ export function Footer() {
             <h3 className="font-bold text-accent/80 mb-4 text-[10px] uppercase tracking-[0.2em]">Social</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="https://facebook.com" className="group flex items-center text-white/50 hover:text-accent transition-colors text-sm gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-accent/40 group-hover:bg-accent/10 transition-all">
+                <Link href="https://facebook.com" className="group flex items-center text-muted-foreground hover:text-accent transition-colors text-sm gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-secondary border border-border flex items-center justify-center group-hover:border-accent/40 group-hover:bg-accent/10 transition-all">
                     <Facebook className="h-3.5 w-3.5" />
                   </div>
                   Facebook
                 </Link>
               </li>
               <li>
-                <Link href="https://instagram.com" className="group flex items-center text-white/50 hover:text-accent transition-colors text-sm gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-accent/40 group-hover:bg-accent/10 transition-all">
+                <Link href="https://instagram.com" className="group flex items-center text-muted-foreground hover:text-accent transition-colors text-sm gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-secondary border border-border flex items-center justify-center group-hover:border-accent/40 group-hover:bg-accent/10 transition-all">
                     <Instagram className="h-3.5 w-3.5" />
                   </div>
                   Instagram
@@ -220,18 +220,18 @@ export function Footer() {
           <Link href="/" className="mb-4 inline-block">
             <UniExoBrand size="md" />
           </Link>
-          <p className="text-white/50 text-xs mb-6 max-w-[280px]">
+          <p className="text-muted-foreground text-xs mb-6 max-w-[280px]">
             Rent vehicles, rooms, buy used items, and find laundry services.
           </p>
 
           {sections.map(section => (
-            <div key={section.id} className="border-t border-white/10">
+            <div key={section.id} className="border-t border-border">
               <button
                 onClick={() => toggleSection(section.id)}
                 className="flex items-center justify-between w-full py-3.5 text-left tap-feedback"
               >
                 <span className="text-[10px] font-bold text-accent/70 uppercase tracking-[0.2em]">{section.title}</span>
-                <ChevronDown className={`w-4 h-4 text-white/30 transition-transform duration-200 ${openSection === section.id ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${openSection === section.id ? 'rotate-180' : ''}`} />
               </button>
               <AnimatePresence>
                 {openSection === section.id && (
@@ -246,11 +246,11 @@ export function Footer() {
                       {section.links.map(link => (
                         <div key={link.label}>
                           {(link as any).onClick ? (
-                            <button onClick={(link as any).onClick} className="text-white/50 hover:text-accent text-sm tap-feedback transition-colors">
+                            <button onClick={(link as any).onClick} className="text-muted-foreground hover:text-accent text-sm tap-feedback transition-colors">
                               {link.label}
                             </button>
                           ) : (
-                            <Link href={link.href} className="text-white/50 hover:text-accent text-sm block tap-feedback transition-colors">{link.label}</Link>
+                            <Link href={link.href} className="text-muted-foreground hover:text-accent text-sm block tap-feedback transition-colors">{link.label}</Link>
                           )}
                         </div>
                       ))}
@@ -262,23 +262,23 @@ export function Footer() {
           ))}
 
           {/* Social links - horizontal on mobile */}
-          <div className="border-t border-white/10 pt-4 flex items-center gap-3">
-            <span className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Follow</span>
-            <Link href="https://facebook.com" className="p-2 rounded-xl bg-white/5 border border-white/10 hover:border-accent/40 hover:bg-accent/10 transition-all tap-feedback">
-              <Facebook className="h-4 w-4 text-white/50" />
+          <div className="border-t border-border pt-4 flex items-center gap-3">
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Follow</span>
+            <Link href="https://facebook.com" className="p-2 rounded-xl bg-secondary border border-border hover:border-accent/40 hover:bg-accent/10 transition-all tap-feedback">
+              <Facebook className="h-4 w-4 text-muted-foreground" />
             </Link>
-            <Link href="https://instagram.com" className="p-2 rounded-xl bg-white/5 border border-white/10 hover:border-accent/40 hover:bg-accent/10 transition-all tap-feedback">
-              <Instagram className="h-4 w-4 text-white/50" />
+            <Link href="https://instagram.com" className="p-2 rounded-xl bg-secondary border border-border hover:border-accent/40 hover:bg-accent/10 transition-all tap-feedback">
+              <Instagram className="h-4 w-4 text-muted-foreground" />
             </Link>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="container mx-auto mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-white/30">&copy; {new Date().getFullYear()} Uniexo Platform. All rights reserved.</p>
+        <div className="container mx-auto mt-10 pt-6 border-t border-border flex flex-col md:flex-row items-center justify-between gap-3">
+          <p className="text-xs text-muted-foreground">&copy; {new Date().getFullYear()} Uniexo Platform. All rights reserved.</p>
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-accent animate-pulse shadow-[0_0_6px_rgba(201,168,76,0.6)]" />
-            <span className="text-[10px] text-white/30 uppercase tracking-widest font-bold">Powered by UniExo</span>
+            <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Powered by UniExo</span>
           </div>
         </div>
       </div>
@@ -306,7 +306,7 @@ export function Footer() {
               initial={{ scale: 0.95, y: 20, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.95, y: 20, opacity: 0 }}
-              className="relative w-full max-w-md overflow-hidden rounded-[2.5rem] border border-white/10 bg-zinc-950/85 p-8 text-center shadow-2xl backdrop-blur-2xl"
+              className="relative w-full max-w-md overflow-hidden rounded-[2.5rem] border border-border bg-background/95 p-8 text-center shadow-2xl backdrop-blur-2xl"
             >
               {/* Top gold/burgundy glow decorative */}
               <div className="absolute -top-16 -left-16 w-36 h-36 bg-accent/20 rounded-full blur-2xl pointer-events-none" />
@@ -314,16 +314,16 @@ export function Footer() {
 
               <button 
                 onClick={() => setServiceModal({ ...serviceModal, open: false })}
-                className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors"
+                className="absolute top-6 right-6 text-muted-foreground hover:text-foreground transition-colors"
               >
-                <span className="text-[10px] uppercase tracking-widest font-black bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-full transition-all">Close</span>
+                <span className="text-[10px] uppercase tracking-widest font-black bg-secondary hover:bg-secondary/80 px-3 py-1.5 rounded-full transition-all">Close</span>
               </button>
 
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/15 text-accent shadow-inner">
                 <span className="text-3xl">{serviceModal.icon}</span>
               </div>
 
-              <h3 className="mb-4 text-2xl font-black uppercase tracking-tight text-white">
+              <h3 className="mb-4 text-2xl font-black uppercase tracking-tight text-foreground">
                 UniExo <span className="text-accent">{serviceModal.title}</span>
               </h3>
 
@@ -346,7 +346,7 @@ export function Footer() {
                     setServiceModal({ ...serviceModal, open: false });
                     router.push('/login');
                   }}
-                  className="w-full h-14 bg-white/5 hover:bg-white/10 text-white font-bold text-xs uppercase tracking-widest rounded-2xl border border-white/10 transition-all"
+                  className="w-full h-14 bg-secondary hover:bg-secondary/80 text-foreground font-bold text-xs uppercase tracking-widest rounded-2xl border border-border transition-all"
                 >
                   Log In to Account
                 </button>

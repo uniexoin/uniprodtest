@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Geist, Geist_Mono, Nunito_Sans } from "next/font/google";
+import { Fira_Sans, Space_Grotesk, Playfair_Display, DM_Sans, JetBrains_Mono, Sora } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Navbar } from "@/components/navbar";
@@ -17,20 +17,48 @@ import { OnboardingGuide } from "@/components/onboarding-guide";
 import { SuccessAnimationOverlay } from "@/components/success-animation-overlay";
 import { GlobalLoaderOverlay } from "@/components/global-loader-overlay";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+/* ── Typography System: 6 Google Fonts ─────────────────────── */
+
+// 1. Body / Navigation / UI (default)
+const firaSans = Fira_Sans({
+  variable: "--font-fira",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// 2. Section Headings (h2–h3)
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
+  weight: ["500", "600", "700"],
 });
 
-const nunitoSans = Nunito_Sans({
-  variable: "--font-nunito-sans",
+// 3. Hero / Page Titles (h1)
+const playfairDisplay = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["700", "800", "900"],
+});
+
+// 4. Captions / Badges / Labels
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+// 5. Data / Monospace (prices, dates, IDs)
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains",
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+});
+
+// 6. KPI / Accent Numbers (stat counters, big numbers)
+const sora = Sora({
+  variable: "--font-sora",
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -90,7 +118,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${nunitoSans.variable} antialiased min-h-screen flex flex-col font-[family-name:var(--font-nunito-sans)]`}
+        className={`${firaSans.variable} ${spaceGrotesk.variable} ${playfairDisplay.variable} ${dmSans.variable} ${jetbrainsMono.variable} ${sora.variable} antialiased min-h-screen flex flex-col font-[family-name:var(--font-fira)]`}
       >
         <Providers>
           <UniExoProvider>

@@ -67,6 +67,14 @@ const config: Config = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		fontFamily: {
+  			sans: ['var(--font-fira)', 'system-ui', 'sans-serif'],
+  			heading: ['var(--font-space-grotesk)', 'system-ui', 'sans-serif'],
+  			display: ['var(--font-playfair)', 'Georgia', 'serif'],
+  			caption: ['var(--font-dm-sans)', 'system-ui', 'sans-serif'],
+  			mono: ['var(--font-jetbrains)', 'Consolas', 'monospace'],
+  			kpi: ['var(--font-sora)', 'system-ui', 'sans-serif'],
   		}
   	}
   },

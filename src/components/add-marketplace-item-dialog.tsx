@@ -107,7 +107,6 @@ export function AddMarketplaceItemDialog() {
                 <option value="like_new">Like New</option>
                 <option value="good">Good</option>
                 <option value="fair">Fair</option>
-                <option value="poor">Poor</option>
               </select>
             </div>
             <div className="space-y-2">

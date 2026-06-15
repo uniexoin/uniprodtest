@@ -151,11 +151,15 @@ export function AirbnbListingCard({
   };
 
   return (
-    <div className="group/card w-full">
-      <Link href={href} className="block">
+    <motion.div 
+      className="group/card w-full bg-surface rounded-3xl border border-border/50 shadow-premium-soft hover-lift overflow-hidden flex flex-col"
+      whileHover={{ y: -6, scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+    >
+      <Link href={href} className="flex flex-col h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
         {/* ── Image Container ─────────────────────────────────── */}
         <div
-          className="relative aspect-square w-full overflow-hidden rounded-xl"
+          className="relative aspect-[4/3] w-full overflow-hidden shrink-0"
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
           onTouchStart={handleTouchStart}
@@ -187,7 +191,7 @@ export function AirbnbListingCard({
           {/* Heart / Favorite Button */}
           <button
             onClick={handleFavorite}
-            className="absolute top-3 right-3 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white hover:scale-110 transition-all duration-200 shadow-sm"
+            className="absolute top-3 right-3 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background hover:scale-110 transition-all duration-200 shadow-sm"
             aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
           >
             <Heart
@@ -223,7 +227,7 @@ export function AirbnbListingCard({
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ duration: 0.15 }}
                     onClick={goToPrev}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-white hover:bg-white shadow-md hover:scale-105 transition-transform"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-background hover:bg-background shadow-md hover:scale-105 transition-transform"
                     aria-label="Previous image"
                   >
                     <ChevronLeft className="w-4 h-4 text-black/80" />
@@ -238,7 +242,7 @@ export function AirbnbListingCard({
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ duration: 0.15 }}
                     onClick={goToNext}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-white hover:bg-white shadow-md hover:scale-105 transition-transform"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-background hover:bg-background shadow-md hover:scale-105 transition-transform"
                     aria-label="Next image"
                   >
                     <ChevronRight className="w-4 h-4 text-black/80" />
@@ -260,8 +264,8 @@ export function AirbnbListingCard({
                     className={cn(
                       'rounded-full transition-all duration-200',
                       realIndex === currentIndex
-                        ? 'w-[7px] h-[7px] bg-white shadow-sm'
-                        : 'w-[6px] h-[6px] bg-white/60 hover:bg-white/80'
+                        ? 'w-[7px] h-[7px] bg-primary shadow-sm'
+                        : 'w-[6px] h-[6px] bg-primary/40 hover:bg-primary/60'
                     )}
                     aria-label={`Go to image ${realIndex + 1}`}
                   />
@@ -272,34 +276,33 @@ export function AirbnbListingCard({
         </div>
 
         {/* ── Text Content ────────────────────────────────────── */}
-        <div className="mt-3">
-          <h3 className="text-[15px] font-semibold text-slate-900 dark:text-zinc-100 truncate leading-tight">
-            {title}
-          </h3>
-          {secondaryInfo && (
-            <p className="text-[14px] text-slate-500 dark:text-zinc-400 mt-0.5 truncate">
-              {secondaryInfo}
-            </p>
-          )}
+        <div className="p-4 md:p-5 flex-1 flex flex-col justify-between">
+          <div>
+            <h3 className="text-[16px] font-bold text-foreground truncate leading-tight">
+              {title}
+            </h3>
+            {secondaryInfo && (
+              <p className="text-[14px] text-muted-foreground mt-1 truncate font-medium">
+                {secondaryInfo}
+              </p>
+            )}
+          </div>
           
-          <div className="flex items-center gap-1.5 mt-1 text-[14px] text-slate-600 dark:text-zinc-400">
+          <div className="flex items-center justify-between mt-4 text-[15px] font-semibold text-foreground/90">
             <span className="truncate">
-              ₹{formattedPrice} {subtitle ? `for ${subtitle}` : ''}
+              ₹{formattedPrice} {subtitle ? <span className="text-sm font-normal text-muted-foreground">/ {subtitle}</span> : ''}
             </span>
             {rating !== undefined && rating > 0 && (
-              <>
-                <span className="text-slate-400 dark:text-zinc-600">•</span>
-                <div className="flex items-center gap-1 shrink-0">
-                  <Star className="w-3.5 h-3.5 fill-slate-900 text-slate-900 dark:fill-zinc-300 dark:text-zinc-300" />
-                  <span className="font-medium text-slate-900 dark:text-zinc-300">
-                    {rating.toFixed(2)}
-                  </span>
-                </div>
-              </>
+              <div className="flex items-center gap-1.5 shrink-0 bg-background px-2 py-0.5 rounded-full">
+                <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                <span className="font-bold text-[13px] text-foreground">
+                  {rating.toFixed(2)}
+                </span>
+              </div>
             )}
           </div>
         </div>
       </Link>
-    </div>
+    </motion.div>
   );
 }

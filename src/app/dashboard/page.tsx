@@ -130,7 +130,7 @@ function UserDashboard() {
                 {user?.name?.[0]?.toUpperCase() || 'U'}
               </div>
               <div>
-                <h1 className="text-3xl font-black text-white tracking-tighter uppercase">{user?.name || 'UniExo User'}</h1>
+                <h1 className="text-3xl font-heading text-white uppercase">{user?.name || 'UniExo User'}</h1>
                 <p className="text-zinc-500 font-medium text-sm">{user?.email}</p>
               </div>
 
@@ -144,7 +144,7 @@ function UserDashboard() {
             <div className="space-y-6">
               <div className="flex items-center gap-3 px-2">
                 <LayoutDashboard className="w-5 h-5 text-zinc-500" />
-                <h2 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em]">Access Services</h2>
+                <h2 className="text-[10px] font-caption text-zinc-500 tracking-[0.3em]">Access Services</h2>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -152,28 +152,28 @@ function UserDashboard() {
                   <div className="p-4 rounded-2xl bg-white/5 group-hover:bg-lime-400/10 transition-colors">
                     <Car className="w-8 h-8 text-zinc-400 group-hover:text-lime-400 transition-colors" />
                   </div>
-                  <span className="text-[10px] font-black text-zinc-500 group-hover:text-white uppercase tracking-[0.2em] transition-colors">Vehicles</span>
+                  <span className="text-[10px] font-caption text-zinc-500 group-hover:text-white tracking-[0.2em] transition-colors">Vehicles</span>
                 </Link>
 
                 <Link href="/houses" className="group relative aspect-square bg-zinc-900/50 border border-white/5 rounded-[40px] flex flex-col items-center justify-center gap-4 transition-all hover:bg-zinc-800 hover:border-lime-500/30 hover:scale-[1.02]">
                   <div className="p-4 rounded-2xl bg-white/5 group-hover:bg-lime-400/10 transition-colors">
                     <Home className="w-8 h-8 text-zinc-400 group-hover:text-lime-400 transition-colors" />
                   </div>
-                  <span className="text-[10px] font-black text-zinc-500 group-hover:text-white uppercase tracking-[0.2em] transition-colors">Rooms</span>
+                  <span className="text-[10px] font-caption text-zinc-500 group-hover:text-white tracking-[0.2em] transition-colors">Rooms</span>
                 </Link>
 
                 <Link href="/marketplace" className="group relative aspect-square bg-zinc-900/50 border border-white/5 rounded-[40px] flex flex-col items-center justify-center gap-4 transition-all hover:bg-zinc-800 hover:border-lime-500/30 hover:scale-[1.02]">
                   <div className="p-4 rounded-2xl bg-white/5 group-hover:bg-lime-400/10 transition-colors">
                     <ShoppingBag className="w-8 h-8 text-zinc-400 group-hover:text-lime-400 transition-colors" />
                   </div>
-                  <span className="text-[10px] font-black text-zinc-500 group-hover:text-white uppercase tracking-[0.2em] transition-colors">Used Items</span>
+                  <span className="text-[10px] font-caption text-zinc-500 group-hover:text-white tracking-[0.2em] transition-colors">Used Items</span>
                 </Link>
 
                 <Link href="/laundry" className="group relative aspect-square bg-zinc-900/50 border border-white/5 rounded-[40px] flex flex-col items-center justify-center gap-4 transition-all hover:bg-zinc-800 hover:border-lime-500/30 hover:scale-[1.02]">
                   <div className="p-4 rounded-2xl bg-white/5 group-hover:bg-lime-400/10 transition-colors">
                     <WashingMachine className="w-8 h-8 text-zinc-400 group-hover:text-lime-400 transition-colors" />
                   </div>
-                  <span className="text-[10px] font-black text-zinc-500 group-hover:text-white uppercase tracking-[0.2em] transition-colors">Laundry</span>
+                  <span className="text-[10px] font-caption text-zinc-500 group-hover:text-white tracking-[0.2em] transition-colors">Laundry</span>
                 </Link>
               </div>
             </div>
@@ -182,7 +182,7 @@ function UserDashboard() {
             <div className="space-y-3">
               <button onClick={() => setSection('bookings')} className="w-full h-16 bg-zinc-900/30 border border-white/5 rounded-3xl flex items-center justify-between px-6 hover:bg-zinc-800/50 transition-colors">
                 <div className="flex items-center gap-4">
-                  <div className="p-2 rounded-xl bg-white/5 text-zinc-500">
+                  <div className="p-2 rounded-2xl bg-white/5 text-zinc-500">
                     <ListOrdered className="w-4 h-4" />
                   </div>
                   <span className="font-bold text-zinc-300">My Activity & Orders</span>
@@ -192,7 +192,7 @@ function UserDashboard() {
 
               <Link href="/profile" className="w-full h-16 bg-zinc-900/30 border border-white/5 rounded-3xl flex items-center justify-between px-6 hover:bg-zinc-800/50 transition-colors">
                 <div className="flex items-center gap-4">
-                  <div className="p-2 rounded-xl bg-white/5 text-zinc-500">
+                  <div className="p-2 rounded-2xl bg-white/5 text-zinc-500">
                     <LayoutDashboard className="w-4 h-4" />
                   </div>
                   <span className="font-bold text-zinc-300">Detailed Dashboard</span>
@@ -205,7 +205,7 @@ function UserDashboard() {
 
         {section === 'bookings' && (
           <>
-            <h2 className="text-2xl font-bold tracking-tight">My Bookings</h2>
+            <h2 className="text-2xl font-heading">My Bookings</h2>
             {loadingBookings ? (
               <div className="space-y-3">{Array.from({ length: 3 }).map((_, i) => <Card key={i} className="p-6 animate-pulse"><div className="h-4 bg-muted rounded w-48" /></Card>)}</div>
             ) : bookings.length === 0 ? (
@@ -265,7 +265,7 @@ function UserDashboard() {
 
         {section === 'laundry' && (
           <>
-            <h2 className="text-2xl font-bold tracking-tight">Laundry Orders</h2>
+            <h2 className="text-2xl font-heading">Laundry Orders</h2>
             {loadingLaundry ? (
               <div className="space-y-3">{Array.from({ length: 3 }).map((_, i) => <Card key={i} className="p-6 animate-pulse"><div className="h-4 bg-muted rounded w-48" /></Card>)}</div>
             ) : laundryOrders.length === 0 ? (
@@ -325,7 +325,7 @@ function UserDashboard() {
 
         {section === 'marketplace' && (
           <>
-            <h2 className="text-2xl font-bold tracking-tight">My Marketplace Listings</h2>
+            <h2 className="text-2xl font-heading">My Marketplace Listings</h2>
             {loadingMarketplace ? (
               <div className="space-y-3">{Array.from({ length: 3 }).map((_, i) => <Card key={i} className="p-6 animate-pulse"><div className="h-4 bg-muted rounded w-48" /></Card>)}</div>
             ) : marketplaceItems.length === 0 ? (
@@ -363,7 +363,7 @@ function UserDashboard() {
 
         {section === 'offers' && (
           <>
-            <h2 className="text-2xl font-bold tracking-tight">My Offers</h2>
+            <h2 className="text-2xl font-heading">My Offers</h2>
             {loadingOffers ? (
               <div className="space-y-3">{Array.from({ length: 3 }).map((_, i) => <Card key={i} className="p-6 animate-pulse"><div className="h-4 bg-muted rounded w-48" /></Card>)}</div>
             ) : myOffers.length === 0 ? (
@@ -483,7 +483,7 @@ function VendorDashboard() {
   });
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 bg-slate-50/50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 p-2 sm:p-4 rounded-xl min-h-screen">
+    <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 bg-slate-50/50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 p-2 sm:p-4 rounded-2xl min-h-screen">
       {/* Sidebar — mobile: icon pill grid, desktop: vertical list */}
       <aside className="lg:w-64 shrink-0">
         {/* Mobile: Compact icon pill grid */}
@@ -494,7 +494,7 @@ function VendorDashboard() {
               <button
                 key={s.id}
                 onClick={() => handleTabChange(s.id)}
-                className={`relative flex flex-col items-center justify-center gap-1 p-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all duration-300 ${isActive
+                className={`relative flex flex-col items-center justify-center gap-1 p-2.5 rounded-2xl text-[10px] font-black uppercase tracking-wider transition-all duration-300 ${isActive
                     ? 'text-white scale-[1.03]'
                     : 'text-slate-500 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-zinc-800/60 hover:text-[#8B004A] dark:hover:text-rose-400'
                   }`}
@@ -502,7 +502,7 @@ function VendorDashboard() {
                 {isActive && (
                   <motion.div
                     layoutId="activeTabMobilePill"
-                    className="absolute inset-0 bg-[#8B004A] rounded-xl shadow-[0_0_20px_rgba(139,0,74,0.35)] -z-10"
+                    className="absolute inset-0 bg-[#8B004A] rounded-2xl shadow-[0_0_20px_rgba(139,0,74,0.35)] -z-10"
                     transition={{ type: 'spring', stiffness: 420, damping: 22 }}
                   />
                 )}
@@ -521,7 +521,7 @@ function VendorDashboard() {
               <button
                 key={s.id}
                 onClick={() => handleTabChange(s.id)}
-                className={`relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black transition-all duration-300 group ${isActive
+                className={`relative flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-black transition-all duration-300 group ${isActive
                     ? 'text-white scale-[1.02]'
                     : 'text-slate-500 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-zinc-800/60 hover:text-[#8B004A] dark:hover:text-rose-400'
                   }`}
@@ -529,7 +529,7 @@ function VendorDashboard() {
                 {isActive && (
                   <motion.div
                     layoutId="activeTabDesktopPill"
-                    className="absolute inset-0 bg-[#8B004A] rounded-xl shadow-[0_0_20px_rgba(139,0,74,0.35)] -z-10"
+                    className="absolute inset-0 bg-[#8B004A] rounded-2xl shadow-[0_0_20px_rgba(139,0,74,0.35)] -z-10"
                     transition={{ type: 'spring', stiffness: 420, damping: 22 }}
                   />
                 )}
@@ -558,7 +558,7 @@ function VendorDashboard() {
         <div className="relative overflow-hidden bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md p-4 sm:p-6 lg:p-8 rounded-2xl lg:rounded-3xl border border-white/20 dark:border-white/10 shadow-xl flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center justify-between gap-4 lg:gap-6">
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 via-pink-500 to-[#8B004A]" />
           <div className="space-y-1">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tighter text-[#8B004A] dark:text-rose-400">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-heading text-[#8B004A] dark:text-rose-400">
               Welcome back, {user?.name?.split(' ')[0] || 'Vendor'} 👋
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-zinc-400 font-medium flex items-center gap-2">
@@ -572,7 +572,7 @@ function VendorDashboard() {
               variant="outline"
               onClick={handleManualRefresh}
               disabled={isRefreshing}
-              className={`rounded-xl h-9 sm:h-11 text-xs sm:text-sm border-blue-200 dark:border-zinc-800 text-slate-700 dark:text-zinc-200 bg-white dark:bg-zinc-900 shadow-md font-bold flex items-center gap-2 hover:bg-slate-50 transition-all ${
+              className={`rounded-2xl h-9 sm:h-11 text-xs sm:text-sm border-blue-200 dark:border-zinc-800 text-slate-700 dark:text-zinc-200 bg-white dark:bg-zinc-900 shadow-md font-bold flex items-center gap-2 hover:bg-slate-50 dark:bg-zinc-800 transition-all ${
                 isRefreshing ? 'animate-pulse pulse-shadow-rose' : 'hover:shadow-[0_0_15px_rgba(139,0,74,0.2)]'
               }`}
             >
@@ -606,7 +606,7 @@ function VendorDashboard() {
         {section === 'vehicles' && (
           <>
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold tracking-tight">My Vehicles</h2>
+              <h2 className="text-2xl font-heading">My Vehicles</h2>
               {vendorProfile?.approvalStatus === 'approved' && isProfileComplete ? (
                 <AddVehicleDialog />
               ) : (
@@ -672,7 +672,7 @@ function VendorDashboard() {
         {section === 'houses' && (
           <>
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold tracking-tight">My Houses</h2>
+              <h2 className="text-2xl font-heading">My Houses</h2>
               {vendorProfile?.approvalStatus === 'approved' && isProfileComplete ? (
                 <AddHouseDialog />
               ) : (
@@ -732,7 +732,7 @@ function VendorDashboard() {
 
         {section === 'bookings' && (
           <>
-            <h2 className="text-2xl font-bold tracking-tight">Booking Requests</h2>
+            <h2 className="text-2xl font-heading">Booking Requests</h2>
             {loadingBookings ? (
               <div className="space-y-3">{Array.from({ length: 3 }).map((_, i) => <Card key={i} className="p-6 animate-pulse"><div className="h-4 bg-muted rounded w-48" /></Card>)}</div>
             ) : bookings.length === 0 ? (
@@ -763,7 +763,7 @@ function VendorDashboard() {
                         </div>
                         <div className="flex justify-between">
                           <span>Total Amount:</span>
-                          <span className="font-black text-[#8B004A]">₹{b.totalAmount}</span>
+                          <span className="font-data font-bold text-[#8B004A]">₹{b.totalAmount}</span>
                         </div>
                       </div>
                       {b.status === 'pending' && (
@@ -1117,7 +1117,7 @@ function VendorIntelligenceSection({ vendorId }: { vendorId: string }) {
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <div className="h-20 animate-pulse bg-muted rounded-xl" />
+              <div className="h-20 animate-pulse bg-muted rounded-2xl" />
             ) : (
               <div className="space-y-4">
                 <div className="flex items-end gap-2">

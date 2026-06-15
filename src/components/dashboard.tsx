@@ -24,6 +24,7 @@ import { useVehicles } from '@/hooks/use-vehicles';
 import { useLaundryServices } from '@/hooks/use-laundry-services';
 import { useMarketplaceItems } from '@/hooks/use-marketplace-items';
 import { AirbnbListingCard } from '@/components/airbnb-listing-card';
+import { VehicleCard } from '@/components/vehicle-card';
 import Link from 'next/link';
 
 export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'homes' | 'experiences' | 'services' | 'marketplace' }) {
@@ -47,32 +48,42 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
   const pgHomes = houses.filter((h: any) => h.propertyType === 'pg').slice(0, 6);
 
   const Section = ({ title, children, onViewAll, showArrow = true }: { title: string, children: React.ReactNode, onViewAll?: () => void, showArrow?: boolean }) => (
-    <section className="mb-10">
-      <div className="flex items-center justify-between mb-4 px-4 sm:px-6 md:px-8">
-        <h2 className="text-xl font-semibold text-slate-900 tracking-tight">{title}</h2>
+    <section className="mb-14">
+      <div className="flex items-center justify-between mb-6 px-4 sm:px-8 md:px-12 lg:px-16">
+        <h2 className="text-2xl font-bold text-foreground tracking-tight">{title}</h2>
         {showArrow && (
-          <button onClick={onViewAll} className="p-1 -mr-1 rounded-full hover:bg-slate-100 transition-colors">
-             <ArrowRight className="w-5 h-5 text-slate-900" />
+          <button onClick={onViewAll} className="p-2 -mr-2 rounded-full hover:bg-secondary/10 transition-colors">
+             <ArrowRight className="w-6 h-6 text-foreground" />
           </button>
         )}
       </div>
-      <div className="flex gap-4 overflow-x-auto pb-6 px-4 sm:px-6 md:px-8 snap-x snap-mandatory scrollbar-hide">
+      <div className="flex gap-6 lg:gap-8 overflow-x-auto pb-8 px-4 sm:px-8 md:px-12 lg:px-16 snap-x snap-mandatory scrollbar-hide">
         {children}
       </div>
     </section>
   );
 
+  const getThemeClass = () => {
+    switch(activeCategory) {
+      case 'homes': return 'theme-house';
+      case 'experiences': return 'theme-car';
+      case 'services': return 'theme-laundry';
+      case 'marketplace': return 'theme-food';
+      default: return '';
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50/50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 pb-24 has-bottom-nav font-sans">
+    <div className={`min-h-screen bg-background text-foreground pb-24 has-bottom-nav font-sans transition-colors duration-500 ${getThemeClass()}`}>
       
       {/* ── Sticky Top Header ──────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 bg-white/80 dark:bg-zinc-950/70 backdrop-blur-xl border-b border-slate-100 dark:border-white/5 pb-2 pt-4 shadow-sm shadow-slate-100/10 dark:shadow-none">
-        <div className="container mx-auto px-4 sm:px-6 md:px-8">
+      <header className="sticky top-0 z-40 bg-background/85 backdrop-blur-2xl border-b border-border/50 pb-4 pt-6 shadow-sm shadow-border/10">
+        <div className="container mx-auto px-4 sm:px-8 md:px-12 lg:px-16">
           
           {/* Search Pill - Exactly like screenshot */}
-          <div className="flex items-center justify-center bg-white dark:bg-zinc-900/60 hover:border-slate-300 dark:hover:border-zinc-700 hover:shadow-lg transition-all duration-300 rounded-[1.8rem] shadow-[0_3px_15px_rgba(0,0,0,0.08)] border border-slate-100 dark:border-zinc-800 py-3.5 px-6 mb-5 cursor-text max-w-xl mx-auto">
-            <Search className="w-5 h-5 text-slate-800 dark:text-zinc-300 mr-3 stroke-[2.5]" />
-            <span className="text-[15px] font-semibold text-slate-950 dark:text-zinc-200">Start your search</span>
+          <div className="flex items-center justify-center bg-surface hover:border-primary/50 hover:shadow-lg transition-all duration-300 rounded-[1.8rem] shadow-[0_3px_15px_rgba(0,0,0,0.08)] border border-border py-3.5 px-6 mb-5 cursor-text max-w-xl mx-auto">
+            <Search className="w-5 h-5 text-muted-foreground mr-3 stroke-[2.5]" />
+            <span className="text-[15px] font-semibold text-foreground">Start your search</span>
           </div>
 
           {/* Categories - Exactly like screenshot */}
@@ -84,7 +95,7 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
                   className={`relative flex flex-col items-center gap-1.5 pb-3 pt-2 min-w-fit transition-all duration-300 ${
-                    isActive ? 'text-slate-900 dark:text-zinc-100 font-bold' : 'text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-zinc-200'
+                    isActive ? 'text-foreground font-bold' : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
                   {cat.isNew && (
@@ -94,13 +105,13 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                   )}
                   {/* Fallback to lucide if custom icons are missing */}
                   <div className="h-7 flex items-center justify-center relative">
-                      <cat.icon className={`w-6 h-6 transition-all duration-300 ${isActive ? 'stroke-[2.5] text-slate-900 dark:text-zinc-100 scale-110' : 'stroke-[1.5] text-slate-400 dark:text-zinc-500'}`} />
+                      <cat.icon className={`w-6 h-6 transition-all duration-300 ${isActive ? 'stroke-[2.5] text-foreground scale-110' : 'stroke-[1.5] text-muted-foreground'}`} />
                   </div>
                   <span className="text-[12px] font-semibold tracking-wide uppercase">{cat.label}</span>
                   {isActive && (
                     <motion.div
                       layoutId="activeCategoryBorder"
-                      className="absolute bottom-0 left-0 right-0 h-[3px] bg-slate-900 dark:bg-zinc-100 rounded-full"
+                      className="absolute bottom-0 left-0 right-0 h-[3px] bg-foreground rounded-full"
                       transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                     />
                   )}
@@ -130,9 +141,9 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                     {isLoadingHouses ? (
                       [1, 2, 3].map(i => (
                         <div key={i} className="min-w-[85vw] w-[85vw] sm:min-w-[320px] sm:w-[320px] snap-center shrink-0 space-y-3">
-                           <div className="aspect-[4/3] bg-slate-100 rounded-3xl animate-pulse" />
-                           <div className="h-4 bg-slate-100 rounded w-2/3 animate-pulse" />
-                           <div className="h-4 bg-slate-100 rounded w-1/3 animate-pulse" />
+                           <div className="aspect-[4/3] bg-surface border border-border/50 rounded-3xl animate-pulse" />
+                           <div className="h-4 bg-surface border border-border/50 rounded w-2/3 animate-pulse" />
+                           <div className="h-4 bg-surface border border-border/50 rounded w-1/3 animate-pulse" />
                         </div>
                       ))
                     ) : (
@@ -159,9 +170,9 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                     {isLoadingHouses ? (
                       [1, 2, 3].map(i => (
                         <div key={i} className="min-w-[85vw] w-[85vw] sm:min-w-[320px] sm:w-[320px] snap-center shrink-0 space-y-3">
-                           <div className="aspect-[4/3] bg-slate-100 rounded-3xl animate-pulse" />
-                           <div className="h-4 bg-slate-100 rounded w-2/3 animate-pulse" />
-                           <div className="h-4 bg-slate-100 rounded w-1/3 animate-pulse" />
+                           <div className="aspect-[4/3] bg-surface border border-border/50 rounded-3xl animate-pulse" />
+                           <div className="h-4 bg-surface border border-border/50 rounded w-2/3 animate-pulse" />
+                           <div className="h-4 bg-surface border border-border/50 rounded w-1/3 animate-pulse" />
                         </div>
                       ))
                     ) : (
@@ -186,6 +197,92 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
 
                 </>
               )}
+
+              {activeCategory === 'experiences' && (
+                <div className="flex flex-col gap-6 w-full max-w-md mx-auto sm:max-w-none">
+                  {/* Top Brands Filter */}
+                  <div className="mb-2">
+                    <h2 className="text-xl font-bold text-foreground tracking-tight mb-4 px-4 sm:px-8 md:px-12 lg:px-16">Top Brands</h2>
+                    <div className="flex gap-4 overflow-x-auto pb-4 px-4 sm:px-8 md:px-12 lg:px-16 snap-x snap-mandatory scrollbar-hide">
+                      {[
+                        { name: 'All', icon: '/brands/all.png' },
+                        { name: 'Royal Enfield', icon: '/brands/royal.png' },
+                        { name: 'Honda', icon: '/brands/honda.png' },
+                        { name: 'Yamaha', icon: '/brands/yamaha.png' },
+                        { name: 'TATA', icon: '/brands/tata.png' }
+                      ].map((brand, i) => (
+                        <div key={brand.name} className="flex flex-col items-center gap-2 snap-center shrink-0 w-16">
+                          <div className={`w-14 h-14 rounded-full flex items-center justify-center ${i===0 ? 'bg-surface border-2 border-border' : 'bg-background border border-border shadow-sm'}`}>
+                            {i === 0 ? <LayoutGrid className="w-5 h-5 text-zinc-600" /> : <img src={`https://ui-avatars.com/api/?name=${brand.name.charAt(0)}&background=random`} alt={brand.name} className="w-8 h-8 object-contain rounded-full" />}
+                          </div>
+                          <span className="text-[10px] font-semibold text-center leading-tight">{brand.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <Section title="Best Deals" showArrow={false}>
+                    {isLoadingVehicles ? (
+                      [1, 2].map(i => <div key={i} className="w-[280px] h-[300px] bg-surface border border-border/50 rounded-[1.2rem] animate-pulse shrink-0" />)
+                    ) : vehicles.slice(0, 4).map((vehicle: any) => (
+                      <VehicleCard
+                        key={vehicle._id}
+                        id={vehicle._id}
+                        title={vehicle.name || vehicle.modelName || 'Vehicle'}
+                        images={vehicle.images?.length ? vehicle.images : ['https://images.unsplash.com/photo-1558981403-c5f9899a28bc']}
+                        pricePerDay={vehicle.pricePerDay || 1000}
+                        rating={4.8}
+                        seatingCapacity={vehicle.seatingCapacity || 2}
+                        fuelType={vehicle.fuelType || 'Petrol'}
+                        kmsOrSpeed={vehicle.topSpeed || 349}
+                        isAvailable={vehicle.isAvailable}
+                        href={`/vehicles/${vehicle._id}`}
+                      />
+                    ))}
+                  </Section>
+
+                  <Section title="Top Vehicles" showArrow={false}>
+                    {isLoadingVehicles ? (
+                      [1, 2].map(i => <div key={i} className="w-[280px] h-[300px] bg-surface border border-border/50 rounded-[1.2rem] animate-pulse shrink-0" />)
+                    ) : vehicles.slice(0, 4).map((vehicle: any) => (
+                      <VehicleCard
+                        key={vehicle._id}
+                        id={vehicle._id}
+                        title={vehicle.name || vehicle.modelName || 'Vehicle'}
+                        images={vehicle.images?.length ? vehicle.images : ['https://images.unsplash.com/photo-1558981403-c5f9899a28bc']}
+                        pricePerDay={vehicle.pricePerDay || 1000}
+                        rating={5.0}
+                        seatingCapacity={vehicle.seatingCapacity || 2}
+                        fuelType={vehicle.fuelType || 'Petrol'}
+                        kmsOrSpeed={vehicle.topSpeed || 349}
+                        isAvailable={vehicle.isAvailable}
+                        href={`/vehicles/${vehicle._id}`}
+                      />
+                    ))}
+                  </Section>
+
+                  <Section title="Near Available" showArrow={false}>
+                    {isLoadingVehicles ? (
+                      [1, 2].map(i => <div key={i} className="w-[280px] h-[300px] bg-surface border border-border/50 rounded-[1.2rem] animate-pulse shrink-0" />)
+                    ) : vehicles.slice(0, 4).map((vehicle: any) => (
+                      <VehicleCard
+                        key={vehicle._id}
+                        id={vehicle._id}
+                        title={vehicle.name || vehicle.modelName || 'Vehicle'}
+                        images={vehicle.images?.length ? vehicle.images : ['https://images.unsplash.com/photo-1558981403-c5f9899a28bc']}
+                        pricePerDay={vehicle.pricePerDay || 1000}
+                        rating={4.5}
+                        seatingCapacity={vehicle.seatingCapacity || 2}
+                        fuelType={vehicle.fuelType || 'Petrol'}
+                        kmsOrSpeed={vehicle.topSpeed || 349}
+                        isAvailable={vehicle.isAvailable}
+                        href={`/vehicles/${vehicle._id}`}
+                      />
+                    ))}
+                  </Section>
+                </div>
+              )}
+
 
               {activeCategory === 'marketplace' && (
                 <div className="flex flex-col gap-6">
@@ -251,7 +348,7 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                           </div>
                         </div>
 
-                        <div className="w-1/2 bg-[#C3C6FF] text-black py-3 rounded-2xl text-xs font-black text-center mb-6 hover:bg-white transition-colors z-10 shadow-[0_0_20px_rgba(195,198,255,0.4)]">
+                        <div className="w-1/2 bg-[#C3C6FF] text-black py-3 rounded-2xl text-xs font-black text-center mb-6 hover:bg-surface transition-colors z-10 shadow-[0_0_20px_rgba(195,198,255,0.4)]">
                           Secure Item
                         </div>
 
@@ -321,9 +418,9 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                     {isLoadingLaundry ? (
                       [1, 2, 3].map(i => (
                         <div key={i} className="min-w-[85vw] w-[85vw] sm:min-w-[320px] sm:w-[320px] snap-center shrink-0 space-y-3">
-                           <div className="aspect-[4/3] bg-slate-100 rounded-3xl animate-pulse" />
-                           <div className="h-4 bg-slate-100 rounded w-2/3 animate-pulse" />
-                           <div className="h-4 bg-slate-100 rounded w-1/3 animate-pulse" />
+                           <div className="aspect-[4/3] bg-surface border border-border/50 rounded-3xl animate-pulse" />
+                           <div className="h-4 bg-surface border border-border/50 rounded w-2/3 animate-pulse" />
+                           <div className="h-4 bg-surface border border-border/50 rounded w-1/3 animate-pulse" />
                         </div>
                       ))
                     ) : (
@@ -353,9 +450,9 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                     {isLoadingMarketplace ? (
                       [1, 2, 3].map(i => (
                         <div key={i} className="min-w-[85vw] w-[85vw] sm:min-w-[320px] sm:w-[320px] snap-center shrink-0 space-y-3">
-                           <div className="aspect-[4/3] bg-slate-100 rounded-3xl animate-pulse" />
-                           <div className="h-4 bg-slate-100 rounded w-2/3 animate-pulse" />
-                           <div className="h-4 bg-slate-100 rounded w-1/3 animate-pulse" />
+                           <div className="aspect-[4/3] bg-surface border border-border/50 rounded-3xl animate-pulse" />
+                           <div className="h-4 bg-surface border border-border/50 rounded w-2/3 animate-pulse" />
+                           <div className="h-4 bg-surface border border-border/50 rounded w-1/3 animate-pulse" />
                         </div>
                       ))
                     ) : (

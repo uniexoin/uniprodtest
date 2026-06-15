@@ -1,410 +1,161 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import Script from 'next/script';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { toast } from 'sonner';
-import { Car, Check, MapPin, Shield, Star, User, LocateFixed, Loader2 } from 'lucide-react';
-import { useAuthStore } from '@/modules/auth/auth.store';
+import { useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { ArrowLeft, Heart, Check, X, Users, Fuel, Gauge, Weight, Settings, Star } from 'lucide-react';
 import { useVehicle } from '@/hooks/use-vehicle';
-import { useCreateBooking } from '@/hooks/use-booking';
-import { useCreatePaymentOrder, useVerifyPayment } from '@/hooks/use-payment';
-import { ListingApprovalStatus, ServiceType } from '@/types';
-import { Lightbox } from '@/components/lightbox';
 
-// Razorpay window interface
-declare global {
-  interface Window {
-    Razorpay: any;
-  }
-}
-
-export default function VehicleDetailPage() {
+export default function VehicleDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
-  const { isAuthenticated, user } = useAuthStore();
-  
-  const { data: vehicle, isLoading, error } = useVehicle(id);
-  const createBooking = useCreateBooking();
-  const createOrder = useCreatePaymentOrder();
-  const verifyPayment = useVerifyPayment();
+  const { data: vehicle, isLoading } = useVehicle(id);
 
-  // Booking state
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [bookingType, setBookingType] = useState<'daily' | 'hourly'>('daily');
-  const paymentMethod = 'online';
-  const [bookingUnits, setBookingUnits] = useState(1);
-  const searchParams = useSearchParams();
-  const [bookingLocation, setBookingLocation] = useState(searchParams.get('location') || '');
-  const [isFetchingLocation, setIsFetchingLocation] = useState(false);
+  const [activeImage, setActiveImage] = useState(0);
 
-  const [isProcessing, setIsProcessing] = useState(false);
-  
-  const [activeImage, setActiveImage] = useState<string>('');
-  
-  // Lightbox State
-  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const [lightboxIndex, setLightboxIndex] = useState(0);
-
-  useEffect(() => {
-    if (startDate && endDate) {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      const diffTime = Math.abs(end.getTime() - start.getTime());
-      
-      if (bookingType === 'hourly') {
-        const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
-        setBookingUnits(Math.max(1, diffHours));
-      } else {
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        setBookingUnits(Math.max(1, diffDays));
-      }
-    }
-  }, [startDate, endDate, bookingType]);
-
-  // Set initial active image when vehicle loads
-  useEffect(() => {
-    if (vehicle?.images?.length) {
-      setActiveImage(vehicle.images[0]);
-    }
-  }, [vehicle]);
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center py-32">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (error || !vehicle) {
-    return (
-      <div className="container mx-auto px-4 py-20 text-center">
-        <h2 className="text-2xl font-bold mb-2">Vehicle Not Found</h2>
-        <p className="text-muted-foreground mb-6">The vehicle you are looking for does not exist or has been removed.</p>
-        <Button onClick={() => router.push('/vehicles')}>Back to Vehicles</Button>
-      </div>
-    );
-  }
-
-  const commissionPercent = 10;
-  const unitPrice = bookingType === 'hourly' ? (vehicle.pricePerHour || Math.round(vehicle.pricePerDay / 24)) : vehicle.pricePerDay;
-  const basePrice = unitPrice * bookingUnits;
-  const serviceFee = (basePrice * commissionPercent) / 100;
-  const totalPrice = basePrice; // Total amount user pays 
-  
-  // Note: Backend calculates totalAmount = vehicle.pricePerDay * days
-  // The commission is deducted from vendor's payout, not added to user total (as per booking.service.ts)
-
-  const handleFetchLocation = () => {
-    if (!navigator.geolocation) {
-      toast.error('Geolocation is not supported by your browser.');
-      return;
-    }
-
-    setIsFetchingLocation(true);
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          const { latitude, longitude } = position.coords;
-          // Use OpenStreetMap Nominatim for reverse geocoding
-          const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-          if (!response.ok) throw new Error('Failed to fetch address');
-          
-          const data = await response.json();
-          const address = data.address;
-          
-          // Format a clean address string
-          const city = address.city || address.town || address.village || address.state_district;
-          const state = address.state;
-          const country = address.country;
-          
-          const formattedLocation = [city, state, country].filter(Boolean).join(', ');
-          
-          if (formattedLocation) {
-            setBookingLocation(formattedLocation);
-            toast.success('Location updated successfully!');
-          } else {
-            toast.error('Could not determine city/state from coordinates.');
-          }
-        } catch (error) {
-          console.error(error);
-          toast.error('Error fetching address. Please enter manually.');
-        } finally {
-          setIsFetchingLocation(false);
-        }
-      },
-      (error) => {
-        console.error(error);
-        setIsFetchingLocation(false);
-        if (error.code === 1) {
-          toast.error('Please allow location access in your browser settings.');
-        } else {
-          toast.error('Could not get your current location.');
-        }
-      },
-      { timeout: 10000, maximumAge: 60000 }
-    );
-  };
-
-  const handleBookNow = () => {
-    router.push(`/checkout?type=vehicle&id=${id}&name=${encodeURIComponent(vehicle.name)}&startDate=${startDate}&endDate=${endDate}&bookingType=${bookingType}&location=${encodeURIComponent(bookingLocation)}`);
-  };
+  if (isLoading || !vehicle) return <div className="min-h-screen bg-surface flex items-center justify-center">Loading...</div>;
 
   return (
-    <>
-      {/* Razorpay Checkout Script */}
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
+    <div className="theme-car min-h-screen bg-background text-foreground pb-24 font-sans transition-colors duration-500">
+      {/* Top Bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-background px-4 py-3 flex items-center justify-between shadow-sm">
+        <div className="flex items-center gap-3">
+          <button onClick={() => router.back()} className="p-2 hover:bg-surface border-border rounded-full">
+            <ArrowLeft className="w-6 h-6 text-foreground" />
+          </button>
+          <span className="text-lg font-bold">Vehicle Details</span>
+        </div>
+        <button className="p-2 hover:bg-surface border-border rounded-full">
+          <Heart className="w-6 h-6 text-foreground" />
+        </button>
+      </div>
 
-      <div className="container mx-auto px-4 py-8 max-w-6xl theme-car pb-24 lg:pb-8">
-        {/* Title & Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">{vehicle.name}</h1>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <Car className="w-4 h-4 text-primary" />
-              <span>{vehicle.brand} {vehicle.modelName} ({vehicle.year})</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <MapPin className="w-4 h-4" />
-              <span>{typeof vehicle.location === 'string' ? vehicle.location : (vehicle as any).location?.address || 'Location TBD'}</span>
-            </div>
+      <div className="pt-16">
+        {/* Image Carousel */}
+        <div className="relative w-full aspect-[4/3] bg-surface overflow-hidden">
+          <img src={vehicle.images?.[activeImage] || 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc'} className="w-full h-full object-cover" alt={vehicle.name} />
+          
+          <div className="absolute top-4 left-4 bg-background/70 text-foreground px-3 py-1.5 rounded-full text-[11px] font-bold flex items-center gap-1.5 backdrop-blur-md">
+            <Star className="w-3.5 h-3.5 fill-white" /> Premium
+          </div>
+          
+          <div className="absolute top-4 right-4 bg-background/60 text-foreground px-3 py-1 rounded-full text-xs font-bold backdrop-blur-md">
+            {activeImage + 1}/{vehicle.images?.length || 1}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column: Images & Details */}
-          <div className="lg:col-span-2 space-y-8">
-            
-            {/* Image Gallery */}
+        {/* Content Container */}
+        <div className="px-5 py-6">
+          {/* Host Info */}
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-8 h-8 bg-surface border-border rounded-full flex items-center justify-center text-muted-foreground">
+              <User className="w-4 h-4" />
+            </div>
+            <span className="text-sm font-semibold text-foreground/90">
+              Hosted by <span className="text-accent">{typeof vehicle.vendorId === 'object' ? vehicle.vendorId?.name : 'Vendor'}</span>
+            </span>
+          </div>
+
+          {/* Title & Price */}
+          <div className="flex items-start justify-between mb-4">
+            <h1 className="text-3xl font-black text-foreground tracking-tight">{vehicle.name || vehicle.modelName}</h1>
+            <div className="bg-accent/10 border border-[#ff9900]/30 text-accent px-4 py-1.5 rounded-xl font-black text-lg">
+              ₹{vehicle.pricePerDay || 1600}/day
+            </div>
+          </div>
+
+          {/* Status Tags */}
+          <div className="flex gap-3 mb-2">
+            <div className="flex items-center gap-1.5 bg-green-50 border border-green-200 text-green-600 px-3 py-1.5 rounded-full">
+              <div className="bg-green-500 rounded-full p-0.5"><Check className="w-3 h-3 text-accent-foreground stroke-[3]" /></div>
+              <span className="text-[12px] font-bold">Available</span>
+            </div>
+            <div className="flex items-center gap-1.5 bg-red-50 border border-red-200 text-red-600 px-3 py-1.5 rounded-full">
+              <div className="bg-red-500 rounded-full p-0.5"><X className="w-3 h-3 text-accent-foreground stroke-[3]" /></div>
+              <span className="text-[12px] font-bold">Non-Deliverable</span>
+            </div>
+          </div>
+          
+          <p className="text-xs text-muted-foreground mb-8 ml-1">Prices are different according to duration of booking</p>
+
+          {/* Specs Grid */}
+          <div className="grid grid-cols-3 gap-3 mb-8">
+            <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col items-center justify-center text-center gap-2">
+              <Settings className="w-6 h-6 text-accent" />
+              <div>
+                <div className="text-[13px] font-bold text-foreground">295 cc</div>
+                <div className="text-[11px] text-muted-foreground font-medium">Engine</div>
+              </div>
+            </div>
+            <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col items-center justify-center text-center gap-2">
+              <Gauge className="w-6 h-6 text-accent" />
+              <div>
+                <div className="text-[13px] font-bold text-foreground">27 HP</div>
+                <div className="text-[11px] text-muted-foreground font-medium">HP</div>
+              </div>
+            </div>
+            <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col items-center justify-center text-center gap-2">
+              <Settings className="w-6 h-6 text-accent" />
+              <div>
+                <div className="text-[13px] font-bold text-foreground">27 Nm</div>
+                <div className="text-[11px] text-muted-foreground font-medium">Torque</div>
+              </div>
+            </div>
+            <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col items-center justify-center text-center gap-2">
+              <Fuel className="w-6 h-6 text-accent" />
+              <div>
+                <div className="text-[13px] font-bold text-foreground">31 kmpl</div>
+                <div className="text-[11px] text-muted-foreground font-medium">Mileage</div>
+              </div>
+            </div>
+            <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col items-center justify-center text-center gap-2">
+              <Gauge className="w-6 h-6 text-accent" />
+              <div>
+                <div className="text-[13px] font-bold text-foreground">130 km/h</div>
+                <div className="text-[11px] text-muted-foreground font-medium">Top Speed</div>
+              </div>
+            </div>
+            <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col items-center justify-center text-center gap-2">
+              <Weight className="w-6 h-6 text-accent" />
+              <div>
+                <div className="text-[13px] font-bold text-foreground">182 kg</div>
+                <div className="text-[11px] text-muted-foreground font-medium">Weight</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Features */}
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-4">Features</h2>
             <div className="space-y-4">
-              <div 
-                className="aspect-[16/9] overflow-hidden rounded-2xl bg-muted border flex items-center justify-center cursor-zoom-in group relative"
-                onClick={() => {
-                  const activeIdx = vehicle.images?.indexOf(activeImage) ?? 0;
-                  setLightboxIndex(activeIdx >= 0 ? activeIdx : 0);
-                  setIsLightboxOpen(true);
-                }}
-              >
-                {activeImage ? (
-                  <img src={activeImage} alt={vehicle.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102" />
-                ) : (
-                  <div className="flex flex-col items-center justify-center text-muted-foreground">
-                    <Car className="w-16 h-16 opacity-20 mb-4" />
-                    <span>No Image Available</span>
-                  </div>
-                )}
+              <div className="flex items-center gap-3">
+                <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center"><Check className="w-4 h-4 text-green-600 stroke-[3]" /></div>
+                <span className="text-muted-foreground font-medium text-sm">Digital Console</span>
               </div>
-              {vehicle.images && vehicle.images.length > 0 && (
-                <div className="grid grid-cols-4 gap-4">
-                  {vehicle.images.map((img: string, idx: number) => (
-                    <button 
-                      key={idx} 
-                      onClick={() => setActiveImage(img)}
-                      className={`aspect-video rounded-xl overflow-hidden border-2 transition-all ${
-                        activeImage === img ? 'border-primary ring-2 ring-primary/20' : 'border-transparent hover:opacity-80'
-                      }`}
-                    >
-                      <img src={img} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover" />
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Description */}
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">About this vehicle</h2>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                {vehicle.description || 'No description provided by the vendor.'}
-              </p>
-            </div>
-
-            {/* Features */}
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Features</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-emerald-500" />
-                  <span className="text-muted-foreground">{vehicle.seatingCapacity} Seats</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-emerald-500" />
-                  <span className="text-muted-foreground">{vehicle.fuelType}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-emerald-500" />
-                  <span className="text-muted-foreground">Plate: {vehicle.registrationNumber}</span>
-                </div>
+              <div className="flex items-center gap-3">
+                <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center"><Check className="w-4 h-4 text-green-600 stroke-[3]" /></div>
+                <span className="text-muted-foreground font-medium text-sm">Abs</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center"><Check className="w-4 h-4 text-green-600 stroke-[3]" /></div>
+                <span className="text-muted-foreground font-medium text-sm">Alloy Wheels</span>
               </div>
             </div>
-
-            {/* Vendor Info */}
-            <div className="py-6 border-y">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                  <User className="w-8 h-8 text-primary" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold">{typeof vehicle.vendorId === 'object' && vehicle.vendorId?.name ? `Hosted by ${vehicle.vendorId.name}` : 'Hosted by Vendor'}</h3>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                    <span>{typeof vehicle.vendorId === 'object' && vehicle.vendorId?.email ? vehicle.vendorId.email : `Vendor ID: ${typeof vehicle.vendorId === 'string' ? vehicle.vendorId.slice(-6) : vehicle.vendorId?._id?.slice(-6) || 'N/A'}`}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+            <button className="mt-4 text-accent font-bold text-sm w-full text-center">Show all features</button>
           </div>
 
-          {/* Right Column: Booking Form */}
-          <div>
-            <Card className="p-6 sticky top-24 border shadow-xl shadow-primary/5">
-              <div className="mb-6">
-                <span className="text-3xl font-bold">₹{vehicle.pricePerDay.toFixed(2)}</span>
-                <span className="text-muted-foreground"> / day</span>
-                {vehicle.pricePerHour && (
-                  <span className="text-sm ml-2 text-muted-foreground">(₹{vehicle.pricePerHour.toFixed(2)} / hr)</span>
-                )}
-              </div>
-
-              <div className="space-y-4 mb-6">
-                <div className="space-y-2">
-                  <Label>Booking Duration Type</Label>
-                  <select
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                    value={bookingType}
-                    onChange={(e) => setBookingType(e.target.value as any)}
-                  >
-                    <option value="daily">Per Day</option>
-                    <option value="hourly">Per Hour</option>
-                  </select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Dates & Times</Label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Input 
-                      type={bookingType === 'hourly' ? 'datetime-local' : 'date'} 
-                      className="bg-background" 
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                      min={new Date().toISOString().slice(0, bookingType === 'hourly' ? 16 : 10)}
-                    />
-                    <Input 
-                      type={bookingType === 'hourly' ? 'datetime-local' : 'date'} 
-                      className="bg-background" 
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                      min={startDate || new Date().toISOString().slice(0, bookingType === 'hourly' ? 16 : 10)}
-                    />
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>Number of {bookingType === 'hourly' ? 'Hours' : 'Days'}</Label>
-                  <Input 
-                    type="number" 
-                    value={bookingUnits} 
-                    readOnly
-                    className="bg-muted cursor-not-allowed text-muted-foreground"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>Pickup Location (Vendor Location)</Label>
-                  <div className="flex h-10 w-full items-center rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground font-medium">
-                    <MapPin className="w-4 h-4 mr-2 text-primary shrink-0" />
-                    {typeof vehicle.location === 'string' ? vehicle.location : (vehicle as any).location?.address || 'Location TBD'}
-                  </div>
-                </div>
-
-                <div className="space-y-2 mb-4">
-                  <div className="flex justify-between items-end">
-                    <Label>Delivery Location (Optional)</Label>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="h-6 text-xs px-2 text-primary"
-                      onClick={handleFetchLocation}
-                      disabled={isFetchingLocation}
-                    >
-                      {isFetchingLocation ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <LocateFixed className="w-3 h-3 mr-1" />}
-                      Auto-fill my location
-                    </Button>
-                  </div>
-                  <Input 
-                    placeholder="Enter delivery city or specific address..."
-                    value={bookingLocation}
-                    onChange={(e) => setBookingLocation(e.target.value)}
-                  />
-                  <p className="text-xs text-muted-foreground">Leave empty if you wish to pick up the vehicle directly from the vendor's location.</p>
-                </div>
-
-                <div className="space-y-2 mb-4">
-                  <Label>Payment Method</Label>
-                  <div className="flex h-10 w-full items-center rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground">
-                    Online Payment (Razorpay)
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-3 mb-6 pt-4 border-t">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">₹{unitPrice} x {bookingUnits} {bookingType === 'hourly' ? 'hours' : 'days'}</span>
-                  <span>₹{basePrice.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between font-bold pt-3 border-t text-lg">
-                  <span>Total Due Today</span>
-                  <span>₹{totalPrice.toFixed(2)}</span>
-                </div>
-              </div>
-
-              <Button
-                  className="w-full h-12 text-base font-bold bg-[#8B004A] hover:bg-[#8B004A]/90 transition-all rounded-xl"
-                  onClick={handleBookNow}
-                  disabled={!vehicle.isAvailable || vehicle.approvalStatus !== 'approved'}
-                >
-                  Book Now
-                </Button>
-
-              <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground">
-                <Shield className="w-4 h-4" />
-                <span>Secure payments with Razorpay</span>
-              </div>
-            </Card>
-          </div>
         </div>
       </div>
-      {/* Mobile Sticky Floating Bar */}
-      {user?.id !== (typeof vehicle.vendorId === 'object' ? vehicle.vendorId?.id || vehicle.vendorId?._id : vehicle.vendorId) && (
-        <div className="lg:hidden fixed bottom-[4.25rem] md:bottom-0 inset-x-0 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border-t border-border p-4 flex items-center justify-between z-[60] shadow-[0_-8px_30px_rgba(0,0,0,0.1)]">
-          <div className="flex flex-col">
-            <span className="text-[10px] uppercase font-bold text-muted-foreground">Total Due</span>
-            <span className="text-lg font-black text-foreground">₹{totalPrice.toLocaleString()}</span>
-          </div>
-          <Button 
-            className="h-12 px-6 rounded-xl font-bold bg-[#8B004A] hover:bg-[#8B004A]/90 text-white flex items-center gap-2 text-xs uppercase tracking-wider"
-            onClick={handleBookNow}
-            disabled={!vehicle.isAvailable || vehicle.approvalStatus !== 'approved'}
-          >
-            Book Now
-          </Button>
-        </div>
-      )}
 
-      <Lightbox 
-        images={vehicle.images || []}
-        currentIndex={lightboxIndex}
-        isOpen={isLightboxOpen}
-        onClose={() => setIsLightboxOpen(false)}
-        onNavigate={(index) => setLightboxIndex(index)}
-      />
-    </>
+      {/* Sticky Bottom Bar */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 z-50">
+        <button 
+          onClick={() => router.push(`/checkout?type=vehicle&id=${id}`)}
+          className="w-full bg-accent text-accent-foreground font-black text-lg py-4 rounded-2xl shadow-lg shadow-[#ff9900]/30 active:scale-[0.98] transition-transform"
+        >
+          Book Now
+        </button>
+      </div>
+    </div>
   );
 }

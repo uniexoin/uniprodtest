@@ -1,9 +1,9 @@
+/* Typography system managed via next/font/google in layout.tsx */
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
 @layer base {
   :root {
@@ -33,17 +33,18 @@
     --ring: #E11948;
   }
 
+
   /* ── Landing Page Theme ────────────────────── */
   .theme-landing {
     --primary: #0D1B2A;
-    --primary-foreground: #F4F4F4;
+    --primary-foreground: #FFFFFF;
     --secondary: #1B2A4A;
-    --secondary-foreground: #F4F4F4;
+    --secondary-foreground: #FFFFFF;
     --accent: #C9A84C;
     --accent-foreground: #0D1B2A;
     --background: #E8F1F2;
     --foreground: #0D1B2A;
-    --muted-foreground: #0D1B2A90;
+    --muted-foreground: #1B2A4A90;
     --surface: #F4F4F4;
     --border: #0D1B2A15;
     --ring: #C9A84C;
@@ -51,97 +52,138 @@
   .dark .theme-landing {
     --primary: #C9A84C;
     --primary-foreground: #0D1B2A;
-    --secondary: #1B2A4A;
-    --secondary-foreground: #F4F4F4;
-    --accent: #E11948;
+    --secondary: #E8F1F2;
+    --secondary-foreground: #0D1B2A;
+    --accent: #C9A84C;
     --accent-foreground: #FFFFFF;
     --background: #08090C;
     --foreground: #F8FAFC;
     --muted-foreground: #94A3B8;
     --surface: #11131A;
-    --border: rgba(255, 255, 255, 0.06);
-    --ring: #E11948;
+    --border: rgba(255, 255, 255, 0.08);
+    --ring: #C9A84C;
   }
 
   /* ── Car Rental Theme ──────────────────────── */
   .theme-car {
     --primary: #1A3C5E;
+    --primary-foreground: #FFFFFF;
     --secondary: #2E6DA4;
+    --secondary-foreground: #FFFFFF;
     --accent: #E63946;
+    --accent-foreground: #FFFFFF;
     --background: #F8F9FA;
     --foreground: #1A3C5E;
+    --muted-foreground: #1A3C5E90;
     --surface: #FFFFFF;
-    --border: #1A3C5E15;
+    --border: #B0BEC560;
+    --ring: #E63946;
   }
   .dark .theme-car {
-    --primary: #E63946;
+    --primary: #2E6DA4;
     --primary-foreground: #FFFFFF;
+    --secondary: #B0BEC5;
+    --secondary-foreground: #1A3C5E;
+    --accent: #E63946;
+    --accent-foreground: #FFFFFF;
     --background: #0B1218;
     --foreground: #F8F9FA;
+    --muted-foreground: #B0BEC5;
     --surface: #15202B;
-    --border: #F8F9FA15;
-    --accent: #E63946;
+    --border: #2E6DA440;
+    --ring: #E63946;
   }
 
   /* ── Home Rental Theme ──────────────────────── */
   .theme-house {
     --primary: #2D6A4F;
+    --primary-foreground: #FFFFFF;
     --secondary: #52B788;
+    --secondary-foreground: #FFFFFF;
     --accent: #D4A96A;
+    --accent-foreground: #141C16;
     --background: #F1EDE4;
-    --foreground: #2D6A4F;
-    --surface: #FFFFFF;
-    --border: #2D6A4F15;
+    --foreground: #141C16;
+    --muted-foreground: #2D6A4F90;
+    --surface: #B7D7C2;
+    --border: #2D6A4F20;
+    --ring: #D4A96A;
   }
   .dark .theme-house {
-    --primary: #D4A96A;
-    --primary-foreground: #2D6A4F;
-    --background: #0D1410;
-    --foreground: #F1EDE4;
-    --surface: #141C16;
-    --border: #F1EDE415;
+    --primary: #52B788;
+    --primary-foreground: #0A140F;
+    --secondary: #B7D7C2;
+    --secondary-foreground: #0A140F;
     --accent: #D4A96A;
+    --accent-foreground: #141C16;
+    --background: #0A140F;
+    --foreground: #F1EDE4;
+    --muted-foreground: #B7D7C2;
+    --surface: #122119;
+    --border: #52B78830;
+    --ring: #D4A96A;
   }
 
   /* ── Laundry Theme ──────────────────────────── */
   .theme-laundry {
     --primary: #0077B6;
+    --primary-foreground: #FFFFFF;
     --secondary: #00B4D8;
+    --secondary-foreground: #FFFFFF;
     --accent: #90E0EF;
-    --background: #F0F9FF;
-    --foreground: #0077B6;
+    --accent-foreground: #0077B6;
+    --background: #CAF0F8;
+    --foreground: #002B44;
+    --muted-foreground: #0077B690;
     --surface: #FFFFFF;
-    --border: #0077B615;
+    --border: #0077B620;
+    --ring: #00B4D8;
   }
   .dark .theme-laundry {
-    --primary: #90E0EF;
-    --primary-foreground: #0077B6;
-    --background: #051923;
-    --foreground: #F0F9FF;
-    --surface: #0A2633;
-    --border: #F0F9FF15;
-    --accent: #90E0EF;
+    --primary: #00B4D8;
+    --primary-foreground: #051622;
+    --secondary: #90E0EF;
+    --secondary-foreground: #051622;
+    --accent: #0077B6;
+    --accent-foreground: #FFFFFF;
+    --background: #051622;
+    --foreground: #CAF0F8;
+    --muted-foreground: #90E0EF;
+    --surface: #0B2435;
+    --border: #00B4D830;
+    --ring: #00B4D8;
   }
 
   /* ── Food & Beverage Theme ──────────────────── */
   .theme-food {
     --primary: #7B2D00;
+    --primary-foreground: #FFFFFF;
     --secondary: #E05C00;
+    --secondary-foreground: #FFFFFF;
     --accent: #F4A261;
+    --accent-foreground: #7B2D00;
     --background: #FFF8F0;
-    --foreground: #7B2D00;
+    --foreground: #2D2D2D;
+    --muted-foreground: #7B2D0090;
     --surface: #FFFFFF;
-    --border: #7B2D0015;
+    --border: #7B2D0020;
+    --ring: #E05C00;
   }
   .dark .theme-food {
     --primary: #F4A261;
-    --primary-foreground: #7B2D00;
-    --background: #14100E;
+    --primary-foreground: #16100B;
+    --secondary: #E05C00;
+    --secondary-foreground: #FFFFFF;
+    --accent: #E05C00;
+    --accent-foreground: #FFFFFF;
+    --background: #16100B;
     --foreground: #FFF8F0;
-    --surface: #1E1A17;
-    --border: #FFF8F015;
-    --accent: #F4A261;
+    --muted-foreground: #F4A261;
+    --surface: #211812;
+    --border: #F4A26130;
+    --ring: #F4A261;
   }
+
 
   /* ── Marketplace Theme ───────────────────────── */
   .theme-marketplace {
@@ -237,6 +279,59 @@
 }
 
 @layer utilities {
+  
+  /* ── Premium UI Layout Utilities ──────────────────── */
+  .shadow-premium-soft {
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 0 3px rgba(0,0,0,0.02);
+  }
+  .dark .shadow-premium-soft {
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4), 0 0 3px rgba(0,0,0,0.2);
+  }
+  .shadow-premium-deep {
+    box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
+  }
+  .dark .shadow-premium-deep {
+    box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.5), 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+  }
+  .hover-lift {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-4px) scale(1.01);
+  }
+
+  /* ── Typography System Utilities ──────────────────── */
+  .font-hero {
+    font-family: var(--font-playfair), Georgia, serif;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+  }
+  .font-section {
+    font-family: var(--font-space-grotesk), system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .font-body {
+    font-family: var(--font-fira), system-ui, sans-serif;
+  }
+  .font-label {
+    font-family: var(--font-dm-sans), system-ui, sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .font-data {
+    font-family: var(--font-jetbrains), Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .font-stat {
+    font-family: var(--font-sora), system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+
   .scrollbar-hide::-webkit-scrollbar { display: none; }
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
   

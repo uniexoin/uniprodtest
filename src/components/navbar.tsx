@@ -79,12 +79,12 @@ export function Navbar() {
   return (
     <>
       {/* ── Top Navbar ─────────────────────────────────────────── */}
-      <nav className="sticky top-0 z-50 w-full bg-[#0D1B2A] dark:bg-black/60 dark:backdrop-blur-xl border-b border-white/10 theme-landing">
+      <nav className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur-xl border-b border-border">
         <div className="container mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
           <div className="flex h-14 md:h-[4.5rem] items-center justify-between">
             {/* Logo & Left Content */}
             <div className="flex items-center gap-4 md:gap-8">
-              <Link href="/" className="flex items-center gap-2 tap-feedback text-white">
+              <Link href="/" className="flex items-center gap-2 tap-feedback text-foreground">
                 <UniExoBrand />
               </Link>
 
@@ -93,12 +93,12 @@ export function Navbar() {
                   <Button
                     onClick={openProfileSidebar}
                     variant="ghost"
-                    className="relative h-10 px-4 rounded-2xl gap-3 border border-white/20 hover:border-accent/50 bg-white/5 hover:bg-white/10 text-white transition-all group overflow-hidden"
+                    className="relative h-10 px-4 rounded-2xl gap-3 border border-border hover:border-accent/50 bg-secondary/50 hover:bg-secondary text-foreground transition-all group overflow-hidden"
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <div className="flex flex-col items-start relative z-10">
-                       <span className="text-[9px] font-black text-white/50 uppercase tracking-widest leading-none mb-1 group-hover:text-accent transition-colors">Command Center</span>
-                       <span className="text-xs font-black text-white leading-none flex items-center gap-1">
+                       <span className="text-[9px] font-caption text-muted-foreground leading-none mb-1 group-hover:text-accent transition-colors">Command Center</span>
+                       <span className="text-xs font-caption text-foreground leading-none flex items-center gap-1">
                          ACCESS UNIEXO <Zap className="w-2.5 h-2.5 text-accent" />
                        </span>
                     </div>
@@ -110,7 +110,7 @@ export function Navbar() {
             {/* Desktop Nav Items (Right) */}
             <div className="hidden md:flex items-center gap-4">
               {isAuthenticated && pathname !== '/' && pathname !== '/dashboard' && (
-                <Button variant="ghost" asChild className="gap-2 text-white/70 hover:text-white hover:bg-white/10 font-bold">
+                <Button variant="ghost" asChild className="gap-2 text-muted-foreground hover:text-foreground hover:bg-secondary font-bold">
                   <Link href={user?.role === 'vendor' ? '/dashboard' : '/'}>
                     <ArrowLeft className="w-4 h-4" />
                     Back to Dashboard
@@ -119,7 +119,7 @@ export function Navbar() {
               )}
 
               {isAuthenticated && user?.role === 'admin' && (
-                <Button variant="outline" size="sm" asChild className="gap-1.5 rounded-xl border-white/20 text-white hover:bg-white/10">
+                <Button variant="outline" size="sm" asChild className="gap-1.5 rounded-xl border-border text-foreground hover:bg-secondary">
                   <Link href="/admin">
                     <ShieldCheck className="w-4 h-4" />
                     Admin
@@ -144,7 +144,7 @@ export function Navbar() {
                 <div className="flex items-center gap-2">
                   <LanguageSelector />
                   <ThemeToggle />
-                  <Button variant="ghost" asChild className="font-bold text-white/80 hover:text-white hover:bg-white/10">
+                  <Button variant="ghost" asChild className="font-bold text-muted-foreground hover:text-foreground hover:bg-secondary">
                     <Link href="/login">Login</Link>
                   </Button>
                   <Button asChild className="font-black rounded-xl bg-accent text-primary hover:bg-accent/90 shadow-lg shadow-accent/30 hover:scale-105 transition-transform">
@@ -159,7 +159,7 @@ export function Navbar() {
               {isAuthenticated && user ? (
                 <>
                   {user.role === 'vendor' && (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-[#8B004A]/20 text-[#8B004A] border border-[#8B004A]/30">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-caption bg-[#8B004A]/20 text-[#8B004A] border border-[#8B004A]/30">
                       <Store className="w-2.5 h-2.5" />
                       Vendor
                     </span>
@@ -171,7 +171,7 @@ export function Navbar() {
                     onClick={openProfileSidebar}
                     variant="ghost"
                     size="icon"
-                    className="h-10 w-10 rounded-xl hover:bg-white/10"
+                    className="h-10 w-10 rounded-xl hover:bg-secondary"
                   >
                     <Avatar className="h-8 w-8 border-2 border-accent/50 shadow-lg">
                       <AvatarImage src={user.avatar} alt={user.name} />
@@ -183,7 +183,7 @@ export function Navbar() {
                 <div className="flex items-center gap-1.5">
                   <LanguageSelector />
                   <ThemeToggle />
-                  <Button variant="ghost" size="sm" asChild className="font-bold text-xs text-white/80 hover:text-white hover:bg-white/10 h-9 px-3">
+                  <Button variant="ghost" size="sm" asChild className="font-bold text-xs text-muted-foreground hover:text-foreground hover:bg-secondary h-9 px-3">
                     <Link href="/login">Login</Link>
                   </Button>
                   <Button size="sm" asChild className="font-black rounded-lg bg-accent text-primary hover:bg-accent/90 shadow-lg shadow-accent/30 h-9 px-3 text-xs">
@@ -198,9 +198,9 @@ export function Navbar() {
 
       {/* ── Mobile Bottom Navigation Bar ───────────────────────── */}
       {isAuthenticated && !isAdmin && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden theme-landing">
-          <div className="bg-background/80 backdrop-blur-xl border-t border-border px-2 pb-safe">
-            <div className="flex items-center justify-around h-[4.25rem]">
+        <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
+          <div className="bg-surface border-t border-border px-2 pb-safe">
+            <div className="flex items-center justify-around h-[4.5rem]">
               {bottomNavItems.map((item) => {
                 const isActive = item.href === getActiveTab();
                 const Icon = item.icon;
@@ -209,26 +209,21 @@ export function Navbar() {
                   <motion.button
                     key={item.href}
                     onClick={() => handleBottomNavTap(item.href)}
-                    whileTap={{ scale: 0.82 }}
-                    className={`relative flex flex-col items-center justify-center w-16 h-14 rounded-2xl transition-all duration-200 ${
-                      isActive ? 'text-primary' : 'text-muted-foreground active:text-foreground'
+                    whileTap={{ scale: 0.9 }}
+                    className={`relative flex flex-col items-center justify-center w-16 h-[3.5rem] mt-2 rounded-2xl transition-all duration-300 ${
+                      isActive ? 'text-accent' : 'text-muted-foreground active:text-foreground'
                     }`}
                   >
                     <motion.div
-                      animate={isActive ? { scale: [1, 1.15, 1] } : {}}
+                      animate={isActive ? { scale: [1, 1.15, 1], y: -4 } : { y: 0 }}
                       transition={{ duration: 0.3 }}
+                      className="relative z-10 flex flex-col items-center"
                     >
-                      <Icon className={`w-5 h-5 mb-0.5 transition-all ${isActive ? 'drop-shadow-[0_0_6px_rgba(201,168,76,0.4)]' : ''}`} />
+                      <div className={`relative flex items-center justify-center w-10 h-10 transition-all duration-300 ${isActive ? 'rounded-full border border-accent bg-accent/10 shadow-sm' : ''}`}>
+                        <Icon className={`w-5 h-5 transition-all ${isActive ? 'stroke-[2.5]' : 'stroke-2'}`} />
+                      </div>
                     </motion.div>
-                    <span className={`text-[9px] font-black uppercase tracking-wider transition-opacity ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.label}</span>
-                    
-                    {isActive && (
-                      <motion.div
-                        layoutId="bottomNavIndicator"
-                        className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-primary rounded-full shadow-[0_0_8px_rgba(201,168,76,0.5)]"
-                        transition={{ type: 'spring', stiffness: 500, damping: 28 }}
-                      />
-                    )}
+                    <span className={`text-[10px] font-semibold mt-1 transition-opacity ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.label}</span>
                   </motion.button>
                 );
               })}
