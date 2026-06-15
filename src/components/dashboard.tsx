@@ -16,7 +16,8 @@ import {
   Tag,
   User,
   Heart,
-  ShieldCheck
+  ShieldCheck,
+  LayoutGrid
 } from 'lucide-react';
 import { useAuthStore } from '@/modules/auth/auth.store';
 import { useHouses } from '@/hooks/use-houses';
