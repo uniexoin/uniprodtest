@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Heart, Check, X, Users, Fuel, Gauge, Weight, Settings, Star } from 'lucide-react';
+import { ArrowLeft, Heart, Check, X, Users, User, Fuel, Gauge, Weight, Settings, Star } from 'lucide-react';
 import { useVehicle } from '@/hooks/use-vehicle';
 
 export default function VehicleDetailsPage() {
