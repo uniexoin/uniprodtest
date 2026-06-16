@@ -97,7 +97,7 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
           </div>
 
           {/* Categories - Exactly like screenshot */}
-          <div className="flex items-center justify-center gap-8 overflow-x-auto scrollbar-hide px-2">
+          <div className="flex items-center justify-center gap-8 overflow-x-auto scrollbar-hide px-2 pt-4 pb-1 -mt-4">
             {categories.map(cat => {
               const isActive = activeCategory === cat.id;
               return (
@@ -109,7 +109,7 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                   }`}
                 >
                   {cat.isNew && (
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-md tracking-wider z-10 animate-bounce-soft">
+                    <span className="absolute -top-1 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-md tracking-wider z-10 animate-pulse">
                       NEW
                     </span>
                   )}
