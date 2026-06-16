@@ -37,7 +37,7 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
   const { data: marketplaceItems = [], isLoading: isLoadingMarketplace } = useMarketplaceItems();
   
   const [activeCategory, setActiveCategory] = useState<'homes' | 'experiences' | 'services' | 'marketplace'>(initialCategory);
-
+  const [selectedVehicleBrand, setSelectedVehicleBrand] = useState<string>('All');
   // Match the screenshot exact category structure
   const categories = [
     { id: 'homes', label: 'Homes', icon: Home, isNew: false, image: '/homes-icon.png' },
@@ -48,6 +48,14 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
 
   const popularHomes = houses.filter((h: any) => h.propertyType === 'room' || h.propertyType === 'house').slice(0, 6);
   const pgHomes = houses.filter((h: any) => h.propertyType === 'pg').slice(0, 6);
+
+  const filteredVehicles = selectedVehicleBrand === 'All' 
+    ? vehicles 
+    : vehicles.filter((v: any) => 
+        v.brand?.toLowerCase() === selectedVehicleBrand.toLowerCase() || 
+        v.name?.toLowerCase().includes(selectedVehicleBrand.toLowerCase()) ||
+        v.modelName?.toLowerCase().includes(selectedVehicleBrand.toLowerCase())
+      );
 
   const Section = ({ title, children, onViewAll, showArrow = true }: { title: string, children: React.ReactNode, onViewAll?: () => void, showArrow?: boolean }) => (
     <section className="mb-14">
@@ -260,12 +268,16 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                         { name: 'Porsche', icon: '/brands/porsche.png' },
                         { name: 'Jaguar', icon: '/brands/jaguar.png' }
                       ].map((brand, i) => (
-                        <div key={brand.name} className="flex flex-col items-center gap-2 snap-center shrink-0 w-16">
-                          <div className={`w-14 h-14 rounded-full flex items-center justify-center ${i===0 ? 'bg-surface border-2 border-border' : 'bg-background border border-border shadow-sm'}`}>
-                            {i === 0 ? <LayoutGrid className="w-5 h-5 text-zinc-600" /> : <img src={`https://ui-avatars.com/api/?name=${brand.name.charAt(0)}&background=random`} alt={brand.name} className="w-8 h-8 object-contain rounded-full" />}
+                        <button 
+                          key={brand.name} 
+                          onClick={() => setSelectedVehicleBrand(brand.name)}
+                          className={`flex flex-col items-center gap-2 snap-center shrink-0 w-16 transition-transform hover:scale-105 ${selectedVehicleBrand === brand.name ? 'opacity-100 scale-110' : 'opacity-70 hover:opacity-100'}`}
+                        >
+                          <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${selectedVehicleBrand === brand.name ? 'bg-surface border-2 border-primary shadow-[0_0_15px_rgba(var(--primary),0.3)]' : 'bg-background border border-border shadow-sm'}`}>
+                            {brand.name === 'All' ? <LayoutGrid className={`w-5 h-5 ${selectedVehicleBrand === 'All' ? 'text-primary' : 'text-zinc-600'}`} /> : <img src={`https://ui-avatars.com/api/?name=${brand.name.charAt(0)}&background=random`} alt={brand.name} className="w-8 h-8 object-contain rounded-full" />}
                           </div>
-                          <span className="text-[10px] font-semibold text-center leading-tight">{brand.name}</span>
-                        </div>
+                          <span className={`text-[10px] font-semibold text-center leading-tight ${selectedVehicleBrand === brand.name ? 'text-primary' : ''}`}>{brand.name}</span>
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -273,7 +285,7 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                   <Section title="Best Deals" showArrow={false}>
                     {isLoadingVehicles ? (
                       [1, 2].map(i => <div key={i} className="w-[280px] h-[300px] bg-surface border border-border/50 rounded-[1.2rem] animate-pulse shrink-0" />)
-                    ) : vehicles.slice(0, 4).map((vehicle: any) => (
+                    ) : filteredVehicles.slice(0, 4).map((vehicle: any) => (
                       <VehicleCard
                         key={vehicle._id}
                         id={vehicle._id}
@@ -293,7 +305,7 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                   <Section title="Top Vehicles" showArrow={false}>
                     {isLoadingVehicles ? (
                       [1, 2].map(i => <div key={i} className="w-[280px] h-[300px] bg-surface border border-border/50 rounded-[1.2rem] animate-pulse shrink-0" />)
-                    ) : vehicles.slice(0, 4).map((vehicle: any) => (
+                    ) : filteredVehicles.slice(0, 4).map((vehicle: any) => (
                       <VehicleCard
                         key={vehicle._id}
                         id={vehicle._id}
