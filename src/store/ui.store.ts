@@ -9,7 +9,9 @@ interface UIState {
   // Success Overlay
   isSuccessOverlayOpen: boolean;
   successOverlayMessage: string;
-  triggerSuccessOverlay: (message?: string, duration?: number) => void;
+  successOverlayPath: string;
+  successOverlayFullPage: boolean;
+  triggerSuccessOverlay: (message?: string, duration?: number, animationPath?: string, isFullPage?: boolean) => void;
   closeSuccessOverlay: () => void;
 
   // Loading Overlay
@@ -26,8 +28,10 @@ export const useUIStore = create<UIState>((set) => ({
 
   isSuccessOverlayOpen: false,
   successOverlayMessage: '',
-  triggerSuccessOverlay: (message = 'Operation Successful!', duration = 3000) => {
-    set({ isSuccessOverlayOpen: true, successOverlayMessage: message });
+  successOverlayPath: '/success.json',
+  successOverlayFullPage: false,
+  triggerSuccessOverlay: (message = 'Operation Successful!', duration = 3000, animationPath = '/success.json', isFullPage = false) => {
+    set({ isSuccessOverlayOpen: true, successOverlayMessage: message, successOverlayPath: animationPath, successOverlayFullPage: isFullPage });
     setTimeout(() => {
       set({ isSuccessOverlayOpen: false });
     }, duration);
