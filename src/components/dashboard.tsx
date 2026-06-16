@@ -26,6 +26,7 @@ import { useLaundryServices } from '@/hooks/use-laundry-services';
 import { useMarketplaceItems } from '@/hooks/use-marketplace-items';
 import { AirbnbListingCard } from '@/components/airbnb-listing-card';
 import { VehicleCard } from '@/components/vehicle-card';
+import { AddMarketplaceItemDialog } from '@/components/add-marketplace-item-dialog';
 import Link from 'next/link';
 
 export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'homes' | 'experiences' | 'services' | 'marketplace' }) {
@@ -405,9 +406,11 @@ export function Dashboard({ initialCategory = 'homes' }: { initialCategory?: 'ho
                     <p className="text-xs font-medium text-white/60 mb-8 max-w-[200px] relative z-10">
                       Get a premium valuation for your used devices in under 60 seconds.
                     </p>
-                    <Link href="/sell" className="w-full sm:w-auto bg-[#E3FF00] text-black px-8 py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-[#cce600] transition-colors relative z-10 shadow-[0_0_20px_rgba(227,255,0,0.25)] tap-feedback">
-                      List Item Now
-                    </Link>
+                    <AddMarketplaceItemDialog trigger={
+                      <button className="w-full sm:w-auto bg-[#E3FF00] text-black px-8 py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-[#cce600] transition-colors relative z-10 shadow-[0_0_20px_rgba(227,255,0,0.25)] tap-feedback">
+                        List Item Now
+                      </button>
+                    } />
                   </div>
 
                 </div>

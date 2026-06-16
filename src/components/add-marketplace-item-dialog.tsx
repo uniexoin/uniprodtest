@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { api } from '@/lib/api';
 
-export function AddMarketplaceItemDialog() {
+export function AddMarketplaceItemDialog({ trigger }: { trigger?: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
   const [error, setError] = useState('');
@@ -71,7 +71,7 @@ export function AddMarketplaceItemDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Sell Item</Button>
+        {trigger || <Button>Sell Item</Button>}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>

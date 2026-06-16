@@ -203,8 +203,16 @@ export function RoomManagementBoard() {
                     <div className="flex justify-between items-center border-b border-slate-100 dark:border-white/5 pb-2">
                       <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5"><AlertCircle className="w-3.5 h-3.5"/> Tenant</span>
                       <div className="text-right">
-                        <span className="font-black text-foreground block">{r.currentBooking.customer?.name || r.currentBooking.notes ? JSON.parse(r.currentBooking.notes).offlineCustomer?.name : 'Customer'}</span>
-                        <span className="text-[10px] text-muted-foreground font-bold">{r.currentBooking.customer?.phone || r.currentBooking.notes ? JSON.parse(r.currentBooking.notes).offlineCustomer?.phone : ''}</span>
+                        <span className="font-black text-foreground block">
+                          {r.currentBooking.customer?.name || (() => {
+                            try { return JSON.parse(r.currentBooking.notes).offlineCustomer?.name; } catch { return 'Customer'; }
+                          })() || 'Customer'}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground font-bold">
+                          {r.currentBooking.customer?.phone || (() => {
+                            try { return JSON.parse(r.currentBooking.notes).offlineCustomer?.phone; } catch { return ''; }
+                          })() || ''}
+                        </span>
                       </div>
                     </div>
                     
@@ -240,7 +248,7 @@ export function RoomManagementBoard() {
                   <div className="mb-4 flex-1 flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-200 dark:border-zinc-800 rounded-2xl bg-slate-50/50 dark:bg-zinc-900/10">
                      <p className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-1.5">Room Available</p>
                      <p className="text-2xl font-black text-foreground text-center">
-                       ₹{(r.pricePerMonth || r.pricePerDay).toLocaleString()}
+                       ₹{(r.pricePerMonth || r.pricePerDay || 0).toLocaleString()}
                        <span className="block text-xs text-muted-foreground font-bold uppercase tracking-wider mt-1">/ {r.pricePerMonth ? 'month' : 'day'}</span>
                      </p>
                   </div>
