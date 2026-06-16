@@ -25,12 +25,12 @@
   }
 
   .dark {
-    --background: #08090C;
+    --background: #030305;
     --foreground: #F8FAFC;
     --muted-foreground: #94A3B8;
-    --surface: #11131A;
+    --surface: #0A0A0F;
     --border: rgba(255, 255, 255, 0.08);
-    --ring: #E11948;
+    --ring: #E3FF00;
   }
 
 
@@ -50,18 +50,18 @@
     --ring: #C9A84C;
   }
   .dark .theme-landing {
-    --primary: #C9A84C;
-    --primary-foreground: #0D1B2A;
-    --secondary: #E8F1F2;
-    --secondary-foreground: #0D1B2A;
-    --accent: #C9A84C;
-    --accent-foreground: #FFFFFF;
-    --background: #08090C;
+    --primary: #E3FF00;
+    --primary-foreground: #000000;
+    --secondary: #111111;
+    --secondary-foreground: #E3FF00;
+    --accent: #E3FF00;
+    --accent-foreground: #000000;
+    --background: #030305;
     --foreground: #F8FAFC;
     --muted-foreground: #94A3B8;
-    --surface: #11131A;
-    --border: rgba(255, 255, 255, 0.08);
-    --ring: #C9A84C;
+    --surface: #0A0A0F;
+    --border: rgba(227, 255, 0, 0.15);
+    --ring: #E3FF00;
   }
 
   /* ── Car Rental Theme ──────────────────────── */
@@ -80,18 +80,18 @@
     --ring: #E63946;
   }
   .dark .theme-car {
-    --primary: #2E6DA4;
-    --primary-foreground: #FFFFFF;
-    --secondary: #B0BEC5;
-    --secondary-foreground: #1A3C5E;
-    --accent: #E63946;
+    --primary: #00F0FF;
+    --primary-foreground: #000000;
+    --secondary: #0A1929;
+    --secondary-foreground: #00F0FF;
+    --accent: #FF003C;
     --accent-foreground: #FFFFFF;
-    --background: #0B1218;
+    --background: #030408;
     --foreground: #F8F9FA;
     --muted-foreground: #B0BEC5;
-    --surface: #15202B;
-    --border: #2E6DA440;
-    --ring: #E63946;
+    --surface: #080D14;
+    --border: rgba(0, 240, 255, 0.15);
+    --ring: #00F0FF;
   }
 
   /* ── Home Rental Theme ──────────────────────── */
@@ -110,18 +110,18 @@
     --ring: #D4A96A;
   }
   .dark .theme-house {
-    --primary: #52B788;
-    --primary-foreground: #0A140F;
-    --secondary: #B7D7C2;
-    --secondary-foreground: #0A140F;
+    --primary: #39FF14;
+    --primary-foreground: #000000;
+    --secondary: #0A140A;
+    --secondary-foreground: #39FF14;
     --accent: #D4A96A;
     --accent-foreground: #141C16;
-    --background: #0A140F;
+    --background: #030503;
     --foreground: #F1EDE4;
     --muted-foreground: #B7D7C2;
-    --surface: #122119;
-    --border: #52B78830;
-    --ring: #D4A96A;
+    --surface: #070D07;
+    --border: rgba(57, 255, 20, 0.15);
+    --ring: #39FF14;
   }
 
   /* ── Laundry Theme ──────────────────────────── */
@@ -140,18 +140,18 @@
     --ring: #00B4D8;
   }
   .dark .theme-laundry {
-    --primary: #00B4D8;
-    --primary-foreground: #051622;
-    --secondary: #90E0EF;
-    --secondary-foreground: #051622;
-    --accent: #0077B6;
+    --primary: #00E5FF;
+    --primary-foreground: #000000;
+    --secondary: #001220;
+    --secondary-foreground: #00E5FF;
+    --accent: #FF00A0;
     --accent-foreground: #FFFFFF;
-    --background: #051622;
+    --background: #02060A;
     --foreground: #CAF0F8;
     --muted-foreground: #90E0EF;
-    --surface: #0B2435;
-    --border: #00B4D830;
-    --ring: #00B4D8;
+    --surface: #050A10;
+    --border: rgba(0, 229, 255, 0.15);
+    --ring: #00E5FF;
   }
 
   /* ── Food & Beverage Theme ──────────────────── */
@@ -196,14 +196,14 @@
     --border: #4361EE15;
   }
   .dark .theme-marketplace {
-    --primary: #4CC9F0;
-    --primary-foreground: #4361EE;
-    --background: #0A0B1A;
+    --primary: #FF00E5;
+    --primary-foreground: #000000;
+    --background: #050205;
     --foreground: #F8F9FF;
     --muted-foreground: #F8F9FF90;
-    --surface: #121430;
-    --border: #F8F9FF15;
-    --accent: #F72585;
+    --surface: #0A040A;
+    --border: rgba(255, 0, 229, 0.15);
+    --accent: #FF9E00;
   }
 
   /* ── Elite Vendor Theme (Stitch Design) ────────── */
@@ -809,4 +809,22 @@ body {
 }
 .dark .goog-te-combo {
   color: white !important;
+}
+
+@layer utilities {
+  .neon-text {
+    @apply dark:drop-shadow-[0_0_8px_var(--primary)];
+  }
+  .neon-border {
+    @apply dark:shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)] dark:border-primary/50;
+  }
+  .neon-glow-hover {
+    @apply hover:dark:shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)] hover:dark:border-primary transition-all duration-300;
+  }
+  .neon-glow-red {
+    @apply dark:shadow-[0_0_15px_rgba(239,68,68,0.4)] dark:border-red-500/50;
+  }
+  .neon-glow-red-hover {
+    @apply hover:dark:shadow-[0_0_20px_rgba(239,68,68,0.6)] hover:dark:border-red-500 hover:dark:bg-red-500/10 transition-all duration-300;
+  }
 }

@@ -191,7 +191,7 @@ export function GlobalProfileSidebar() {
                   key={service.href} 
                   href={service.href} 
                   onClick={onClose}
-                  className="flex flex-col items-center justify-center p-3 md:p-6 rounded-xl md:rounded-[2rem] bg-surface/50 border border-border hover:border-primary/30 hover:bg-primary/5 transition-all group tap-feedback"
+                  className="flex flex-col items-center justify-center p-3 md:p-6 rounded-xl md:rounded-[2rem] bg-surface/50 border border-border hover:border-primary/30 hover:bg-primary/5 neon-glow-hover group tap-feedback"
                 >
                   <service.icon className="w-5 h-5 md:w-6 md:h-6 mb-1.5 md:mb-3 text-muted-foreground group-hover:text-primary transition-colors" />
                   <span className="text-[8px] md:text-[10px] font-black uppercase tracking-wider md:tracking-widest text-muted-foreground group-hover:text-foreground transition-colors">{service.label}</span>
@@ -203,7 +203,7 @@ export function GlobalProfileSidebar() {
         {/* Quick Navigation Links */}
         <div className="space-y-1 md:space-y-2 mb-8 md:mb-12">
           {user?.role === 'admin' && (
-            <Link href="/admin" onClick={onClose} className="flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-colors group tap-feedback">
+            <Link href="/admin" onClick={onClose} className="flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl bg-primary/10 border border-primary/20 hover:bg-primary/20 neon-glow-hover group tap-feedback">
                 <div className="flex items-center gap-3">
                   <div className="p-1.5 md:p-2 rounded-lg md:rounded-xl bg-primary/20 text-primary">
                       <LayoutGrid className="w-4 h-4" />
@@ -213,7 +213,7 @@ export function GlobalProfileSidebar() {
                 <ChevronRight className="w-4 h-4 text-primary" />
             </Link>
           )}
-          <Link href="/dashboard" onClick={onClose} className="flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl hover:bg-muted/50 transition-colors group tap-feedback">
+          <Link href="/dashboard" onClick={onClose} className="flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl border border-transparent hover:bg-muted/50 neon-glow-hover group tap-feedback">
               <div className="flex items-center gap-3">
                 <div className="p-1.5 md:p-2 rounded-lg md:rounded-xl bg-muted text-muted-foreground group-hover:text-primary transition-colors">
                     <Settings className="w-4 h-4" />
@@ -223,7 +223,7 @@ export function GlobalProfileSidebar() {
               <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
           </Link>
           {!isVendor && (
-            <Link href="/orders" onClick={onClose} className="flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl hover:bg-muted/50 transition-colors group tap-feedback">
+            <Link href="/orders" onClick={onClose} className="flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl border border-transparent hover:bg-muted/50 neon-glow-hover group tap-feedback">
                 <div className="flex items-center gap-3">
                   <div className="p-1.5 md:p-2 rounded-lg md:rounded-xl bg-muted text-muted-foreground group-hover:text-primary transition-colors">
                       <ShoppingBasket className="w-4 h-4" />
@@ -233,7 +233,7 @@ export function GlobalProfileSidebar() {
                 <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
             </Link>
           )}
-          <Link href="/profile" onClick={onClose} className="flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl hover:bg-muted/50 transition-colors group tap-feedback">
+          <Link href="/profile" onClick={onClose} className="flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl border border-transparent hover:bg-muted/50 neon-glow-hover group tap-feedback">
               <div className="flex items-center gap-3">
                 <div className="p-1.5 md:p-2 rounded-lg md:rounded-xl bg-muted text-muted-foreground group-hover:text-primary transition-colors">
                     <User className="w-4 h-4" />
@@ -252,7 +252,7 @@ export function GlobalProfileSidebar() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: idx * 0.05 }}
-              className="p-3 md:p-5 rounded-xl md:rounded-3xl bg-surface/50 border border-border group hover:border-primary/20 transition-colors"
+              className="p-3 md:p-5 rounded-xl md:rounded-3xl bg-surface/50 border border-border group neon-glow-hover"
             >
               <div className="flex items-center gap-1.5 md:gap-2 mb-1 md:mb-2 text-muted-foreground">
                 <stat.icon className="w-3 h-3" />
@@ -304,12 +304,12 @@ export function GlobalProfileSidebar() {
 
         {/* Become a Vendor CTA */}
         {user?.role === 'user' && (
-          <Link href="/signup?role=vendor" onClick={onClose} className="tap-feedback block">
-            <div className="p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] bg-gradient-to-br from-primary to-secondary text-primary-foreground relative overflow-hidden group shadow-2xl">
+          <Link href="/signup?role=vendor" onClick={onClose} className="tap-feedback block neon-glow-hover rounded-[1.5rem] md:rounded-[2rem]">
+            <div className="p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] bg-gradient-to-br from-primary to-secondary text-primary-foreground relative overflow-hidden group shadow-2xl dark:border dark:border-primary/50">
               <Zap className="absolute -right-6 -bottom-6 w-24 h-24 md:w-32 md:h-32 text-primary-foreground/20 group-hover:scale-110 transition-transform duration-700" />
               <h4 className="text-xl md:text-2xl font-black leading-none mb-1.5 md:mb-2">Become a <br />Vendor</h4>
               <p className="text-xs md:text-sm font-medium mb-4 md:mb-6 opacity-80">Start earning by listing your services.</p>
-              <div className="w-full bg-primary-foreground text-primary flex items-center justify-center font-bold rounded-lg md:rounded-xl h-10 md:h-12 shadow-xl text-sm">
+              <div className="w-full bg-primary-foreground text-primary flex items-center justify-center font-bold rounded-lg md:rounded-xl h-10 md:h-12 shadow-xl text-sm neon-text">
                   GET STARTED
               </div>
             </div>
@@ -318,12 +318,12 @@ export function GlobalProfileSidebar() {
       </div>
 
       {/* Bottom Actions */}
-      <div className="p-5 md:p-8 border-t border-border bg-gray-50 dark:bg-surface/80 pb-safe">
+      <div className="p-5 md:p-8 border-t border-border bg-gray-50 dark:bg-black/40 pb-safe">
         <Button 
           onClick={handleLogout}
-          variant="ghost" 
+          variant="outline" 
           disabled={logoutLoading}
-          className="w-full text-muted-foreground hover:text-red-400 transition-colors font-black tracking-widest text-[10px] gap-2 tap-feedback"
+          className="w-full border-red-500/20 text-red-500 hover:bg-red-50 dark:border-red-500/50 dark:bg-red-500/10 dark:text-red-400 font-black tracking-widest text-[10px] gap-2 tap-feedback neon-glow-red-hover"
         >
             <LogOut className="w-3 h-3" />
             {logoutLoading ? 'LOGGING OUT...' : 'LOG OUT FROM SESSION'}
@@ -357,7 +357,7 @@ export function GlobalProfileSidebar() {
                   isMobile 
                     ? 'absolute bottom-0 left-0 right-0 max-h-[90vh] rounded-t-[2rem]' 
                     : 'h-full w-[440px]'
-                } bg-white dark:bg-[#0D1117] backdrop-blur-2xl shadow-[-20px_0_100px_rgba(0,0,0,0.15)] dark:shadow-[-20px_0_100px_rgba(0,0,0,0.4)] flex flex-col overflow-hidden border-l border-border`}
+                } bg-white dark:bg-black/95 backdrop-blur-3xl shadow-[-20px_0_100px_rgba(0,0,0,0.15)] dark:shadow-[0_0_100px_rgba(var(--primary-rgb),0.1)] flex flex-col overflow-hidden border-l border-border dark:border-l-primary/20`}
               >
                 {sidebarContent}
               </motion.aside>
