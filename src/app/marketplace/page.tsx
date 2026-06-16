@@ -98,7 +98,15 @@ export default function MarketplacePage() {
     return true;
   });
 
-  const categories = ['Electronics', 'Furniture', 'Clothing', 'Books'];
+  const categories = [
+    'Electronics', 'Laptops', 'Mobile Phones', 'Tablets', 'Audio & Headphones', 'Cameras',
+    'Furniture', 'Desks & Chairs', 'Beds & Mattresses', 'Home Decor', 'Lighting',
+    'Clothing (Men)', 'Clothing (Women)', 'Shoes & Sneakers', 'Accessories & Watches',
+    'Books', 'Textbooks', 'Novels & Fiction', 'Stationery', 'Art Supplies',
+    'Bicycles', 'Scooters & E-Bikes', 'Sports Equipment', 'Gym & Fitness',
+    'Gaming Consoles', 'Video Games', 'Musical Instruments',
+    'Kitchenware', 'Appliances', 'Event Tickets & Passes', 'Services'
+  ];
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 pb-20 theme-marketplace">

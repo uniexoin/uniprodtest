@@ -103,7 +103,7 @@ export function IntelligenceSurgeView() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-secondary uppercase block">Base Transfer Rate ($)</label>
+              <label className="text-[10px] font-bold text-secondary uppercase block">Base Transfer Rate (₹)</label>
               <input
                 type="number"
                 required

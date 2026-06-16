@@ -23,6 +23,12 @@ const USER_NAV_ITEMS = [
   { href: '/profile', icon: User, label: 'Log in' },
 ];
 
+const AUTHENTICATED_USER_NAV_ITEMS = [
+  { href: '/', icon: Search, label: 'Explore' },
+  { href: '/wishlists', icon: Heart, label: 'Wishlists' },
+  { href: '/profile', icon: User, label: 'Profile' },
+];
+
 const VENDOR_NAV_ITEMS = [
   { href: '/', icon: Home, label: 'Home' },
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -65,7 +71,7 @@ export function Navbar() {
   const getBottomNavItems = () => {
     if (!user) return USER_NAV_ITEMS;
     if (user.role === 'vendor') return VENDOR_NAV_ITEMS;
-    return USER_NAV_ITEMS;
+    return AUTHENTICATED_USER_NAV_ITEMS;
   };
 
   const bottomNavItems = getBottomNavItems();

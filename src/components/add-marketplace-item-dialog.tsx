@@ -87,10 +87,28 @@ export function AddMarketplaceItemDialog({ trigger }: { trigger?: React.ReactNod
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
-              <Input id="category" name="category" required value={formData.category} onChange={handleChange} placeholder="e.g. Electronics" />
+              <select 
+                id="category" 
+                name="category" 
+                required 
+                value={formData.category} 
+                onChange={handleChange}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="">Select Category</option>
+                {[
+                  'Electronics', 'Laptops', 'Mobile Phones', 'Tablets', 'Audio & Headphones', 'Cameras',
+                  'Furniture', 'Desks & Chairs', 'Beds & Mattresses', 'Home Decor', 'Lighting',
+                  'Clothing (Men)', 'Clothing (Women)', 'Shoes & Sneakers', 'Accessories & Watches',
+                  'Books', 'Textbooks', 'Novels & Fiction', 'Stationery', 'Art Supplies',
+                  'Bicycles', 'Scooters & E-Bikes', 'Sports Equipment', 'Gym & Fitness',
+                  'Gaming Consoles', 'Video Games', 'Musical Instruments',
+                  'Kitchenware', 'Appliances', 'Event Tickets & Passes', 'Services'
+                ].map(cat => <option key={cat} value={cat}>{cat}</option>)}
+              </select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="price">Price ($)</Label>
+              <Label htmlFor="price">Price (₹)</Label>
               <Input id="price" name="price" type="number" step="0.01" required value={formData.price} onChange={handleChange} />
             </div>
             <div className="space-y-2">
