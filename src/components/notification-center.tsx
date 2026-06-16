@@ -22,31 +22,18 @@ import { Button } from '@/components/ui/button';
 import { useNotifications, Notification } from '@/hooks/use-notifications';
 import { formatDistanceToNow } from 'date-fns';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetTrigger 
+} from '@/components/ui/sheet';
 import { haptics } from '@/lib/haptics';
 
 export function NotificationCenter() {
   const [open, setOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { notifications, unreadCount, markAsRead, markAllAsRead, isLoading } = useNotifications();
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
-
-  // Lock body scroll when mobile sheet is open
-  useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
-  }, [mobileOpen]);
 
   const getIcon = (type: Notification['type']) => {
     switch (type) {
@@ -167,11 +154,11 @@ export function NotificationCenter() {
     </div>
   );
 
-  const bellButton = (
+  const getBellButton = (isMobile: boolean) => (
     <Button 
       variant="ghost" 
       size="icon" 
-      onClick={isMobile ? () => { setMobileOpen(true); haptics.light(); } : undefined}
+      onClick={isMobile ? () => haptics.light() : undefined}
       className="relative w-10 h-10 rounded-xl hover:bg-white/10 text-white/80 hover:text-white transition-all flex items-center justify-center"
     >
       <Bell className={`w-4.5 h-4.5 md:w-5 md:h-5 ${unreadCount > 0 ? 'text-accent' : 'text-white/80 group-hover:text-white'}`} />
@@ -190,7 +177,7 @@ export function NotificationCenter() {
       <div className="hidden md:block">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            {bellButton}
+            {getBellButton(false)}
           </PopoverTrigger>
           <PopoverContent className="w-[420px] p-0 glass-dark-lg rounded-[2rem] shadow-2xl overflow-hidden" align="end">
             <NotificationList onClose={() => setOpen(false)} />
@@ -198,36 +185,20 @@ export function NotificationCenter() {
         </Popover>
       </div>
 
-      {/* Mobile: Full-screen sheet */}
+      {/* Mobile: Sheet (Bottom Drawer) */}
       <div className="md:hidden">
-        {bellButton}
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetTrigger asChild>
+            {getBellButton(true)}
+          </SheetTrigger>
+          <SheetContent side="bottom" className="p-0 glass-dark-lg rounded-t-[2rem] max-h-[85vh] overflow-hidden">
+            <div className="pt-3 pb-1 flex justify-center">
+              <div className="w-12 h-1.5 bg-muted rounded-full opacity-50" />
+            </div>
+            <NotificationList onClose={() => setMobileOpen(false)} />
+          </SheetContent>
+        </Sheet>
       </div>
-
-      <AnimatePresence>
-        {mobileOpen && (
-          <div className="fixed inset-0 z-[9999] md:hidden">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileOpen(false)}
-              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-              className="absolute bottom-0 left-0 right-0 glass-dark-lg rounded-t-[2rem] max-h-[85vh] overflow-hidden"
-            >
-              <div className="pt-3 pb-1">
-                <div className="drag-indicator" />
-              </div>
-              <NotificationList onClose={() => setMobileOpen(false)} />
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </>
   );
 }
