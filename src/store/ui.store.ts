@@ -20,6 +20,8 @@ interface UIState {
   hideLoadingOverlay: () => void;
 }
 
+let overlayTimeout: NodeJS.Timeout;
+
 export const useUIStore = create<UIState>((set) => ({
   isProfileSidebarOpen: false,
   openProfileSidebar: () => set({ isProfileSidebarOpen: true }),
@@ -31,12 +33,16 @@ export const useUIStore = create<UIState>((set) => ({
   successOverlayPath: '/success.json',
   successOverlayFullPage: false,
   triggerSuccessOverlay: (message = 'Operation Successful!', duration = 3000, animationPath = '/success.json', isFullPage = false) => {
+    if (overlayTimeout) clearTimeout(overlayTimeout);
     set({ isSuccessOverlayOpen: true, successOverlayMessage: message, successOverlayPath: animationPath, successOverlayFullPage: isFullPage });
-    setTimeout(() => {
+    overlayTimeout = setTimeout(() => {
       set({ isSuccessOverlayOpen: false });
     }, duration);
   },
-  closeSuccessOverlay: () => set({ isSuccessOverlayOpen: false }),
+  closeSuccessOverlay: () => {
+    if (overlayTimeout) clearTimeout(overlayTimeout);
+    set({ isSuccessOverlayOpen: false });
+  },
 
   isLoadingOverlayOpen: false,
   showLoadingOverlay: () => set({ isLoadingOverlayOpen: true }),

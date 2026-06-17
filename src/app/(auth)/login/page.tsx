@@ -89,8 +89,13 @@ export default function LoginPage() {
         localStorage.setItem('uniexo_trigger_onboarding', 'true');
       } catch (e) {}
 
-      // Trigger success lottie animation overlay (Full page circle morphing)
+      // Trigger success lottie animation overlay (Phase 1: Full page circle morphing)
       useUIStore.getState().triggerSuccessOverlay("Access Granted! Welcome to UniExo", 3500, '/login-success.json', true);
+
+      // Trigger welcome animation (Phase 2)
+      setTimeout(() => {
+        useUIStore.getState().triggerSuccessOverlay("", 3500, '/welcome-success.json', true);
+      }, 3500);
 
       // Determine redirect path
       let redirectPath = '/';
@@ -103,7 +108,7 @@ export default function LoginPage() {
       console.log('[LOGIN] Redirecting to:', redirectPath);
       setTimeout(() => {
         window.location.href = redirectPath;
-      }, 3500);
+      }, 7000); // 3.5s morph + 3.5s welcome = 7s total
     } catch (err: any) {
       console.error('Login error:', err);
       setError(err.message || "Invalid credentials");
