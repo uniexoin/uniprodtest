@@ -22,7 +22,7 @@ export function SuccessAnimationOverlay() {
       anim = lottieModule.default.loadAnimation({
         container: containerRef.current!,
         renderer: 'svg',
-        loop: false,
+        loop: true,
         autoplay: true,
         path: successOverlayPath || '/success.json',
       });
@@ -46,7 +46,7 @@ export function SuccessAnimationOverlay() {
           className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/80 backdrop-blur-xl text-white ${successOverlayFullPage ? 'bg-black' : ''}`}
         >
           <div className={`${successOverlayFullPage ? 'w-full h-full flex flex-col items-center justify-center' : 'max-w-md w-full p-8 text-center space-y-6'}`}>
-            <div ref={containerRef} className={`${successOverlayFullPage ? 'w-full h-full max-w-2xl max-h-[80vh]' : 'w-48 h-48 sm:w-64 sm:h-64 mx-auto max-w-full'}`} />
+            <div key={successOverlayPath} ref={containerRef} className={`${successOverlayFullPage ? 'w-full h-full max-w-2xl max-h-[80vh]' : 'w-48 h-48 sm:w-64 sm:h-64 mx-auto max-w-full'}`} />
             {successOverlayMessage && !successOverlayFullPage && (
               <motion.h3 
                 initial={{ scale: 0.9, y: 10 }}
