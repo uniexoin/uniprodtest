@@ -179,16 +179,16 @@ export default function SignupPage() {
 
       setTimeout(() => {
         useUIStore.getState().triggerSuccessOverlay("", 10000, '/welcome-success.json', true);
-      }, 3500);
+      }, 3450);
 
       setTimeout(() => {
         useUIStore.getState().triggerSuccessOverlay("Preparing your dashboard...", 3500, '/login-success.json', true);
-      }, 13500);
+      }, 13400);
 
       const redirectPath = role === 'vendor' ? '/dashboard' : '/';
       setTimeout(() => {
         router.replace(redirectPath);
-      }, 17000);
+      }, 16800);
 
     } catch (err: any) {
       console.error('Finalize error:', err);

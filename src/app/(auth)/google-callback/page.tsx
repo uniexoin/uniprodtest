@@ -85,15 +85,15 @@ export default function GoogleCallbackPage() {
           
           setTimeout(() => {
             useUIStore.getState().triggerSuccessOverlay("", 10000, '/welcome-success.json', true);
-          }, 3500);
+          }, 3450);
 
           setTimeout(() => {
             useUIStore.getState().triggerSuccessOverlay("Syncing your account...", 3500, '/login-success.json', true);
-          }, 13500);
+          }, 13400);
 
           setTimeout(() => {
             window.location.href = redirectPath;
-          }, 17000);
+          }, 16800);
         }
       } catch (err: any) {
         console.error('[GOOGLE CALLBACK] Error:', err);

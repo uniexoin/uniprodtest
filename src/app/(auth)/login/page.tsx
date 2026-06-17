@@ -92,15 +92,15 @@ export default function LoginPage() {
       // Trigger success lottie animation overlay (Phase 1: Full page circle morphing)
       useUIStore.getState().triggerSuccessOverlay("Access Granted! Welcome to UniExo", 3500, '/login-success.json', true);
 
-      // Trigger welcome animation (Phase 2)
+      // Trigger welcome animation (Phase 2) - Trigger before store auto-closes
       setTimeout(() => {
         useUIStore.getState().triggerSuccessOverlay("", 10000, '/welcome-success.json', true);
-      }, 3500);
+      }, 3450);
 
       // Trigger morph again (Phase 3)
       setTimeout(() => {
         useUIStore.getState().triggerSuccessOverlay("Loading your experience...", 3500, '/login-success.json', true);
-      }, 13500);
+      }, 13400);
 
       // Determine redirect path
       let redirectPath = '/';
@@ -113,7 +113,7 @@ export default function LoginPage() {
       console.log('[LOGIN] Redirecting to:', redirectPath);
       setTimeout(() => {
         window.location.href = redirectPath;
-      }, 17000); // 3.5s + 10s + 3.5s = 17s total
+      }, 16800);
     } catch (err: any) {
       console.error('Login error:', err);
       setError(err.message || "Invalid credentials");
