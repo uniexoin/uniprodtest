@@ -65,13 +65,18 @@ function VerifyOtpForm() {
       // Auto-login after successful verification
       if (data.token && data.profile) {
         useAuthStore.getState().login(data.profile, data.token);
-        useUIStore.getState().triggerSuccessOverlay("Identity Verified! Welcome to UniExo", 2500);
+        
+        useUIStore.getState().triggerSuccessOverlay("Identity Verified! Welcome to UniExo", 3500, '/login-success.json', true);
+        
+        setTimeout(() => {
+          useUIStore.getState().triggerSuccessOverlay("", 3500, '/welcome-success.json', true);
+        }, 3500);
         
         const redirectPath = data.profile.role === 'admin' ? '/admin' 
           : data.profile.role === 'vendor' ? '/dashboard' : '/';
         setTimeout(() => {
           router.replace(redirectPath);
-        }, 2500);
+        }, 7000);
       } else {
         useUIStore.getState().triggerSuccessOverlay("OTP verified successfully!", 2500);
         setTimeout(() => {

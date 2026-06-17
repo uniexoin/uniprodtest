@@ -175,12 +175,16 @@ export default function SignupPage() {
       } catch (e) {}
 
       // Trigger success lottie animation overlay
-      useUIStore.getState().triggerSuccessOverlay("Welcome to UniExo! Account Created.", 2500);
+      useUIStore.getState().triggerSuccessOverlay("Welcome to UniExo! Account Created.", 3500, '/login-success.json', true);
+
+      setTimeout(() => {
+        useUIStore.getState().triggerSuccessOverlay("", 3500, '/welcome-success.json', true);
+      }, 3500);
 
       const redirectPath = role === 'vendor' ? '/dashboard' : '/';
       setTimeout(() => {
         router.replace(redirectPath);
-      }, 2500);
+      }, 7000);
 
     } catch (err: any) {
       console.error('Finalize error:', err);

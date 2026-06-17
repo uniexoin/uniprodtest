@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/modules/auth/auth.store';
+import { useUIStore } from '@/store/ui.store';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -80,7 +81,15 @@ export default function GoogleCallbackPage() {
           if (data.profile.role === 'admin') redirectPath = '/admin';
           else if (data.profile.role === 'vendor') redirectPath = '/dashboard';
 
-          window.location.href = redirectPath;
+          useUIStore.getState().triggerSuccessOverlay("Access Granted! Welcome to UniExo", 3500, '/login-success.json', true);
+          
+          setTimeout(() => {
+            useUIStore.getState().triggerSuccessOverlay("", 3500, '/welcome-success.json', true);
+          }, 3500);
+
+          setTimeout(() => {
+            window.location.href = redirectPath;
+          }, 7000);
         }
       } catch (err: any) {
         console.error('[GOOGLE CALLBACK] Error:', err);
