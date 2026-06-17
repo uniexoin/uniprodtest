@@ -178,13 +178,17 @@ export default function SignupPage() {
       useUIStore.getState().triggerSuccessOverlay("Welcome to UniExo! Account Created.", 3500, '/login-success.json', true);
 
       setTimeout(() => {
-        useUIStore.getState().triggerSuccessOverlay("", 3500, '/welcome-success.json', true);
+        useUIStore.getState().triggerSuccessOverlay("", 10000, '/welcome-success.json', true);
       }, 3500);
+
+      setTimeout(() => {
+        useUIStore.getState().triggerSuccessOverlay("Preparing your dashboard...", 3500, '/login-success.json', true);
+      }, 13500);
 
       const redirectPath = role === 'vendor' ? '/dashboard' : '/';
       setTimeout(() => {
         router.replace(redirectPath);
-      }, 7000);
+      }, 17000);
 
     } catch (err: any) {
       console.error('Finalize error:', err);

@@ -69,14 +69,18 @@ function VerifyOtpForm() {
         useUIStore.getState().triggerSuccessOverlay("Identity Verified! Welcome to UniExo", 3500, '/login-success.json', true);
         
         setTimeout(() => {
-          useUIStore.getState().triggerSuccessOverlay("", 3500, '/welcome-success.json', true);
+          useUIStore.getState().triggerSuccessOverlay("", 10000, '/welcome-success.json', true);
         }, 3500);
+
+        setTimeout(() => {
+          useUIStore.getState().triggerSuccessOverlay("Loading your profile...", 3500, '/login-success.json', true);
+        }, 13500);
         
         const redirectPath = data.profile.role === 'admin' ? '/admin' 
           : data.profile.role === 'vendor' ? '/dashboard' : '/';
         setTimeout(() => {
           router.replace(redirectPath);
-        }, 7000);
+        }, 17000);
       } else {
         useUIStore.getState().triggerSuccessOverlay("OTP verified successfully!", 2500);
         setTimeout(() => {

@@ -12,7 +12,13 @@ export function SuccessAnimationOverlay() {
     if (!isSuccessOverlayOpen || typeof window === 'undefined' || !containerRef.current) return;
     
     let anim: any;
+    let isCancelled = false;
+
+    // Clear previous contents to prevent overlaps
+    containerRef.current.innerHTML = '';
+
     import('lottie-web').then((lottieModule) => {
+      if (isCancelled) return;
       anim = lottieModule.default.loadAnimation({
         container: containerRef.current!,
         renderer: 'svg',
@@ -23,6 +29,7 @@ export function SuccessAnimationOverlay() {
     });
 
     return () => {
+      isCancelled = true;
       if (anim) {
         anim.destroy();
       }

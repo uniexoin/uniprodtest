@@ -84,12 +84,16 @@ export default function GoogleCallbackPage() {
           useUIStore.getState().triggerSuccessOverlay("Access Granted! Welcome to UniExo", 3500, '/login-success.json', true);
           
           setTimeout(() => {
-            useUIStore.getState().triggerSuccessOverlay("", 3500, '/welcome-success.json', true);
+            useUIStore.getState().triggerSuccessOverlay("", 10000, '/welcome-success.json', true);
           }, 3500);
 
           setTimeout(() => {
+            useUIStore.getState().triggerSuccessOverlay("Syncing your account...", 3500, '/login-success.json', true);
+          }, 13500);
+
+          setTimeout(() => {
             window.location.href = redirectPath;
-          }, 7000);
+          }, 17000);
         }
       } catch (err: any) {
         console.error('[GOOGLE CALLBACK] Error:', err);

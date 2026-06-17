@@ -94,8 +94,13 @@ export default function LoginPage() {
 
       // Trigger welcome animation (Phase 2)
       setTimeout(() => {
-        useUIStore.getState().triggerSuccessOverlay("", 3500, '/welcome-success.json', true);
+        useUIStore.getState().triggerSuccessOverlay("", 10000, '/welcome-success.json', true);
       }, 3500);
+
+      // Trigger morph again (Phase 3)
+      setTimeout(() => {
+        useUIStore.getState().triggerSuccessOverlay("Loading your experience...", 3500, '/login-success.json', true);
+      }, 13500);
 
       // Determine redirect path
       let redirectPath = '/';
@@ -108,7 +113,7 @@ export default function LoginPage() {
       console.log('[LOGIN] Redirecting to:', redirectPath);
       setTimeout(() => {
         window.location.href = redirectPath;
-      }, 7000); // 3.5s morph + 3.5s welcome = 7s total
+      }, 17000); // 3.5s + 10s + 3.5s = 17s total
     } catch (err: any) {
       console.error('Login error:', err);
       setError(err.message || "Invalid credentials");
