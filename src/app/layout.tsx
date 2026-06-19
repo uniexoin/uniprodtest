@@ -11,6 +11,7 @@ import { CacheManager } from "@/components/cache-manager";
 import { PushNotificationProvider } from "@/components/push-notification-provider";
 import { UniExoProvider } from "@/components/providers/uniexo-provider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 import Script from "next/script";
 import { IntelligencePulse } from "@/components/intelligence-pulse";
 import { OnboardingGuide } from "@/components/onboarding-guide";
@@ -152,6 +153,7 @@ export default function RootLayout({
           </UniExoProvider>
         </Providers>
         <SpeedInsights />
+        <Analytics />
         <Script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" strategy="afterInteractive" />
         <Script id="google-translate-init" strategy="afterInteractive">
           {`
