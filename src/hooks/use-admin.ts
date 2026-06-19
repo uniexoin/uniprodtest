@@ -247,3 +247,54 @@ export function useUpdateVendorRank() {
         },
     });
 }
+
+// ==================== Vendor Assets ====================
+
+export function useVendorAssets(vendorId: string | null) {
+    return useQuery({
+        queryKey: ['admin', 'vendor_assets', vendorId],
+        queryFn: async () => {
+            if (!vendorId) return [];
+            const res = await api.get(`/admin/vendors/${vendorId}/assets`);
+            return res.data.data;
+        },
+        enabled: !!vendorId,
+        refetchInterval: REALTIME_INTERVAL,
+        staleTime: REALTIME_STALE,
+    });
+}
+
+export function useDeleteVendorAsset() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({
+            vendorId,
+            assetId,
+            type,
+            purgeAll = false
+        }: {
+            vendorId: string;
+            assetId?: string;
+            type?: string;
+            purgeAll?: boolean;
+        }) => {
+            let url = `/admin/vendors/${vendorId}/assets`;
+            if (purgeAll) {
+                url += '?purgeAll=true';
+            } else if (assetId && type) {
+                url += `?assetId=${assetId}&type=${type}`;
+            } else {
+                throw new Error('Must provide either purgeAll or assetId and type');
+            }
+            const res = await api.delete(url);
+            return res.data;
+        },
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ['admin', 'vendor_assets', variables.vendorId] });
+            // Also invalidate global listing queries just in case
+            queryClient.invalidateQueries({ queryKey: ['houses'] });
+            queryClient.invalidateQueries({ queryKey: ['vehicles'] });
+            queryClient.invalidateQueries({ queryKey: ['marketplace'] });
+        },
+    });
+}

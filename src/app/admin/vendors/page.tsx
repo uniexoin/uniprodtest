@@ -5,13 +5,15 @@ import { useVendorsList, useApproveVendor } from '@/hooks/use-admin';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { CheckCircle, XCircle, Clock, Search } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, Search, FolderOpen } from 'lucide-react';
+import { VendorAssetsModal } from '@/components/admin/vendor-assets-modal';
 
 export default function AdminVendorsPage() {
   const { data: vendors, isLoading } = useVendorsList();
   const approveVendor = useApproveVendor();
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected' | 'suspended'>('all');
+  const [selectedVendorForAssets, setSelectedVendorForAssets] = useState<any>(null);
 
   const handleApprove = (vendorId: string) => {
     approveVendor.mutate({ vendorId, status: 'approved' });
@@ -165,16 +167,27 @@ export default function AdminVendorsPage() {
                 )}
 
                 {vendor.approvalStatus === 'approved' && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleSuspend(vendor._id)}
-                    disabled={approveVendor.isPending}
-                    className="border-orange-200 text-orange-600 hover:bg-orange-50 shrink-0"
-                  >
-                    <XCircle className="w-4 h-4 mr-1" />
-                    Suspend
-                  </Button>
+                  <div className="flex gap-2 shrink-0">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setSelectedVendorForAssets(vendor)}
+                      className="border-primary/20 text-primary hover:bg-primary/5"
+                    >
+                      <FolderOpen className="w-4 h-4 mr-1" />
+                      Manage Assets
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleSuspend(vendor._id)}
+                      disabled={approveVendor.isPending}
+                      className="border-orange-200 text-orange-600 hover:bg-orange-50 shrink-0"
+                    >
+                      <XCircle className="w-4 h-4 mr-1" />
+                      Suspend
+                    </Button>
+                  </div>
                 )}
 
                 {(vendor.approvalStatus === 'rejected' || vendor.approvalStatus === 'suspended') && (
@@ -193,6 +206,12 @@ export default function AdminVendorsPage() {
           ))}
         </div>
       )}
+
+      <VendorAssetsModal
+        vendor={selectedVendorForAssets}
+        isOpen={!!selectedVendorForAssets}
+        onClose={() => setSelectedVendorForAssets(null)}
+      />
     </div>
   );
 }
