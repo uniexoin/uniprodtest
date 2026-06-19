@@ -14,63 +14,31 @@ import { ShoppingBag, Tag, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { AddMarketplaceItemDialog } from '@/components/add-marketplace-item-dialog';
 
-function VendorGroup({ vendorName, items }: { vendorName: string, items: any[] }) {
-  const renderCard = (item: any) => (
-    <Link key={item.id} href={item.href} className="group flex flex-col gap-3 cursor-pointer tap-feedback">
-      <div className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-surface border border-border shadow-sm flex items-center justify-center">
-        {item.image ? (
-          <img 
-            src={item.image} 
-            alt={item.title} 
-            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300" 
-          />
-        ) : (
-          <div className="flex flex-col items-center justify-center text-muted-foreground">
-            <ShoppingBag className="w-12 h-12 opacity-20 mb-2" />
-          </div>
-        )}
-        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-           <div className="p-2 rounded-full bg-surface shadow-lg text-primary">
-              <Tag className="w-4 h-4" />
-           </div>
-        </div>
-      </div>
-      <div className="flex flex-col px-1">
-        <div className="flex justify-between items-start mb-1">
-          <h3 className="font-bold text-sm text-foreground line-clamp-1">{item.vendorName}</h3>
-          <span className="px-2 py-0.5 bg-primary/10 text-primary rounded-full text-[10px] font-bold uppercase tracking-wider">{item.category}</span>
-        </div>
-        <div className="text-muted-foreground text-sm line-clamp-1 capitalize mb-2">{item.title}</div>
-        <div className="flex items-center justify-between">
-           <span className="font-black text-lg text-foreground">₹{item.price}</span>
-           <div className="text-[10px] font-bold text-primary group-hover:translate-x-1 transition-transform flex items-center gap-1">
-              VIEW ITEM <ShoppingBag className="w-3 h-3" />
-           </div>
-        </div>
-      </div>
-    </Link>
-  );
-
-  return (
-    <div className="space-y-6 mb-16 w-full pt-8 border-t border-border">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-black tracking-tight flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-            <User className="w-5 h-5" />
-          </div>
-          Shared by {vendorName}
-        </h2>
-        <div className="text-xs font-bold text-muted-foreground bg-surface border border-border px-3 py-1 rounded-full uppercase tracking-widest">
-           {items.length} ITEMS
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {items.map(renderCard)}
+const renderCard = (item: any) => (
+  <Link key={item.id} href={item.href} className="group flex flex-col bg-white dark:bg-[#111625] rounded-xl overflow-hidden border border-border/50 hover:shadow-xl transition-all duration-300">
+    <div className="relative aspect-square sm:aspect-[4/3] bg-zinc-100 dark:bg-black/40 flex items-center justify-center overflow-hidden">
+      {item.image ? (
+        <img 
+          src={item.image} 
+          alt={item.title} 
+          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" 
+        />
+      ) : (
+        <ShoppingBag className="w-12 h-12 text-muted-foreground/30" />
+      )}
+      <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider">
+        {item.category}
       </div>
     </div>
-  );
-}
+    <div className="p-4 flex flex-col flex-1">
+      <div className="text-2xl font-black text-foreground mb-1">₹{item.price.toLocaleString('en-IN')}</div>
+      <div className="text-sm text-foreground/80 line-clamp-2 leading-snug mb-3 min-h-[2.5rem]">{item.title}</div>
+      <div className="mt-auto flex items-center justify-between text-xs text-muted-foreground pt-3 border-t border-border/50">
+        <span className="flex items-center gap-1.5 truncate"><User className="w-3 h-3" /> {item.vendorName}</span>
+      </div>
+    </div>
+  </Link>
+);
 
 export default function MarketplacePage() {
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
@@ -168,24 +136,9 @@ export default function MarketplacePage() {
         ) : (
           <div className="space-y-4">
             {filteredItems.length > 0 ? (
-              Object.entries(
-                filteredItems.reduce((acc, item) => {
-                  const vendorName = item.vendorName || 'Independent Seller';
-                  if (!acc[vendorName]) {
-                    acc[vendorName] = { items: [] };
-                  }
-                  acc[vendorName].items.push(item);
-                  return acc;
-                }, {} as Record<string, { items: typeof filteredItems }>)
-              )
-              .sort((a, b) => a[0].localeCompare(b[0]))
-              .map(([vendorName, data]) => (
-                <VendorGroup 
-                  key={vendorName} 
-                  vendorName={vendorName} 
-                  items={data.items} 
-                />
-              ))
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
+                {filteredItems.map(item => renderCard(item))}
+              </div>
             ) : (
               <div className="text-center py-40 border border-dashed border-border rounded-[3rem]">
                 <Tag className="w-16 h-16 text-muted-foreground/20 mx-auto mb-6" />

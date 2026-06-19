@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const isAuthenticating = useRef(false);
   
   const [formData, setFormData] = useState({
     email: '',
@@ -29,7 +30,7 @@ export default function LoginPage() {
 
   // If already logged in, redirect away from login page
   useEffect(() => {
-    if (_hasHydrated && isAuthenticated && user) {
+    if (_hasHydrated && isAuthenticated && user && !isAuthenticating.current) {
       const path = user.role === 'admin' ? '/admin' : user.role === 'vendor' ? '/dashboard' : '/';
       window.location.href = path;
     }
@@ -46,6 +47,7 @@ export default function LoginPage() {
     
     setLoading(true);
     setError('');
+    isAuthenticating.current = true;
 
     try {
       console.log('[LOGIN] Submitting credentials...');
@@ -89,18 +91,8 @@ export default function LoginPage() {
         localStorage.setItem('uniexo_trigger_onboarding', 'true');
       } catch (e) {}
 
-      // Trigger success lottie animation overlay (Phase 1: Full page circle morphing)
-      useUIStore.getState().triggerSuccessOverlay("Access Granted! Welcome to UniExo", 3500, '/login-success.json', true);
-
-      // Trigger welcome animation (Phase 2) - Trigger before store auto-closes
-      setTimeout(() => {
-        useUIStore.getState().triggerSuccessOverlay("", 10000, '/welcome-success.json', true);
-      }, 3450);
-
-      // Trigger morph again (Phase 3)
-      setTimeout(() => {
-        useUIStore.getState().triggerSuccessOverlay("Loading your experience...", 3500, '/login-success.json', true);
-      }, 13400);
+      // Trigger welcome animation
+      useUIStore.getState().triggerSuccessOverlay("Welcome to UniExo", 4500, '/welcome-success.json', true);
 
       // Determine redirect path
       let redirectPath = '/';
@@ -113,11 +105,12 @@ export default function LoginPage() {
       console.log('[LOGIN] Redirecting to:', redirectPath);
       setTimeout(() => {
         window.location.href = redirectPath;
-      }, 16800);
+      }, 4000);
     } catch (err: any) {
       console.error('Login error:', err);
       setError(err.message || "Invalid credentials");
       toast.error(err.message || "Login failed");
+      isAuthenticating.current = false;
     } finally {
       setLoading(false);
     }

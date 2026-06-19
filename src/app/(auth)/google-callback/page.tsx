@@ -81,19 +81,11 @@ export default function GoogleCallbackPage() {
           if (data.profile.role === 'admin') redirectPath = '/admin';
           else if (data.profile.role === 'vendor') redirectPath = '/dashboard';
 
-          useUIStore.getState().triggerSuccessOverlay("Access Granted! Welcome to UniExo", 3500, '/login-success.json', true);
+          useUIStore.getState().triggerSuccessOverlay("Access Granted! Welcome to UniExo", 4500, '/welcome-success.json', true);
           
           setTimeout(() => {
-            useUIStore.getState().triggerSuccessOverlay("", 10000, '/welcome-success.json', true);
-          }, 3450);
-
-          setTimeout(() => {
-            useUIStore.getState().triggerSuccessOverlay("Syncing your account...", 3500, '/login-success.json', true);
-          }, 13400);
-
-          setTimeout(() => {
             window.location.href = redirectPath;
-          }, 16800);
+          }, 4000);
         }
       } catch (err: any) {
         console.error('[GOOGLE CALLBACK] Error:', err);

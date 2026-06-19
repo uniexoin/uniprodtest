@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -48,6 +48,7 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const isAuthenticating = useRef(false);
   const [termsOverlay, setTermsOverlay] = useState<{ open: boolean, title: string, content: React.ReactNode }>({
     open: false,
     title: '',
@@ -72,7 +73,7 @@ export default function SignupPage() {
 
   // If already logged in, redirect away
   useEffect(() => {
-    if (_hasHydrated && isAuthenticated && user) {
+    if (_hasHydrated && isAuthenticated && user && !isAuthenticating.current) {
       const path = user.role === 'admin' ? '/admin' : user.role === 'vendor' ? '/dashboard' : '/';
       router.replace(path);
     }
@@ -116,6 +117,7 @@ export default function SignupPage() {
 
     setLoading(true);
     setError('');
+    isAuthenticating.current = true;
 
     try {
       console.log('[SIGNUP] Finalizing registration...');
@@ -174,26 +176,19 @@ export default function SignupPage() {
         localStorage.setItem('uniexo_trigger_onboarding', 'true');
       } catch (e) {}
 
-      // Trigger success lottie animation overlay
-      useUIStore.getState().triggerSuccessOverlay("Welcome to UniExo! Account Created.", 3500, '/login-success.json', true);
-
-      setTimeout(() => {
-        useUIStore.getState().triggerSuccessOverlay("", 10000, '/welcome-success.json', true);
-      }, 3450);
-
-      setTimeout(() => {
-        useUIStore.getState().triggerSuccessOverlay("Preparing your dashboard...", 3500, '/login-success.json', true);
-      }, 13400);
+      // Trigger welcome animation
+      useUIStore.getState().triggerSuccessOverlay("Welcome to UniExo! Account Created.", 4500, '/welcome-success.json', true);
 
       const redirectPath = role === 'vendor' ? '/dashboard' : '/';
       setTimeout(() => {
         router.replace(redirectPath);
-      }, 16800);
+      }, 4000);
 
     } catch (err: any) {
       console.error('Finalize error:', err);
       setError(err.message || "Registration failed");
       toast.error(err.message || "Registration failed");
+      isAuthenticating.current = false;
     } finally {
       setLoading(false);
     }
