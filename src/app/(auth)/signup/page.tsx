@@ -208,11 +208,12 @@ export default function SignupPage() {
       </Link>
 
       {/* Left Half: Animation */}
-      <div className="hidden md:flex flex-col md:w-1/2 relative items-center justify-center p-8 z-10 border-r border-white/10 bg-white/5 dark:bg-black/20 backdrop-blur-sm">
-        <div className="w-full max-w-lg aspect-square relative flex items-center justify-center">
+      <div className="hidden md:flex flex-col md:w-1/2 relative items-center justify-center p-8 z-10 border-r border-white/10 bg-white/5 dark:bg-black/20 backdrop-blur-sm overflow-hidden">
+        <div className="absolute inset-0 w-full h-full opacity-90">
           <LottieAnimation src="/animations/Global.json" />
         </div>
-        <div className="absolute bottom-12 left-0 right-0 text-center px-8">
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent z-10 pointer-events-none" />
+        <div className="absolute bottom-12 left-0 right-0 text-center px-8 z-20">
           <h2 className="text-2xl font-bold text-foreground mb-3 font-playfair tracking-wide">Join the Network</h2>
           <p className="text-muted-foreground max-w-md mx-auto text-sm font-medium leading-relaxed">Create your account to unlock exclusive campus services, premium rentals, and secure transactions.</p>
         </div>

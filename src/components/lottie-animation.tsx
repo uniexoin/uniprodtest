@@ -31,8 +31,10 @@ export function LottieAnimation({
         container: containerRef.current,
         renderer: 'svg',
         loop,
-        autoplay,
         path: src,
+        rendererSettings: {
+          preserveAspectRatio: 'xMidYMid slice'
+        }
       });
     });
 
