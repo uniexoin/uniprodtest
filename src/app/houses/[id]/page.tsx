@@ -41,6 +41,11 @@ export default function HouseDetailPage() {
   const [bookingDays, setBookingDays] = useState(30); // Default to a month
   const paymentMethod = 'online';
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   
   const [activeImage, setActiveImage] = useState<string>('');
   const [activeTab, setActiveTab] = useState('Common');
@@ -150,11 +155,11 @@ export default function HouseDetailPage() {
   const faqs = house.faqs && house.faqs.length > 0 ? house.faqs : [];
 
   // Generate next 7 days for the interest modal
-  const next7Days = Array.from({ length: 7 }).map((_, i) => {
+  const next7Days = isMounted ? Array.from({ length: 7 }).map((_, i) => {
     const d = new Date();
     d.setDate(d.getDate() + i);
     return d;
-  });
+  }) : [];
 
   const visitTimes = [
     '9 - 9:30 AM', '9:30 - 10 AM', '10 - 10:30 AM', '10:30 - 11 AM', '11 - 11:30 AM',
@@ -750,7 +755,7 @@ export default function HouseDetailPage() {
                      className="bg-gray-50 border-gray-200" 
                      value={startDate}
                      onChange={(e) => setStartDate(e.target.value)}
-                     min={new Date().toISOString().split('T')[0]}
+                     min={isMounted ? new Date().toISOString().split('T')[0] : ''}
                    />
                 </div>
                 <div className="space-y-1">
@@ -760,7 +765,7 @@ export default function HouseDetailPage() {
                      className="bg-gray-50 border-gray-200" 
                      value={endDate}
                      onChange={(e) => setEndDate(e.target.value)}
-                     min={startDate || new Date().toISOString().split('T')[0]}
+                     min={startDate || (isMounted ? new Date().toISOString().split('T')[0] : '')}
                    />
                 </div>
               </div>

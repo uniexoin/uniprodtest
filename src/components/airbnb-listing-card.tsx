@@ -152,11 +152,11 @@ export function AirbnbListingCard({
 
   return (
     <motion.div 
-      className="group/card w-full bg-surface rounded-3xl border border-border/50 shadow-premium-soft hover-lift overflow-hidden flex flex-col"
+      className="group/card w-full bg-surface rounded-3xl border border-border/50 shadow-premium-soft hover-lift overflow-hidden flex flex-col relative focus-within:ring-2 focus-within:ring-ring"
       whileHover={{ y: -6, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
     >
-      <Link href={href} className="flex flex-col h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+      <div className="flex flex-col h-full">
         {/* ── Image Container ─────────────────────────────────── */}
         <div
           className="relative aspect-[4/3] w-full overflow-hidden shrink-0"
@@ -191,7 +191,7 @@ export function AirbnbListingCard({
           {/* Heart / Favorite Button */}
           <button
             onClick={handleFavorite}
-            className="absolute top-3 right-3 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background hover:scale-110 transition-all duration-200 shadow-sm"
+            className="absolute top-3 right-3 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background hover:scale-110 transition-all duration-200 shadow-sm relative z-10"
             aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
           >
             <Heart
@@ -279,7 +279,9 @@ export function AirbnbListingCard({
         <div className="p-4 md:p-5 flex-1 flex flex-col justify-between">
           <div>
             <h3 className="text-[16px] font-bold text-foreground truncate leading-tight">
-              {title}
+              <Link href={href} className="before:absolute before:inset-0 z-0 focus:outline-none">
+                {title}
+              </Link>
             </h3>
             {secondaryInfo && (
               <p className="text-[14px] text-muted-foreground mt-1 truncate font-medium">
@@ -302,7 +304,7 @@ export function AirbnbListingCard({
             )}
           </div>
         </div>
-      </Link>
+      </div>
     </motion.div>
   );
 }
