@@ -14,6 +14,7 @@ import { UniExoBrand } from '@/components/brand';
 import { SaaSBackground } from '@/components/saas-background';
 import { supabase } from '@/lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
+import { LottieAnimation } from '@/components/lottie-animation';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -117,7 +118,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-background flex items-center justify-center p-4 sm:p-6 theme-landing relative overflow-hidden selection:bg-primary/30">
+    <div className="min-h-[100dvh] bg-background flex flex-col md:flex-row theme-landing relative overflow-hidden selection:bg-primary/30">
       <SaaSBackground />
 
       <Link 
@@ -128,13 +129,26 @@ export default function LoginPage() {
         <span>Back to Home</span>
       </Link>
 
-      <AnimatePresence mode="wait">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-md bg-white/60 dark:bg-black/40 border border-white/60 dark:border-white/10 p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] backdrop-blur-2xl relative z-10"
-        >
+      {/* Left Half: Animation */}
+      <div className="hidden md:flex flex-col md:w-1/2 relative items-center justify-center p-8 z-10 border-r border-white/10 bg-white/5 dark:bg-black/20 backdrop-blur-sm">
+        <div className="w-full max-w-lg aspect-square relative flex items-center justify-center">
+          <LottieAnimation src="/animations/Global.json" />
+        </div>
+        <div className="absolute bottom-12 left-0 right-0 text-center px-8">
+          <h2 className="text-2xl font-bold text-foreground mb-3 font-playfair tracking-wide">Global Campus Ecosystem</h2>
+          <p className="text-muted-foreground max-w-md mx-auto text-sm font-medium leading-relaxed">Experience a unified platform where students and premium vendors connect seamlessly.</p>
+        </div>
+      </div>
+
+      {/* Right Half: Form */}
+      <div className="w-full md:w-1/2 min-h-[100dvh] flex items-center justify-center p-4 sm:p-8 lg:p-12 relative z-10">
+        <AnimatePresence mode="wait">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-md bg-white/60 dark:bg-black/40 border border-white/60 dark:border-white/10 p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] backdrop-blur-2xl relative"
+          >
         <div className="text-center mb-8">
           <motion.div 
             initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: "spring" }}
@@ -253,7 +267,8 @@ export default function LoginPage() {
           </motion.div>
         </div>
         </motion.div>
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
