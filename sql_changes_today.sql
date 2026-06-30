@@ -12,3 +12,8 @@ ADD COLUMN IF NOT EXISTS page_taken_down BOOLEAN DEFAULT false;
 UPDATE profiles 
 SET password_hash = '$2b$10$f7Q78hPEi1eXTVxwTjVlJOaRhJEWAVjCd0YrJkM7NS47LZQEF8vsO' 
 WHERE email = 'uniexo.in@gmail.com' AND role = 'admin';
+
+-- 3. Add current_session_id for multiple session detection
+ALTER TABLE profiles
+ADD COLUMN IF NOT EXISTS current_session_id TEXT;
+

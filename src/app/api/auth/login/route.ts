@@ -7,7 +7,7 @@ export async function POST(req: Request) {
   console.log('[LOGIN API] Received POST request');
   try {
     const body = await req.json();
-    const { email, password } = body;
+    const { email, password, forceOverride } = body;
 
     if (!email || !password) {
       return NextResponse.json(
@@ -83,6 +83,28 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: 'Account suspended.' }, { status: 200 });
     }
 
+    // ── Session Conflict Check ──
+    if (profile.current_session_id && !forceOverride) {
+      return NextResponse.json({ 
+        success: false, 
+        requiresSessionOverride: true, 
+        message: 'You are already logged in on another device.' 
+      }, { status: 200 });
+    }
+
+    // ── Update current_session_id ──
+    const crypto = await import('crypto');
+    const newSessionId = crypto.randomUUID();
+    
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ current_session_id: newSessionId })
+      .eq('id', profile.id);
+      
+    if (updateError) {
+      console.error('[LOGIN API] Failed to update session id:', updateError);
+    }
+
     // ── Build response profile ──
     const safeProfile = {
       id: profile.id,
@@ -99,11 +121,11 @@ export async function POST(req: Request) {
       businessName: profile.business_name || '',
       serviceType: profile.service_type || '',
       pageTakenDown: profile.page_taken_down || false,
+      sessionId: newSessionId,
     };
 
     // ── Generate JWT ──
     console.log('[LOGIN API] Generating token...');
-    const crypto = await import('crypto');
     const jwtSecret = process.env.JWT_SECRET || process.env.JWT_ACCESS_SECRET || 'uniexo-default-dev-secret';
 
     const now = Math.floor(Date.now() / 1000);
@@ -113,6 +135,7 @@ export async function POST(req: Request) {
       role: safeProfile.role,
       email: safeProfile.email,
       name: safeProfile.name,
+      sessionId: newSessionId,
       iat: now,
       exp: now + 90 * 24 * 60 * 60, // 90 days
     };

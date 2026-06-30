@@ -18,6 +18,7 @@ import { OnboardingGuide } from "@/components/onboarding-guide";
 import { SuccessAnimationOverlay } from "@/components/success-animation-overlay";
 import { GlobalLoaderOverlay } from "@/components/global-loader-overlay";
 import { PageTakenDownModal } from "@/components/page-taken-down-modal";
+import { SessionMonitor } from "@/components/session-monitor";
 
 /* ── Typography System: 6 Google Fonts ─────────────────────── */
 
@@ -134,6 +135,7 @@ export default function RootLayout({
               <GlobalLoaderOverlay />
             </Suspense>
             <PageTakenDownModal />
+            <SessionMonitor />
             <main className="flex-1 flex flex-col">
               {children}
             </main>

@@ -16,6 +16,7 @@ export interface User {
   businessName?: string;
   serviceType?: string;
   pageTakenDown?: boolean;
+  sessionId?: string;
 }
 
 export interface AuthState {

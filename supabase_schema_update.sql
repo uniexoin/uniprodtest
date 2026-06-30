@@ -60,6 +60,7 @@ CREATE TABLE profiles (
   is_deleted BOOLEAN DEFAULT false,
   is_suspended BOOLEAN DEFAULT false,
   page_taken_down BOOLEAN DEFAULT false,
+  current_session_id TEXT,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
 );

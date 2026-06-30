@@ -22,6 +22,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [sessionConflict, setSessionConflict] = useState(false);
   const isAuthenticating = useRef(false);
   
   const [formData, setFormData] = useState({
@@ -42,8 +43,8 @@ export default function LoginPage() {
     setError('');
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent, forceOverride = false) => {
+    if (e) e.preventDefault();
     if (loading) return;
     
     setLoading(true);
@@ -61,11 +62,20 @@ export default function LoginPage() {
         },
         body: JSON.stringify({
           email: formData.email.trim().toLowerCase(),
-          password: formData.password
+          password: formData.password,
+          forceOverride
         })
       });
 
       const data = await res.json();
+      
+      if (data.requiresSessionOverride) {
+        setSessionConflict(true);
+        setLoading(false);
+        isAuthenticating.current = false;
+        return;
+      }
+
       if (!data.success) {
         throw new Error(data.error || "Login failed");
       }
@@ -163,6 +173,34 @@ export default function LoginPage() {
           <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="text-sm font-bold text-muted-foreground uppercase tracking-widest mt-4">Secure Portal Access</motion.h1>
         </div>
 
+        {sessionConflict ? (
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-6 text-center">
+            <div className="bg-orange-500/10 border border-orange-500/20 p-6 rounded-2xl">
+              <h3 className="text-lg font-bold text-orange-600 dark:text-orange-400 mb-2">Active Session Detected</h3>
+              <p className="text-sm text-muted-foreground mb-6">
+                You are already logged in on another device. Do you want to keep that session or force a login here?
+              </p>
+              <div className="flex flex-col gap-3">
+                <Button 
+                  onClick={() => handleSubmit(undefined, true)}
+                  className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl"
+                >
+                  Keep this session (Logout other)
+                </Button>
+                <Button 
+                  variant="outline"
+                  onClick={() => {
+                    setSessionConflict(false);
+                    isAuthenticating.current = false;
+                  }}
+                  className="w-full h-12 border-orange-500/30 text-orange-600 dark:text-orange-400 hover:bg-orange-500/10 font-bold rounded-xl"
+                >
+                  Keep that session (Cancel)
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        ) : (
         <div className="space-y-6">
           <form onSubmit={handleSubmit} className="space-y-5">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
@@ -267,6 +305,7 @@ export default function LoginPage() {
              </Link>
           </motion.div>
         </div>
+        )}
         </motion.div>
         </AnimatePresence>
       </div>
