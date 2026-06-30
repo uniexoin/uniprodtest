@@ -15,6 +15,7 @@ export interface User {
   kycStatus?: 'pending' | 'approved' | 'rejected' | 'none';
   businessName?: string;
   serviceType?: string;
+  pageTakenDown?: boolean;
 }
 
 export interface AuthState {

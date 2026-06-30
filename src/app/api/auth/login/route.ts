@@ -98,6 +98,7 @@ export async function POST(req: Request) {
       kycStatus: profile.kyc_status || 'none',
       businessName: profile.business_name || '',
       serviceType: profile.service_type || '',
+      pageTakenDown: profile.page_taken_down || false,
     };
 
     // ── Generate JWT ──

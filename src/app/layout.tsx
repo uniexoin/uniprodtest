@@ -17,6 +17,7 @@ import { IntelligencePulse } from "@/components/intelligence-pulse";
 import { OnboardingGuide } from "@/components/onboarding-guide";
 import { SuccessAnimationOverlay } from "@/components/success-animation-overlay";
 import { GlobalLoaderOverlay } from "@/components/global-loader-overlay";
+import { PageTakenDownModal } from "@/components/page-taken-down-modal";
 
 /* ── Typography System: 6 Google Fonts ─────────────────────── */
 
@@ -132,6 +133,7 @@ export default function RootLayout({
             <Suspense fallback={null}>
               <GlobalLoaderOverlay />
             </Suspense>
+            <PageTakenDownModal />
             <main className="flex-1 flex flex-col">
               {children}
             </main>

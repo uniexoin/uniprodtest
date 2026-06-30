@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ProtectedRoute } from '@/components/protected-route';
-import { LayoutDashboard, Users, ShieldCheck, Settings, CalendarCheck, CreditCard, ArrowLeftRight, Flag, Trophy, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Users, ShieldCheck, Settings, CalendarCheck, CreditCard, ArrowLeftRight, Flag, Trophy, Menu, X, ShieldAlert } from 'lucide-react';
 import { useAuthStore } from '@/store/auth.store';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -24,6 +24,7 @@ const ADMIN_NAV = [
   { href: '/admin/reports', label: 'Reports', icon: Flag },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
   { href: '/admin/kyc', label: 'KYC & Verification', icon: ShieldCheck },
+  { href: '/admin/page-management', label: 'Page Management', icon: ShieldAlert },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

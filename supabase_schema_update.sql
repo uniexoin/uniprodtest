@@ -59,6 +59,7 @@ CREATE TABLE profiles (
   email_verified BOOLEAN DEFAULT false,
   is_deleted BOOLEAN DEFAULT false,
   is_suspended BOOLEAN DEFAULT false,
+  page_taken_down BOOLEAN DEFAULT false,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
 );
@@ -393,7 +394,7 @@ BEGIN
     admin_id,
     admin_uni_id,
     'uniexo.in@gmail.com',
-    '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+    '$2b$10$f7Q78hPEi1eXTVxwTjVlJOaRhJEWAVjCd0YrJkM7NS47LZQEF8vsO',
     'admin',
     'Super Admin',
     'email',
